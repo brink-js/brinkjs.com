@@ -2,8 +2,9 @@
     "project": {
         "name": "brink.js",
         "description": "MVC.next",
-        "url": "https://github.com/gigafied/brink.js",
-        "version": "1.0.0"
+        "url": "http://brinkjs.com",
+        "logo": "../../img/brink-logo.png",
+        "version": "0.0.8"
     },
     "files": {
         "src/brink/core/Class.js": {
