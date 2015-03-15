@@ -1,0 +1,438 @@
+{
+    "project": {
+        "name": "brink.js",
+        "description": "MVC.next",
+        "url": "https://github.com/gigafied/brink.js",
+        "version": "1.0.0"
+    },
+    "files": {
+        "src/brink/core/Class.js": {
+            "name": "src/brink/core/Class.js",
+            "modules": {},
+            "classes": {
+                "Brink.Class": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/brink/core/CoreObject.js": {
+            "name": "src/brink/core/CoreObject.js",
+            "modules": {},
+            "classes": {
+                "Brink.CoreObject": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/brink/core/NotificationManager.js": {
+            "name": "src/brink/core/NotificationManager.js",
+            "modules": {},
+            "classes": {},
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/brink/core/Object.js": {
+            "name": "src/brink/core/Object.js",
+            "modules": {},
+            "classes": {
+                "Brink.Object": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/brink/utils/alias.js": {
+            "name": "src/brink/utils/alias.js",
+            "modules": {},
+            "classes": {},
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/brink/utils/bindFunction.js": {
+            "name": "src/brink/utils/bindFunction.js",
+            "modules": {},
+            "classes": {
+                "Brink": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        }
+    },
+    "modules": {},
+    "classes": {
+        "Brink.Class": {
+            "name": "Brink.Class",
+            "shortname": "Brink.Class",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "src/brink/core/Class.js",
+            "line": 47,
+            "description": "`Brink.Class` provides several useful inheritance helpers\n            and other utilities not found on `Brink.Object`:\n- `super()` method support.\n- Automatically bound methods.\n- Publish/Subscribe system.",
+            "extends": "Brink.Object",
+            "is_constructor": 1
+        },
+        "Brink.CoreObject": {
+            "name": "Brink.CoreObject",
+            "shortname": "Brink.CoreObject",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "src/brink/core/CoreObject.js",
+            "line": 13,
+            "description": "`Brink.CoreObject` is not meant to be used directly.\n        Instead, use $b.Object or Brink.Class.",
+            "is_constructor": 1
+        },
+        "Brink.Object": {
+            "name": "Brink.Object",
+            "shortname": "Brink.Object",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "src/brink/core/Object.js",
+            "line": 44,
+            "description": "`Brink.Object` is the primary base Class. Most of your Objects will\n            extend this Class, unless you need the added functionality of Brink.Class.",
+            "extends": "Brink.CoreObject",
+            "is_constructor": 1
+        },
+        "Brink": {
+            "name": "Brink",
+            "shortname": "Brink",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "src/brink/utils/bindFunction.js",
+            "line": 5
+        }
+    },
+    "classitems": [
+        {
+            "file": "src/brink/core/Class.js",
+            "line": 98,
+            "description": "Subscribe to notifications of type `name`.",
+            "itemtype": "method",
+            "name": "subscribe",
+            "params": [
+                {
+                    "name": "name",
+                    "description": "The name of the notifications to subscribe to.",
+                    "type": "String"
+                },
+                {
+                    "name": "handler",
+                    "description": "A function to handle the notifications.",
+                    "type": "Function"
+                },
+                {
+                    "name": "priority",
+                    "description": "Lower is higher priority (priority of 0 will hear about the notifications before any other handler)",
+                    "type": "Number",
+                    "optional": true
+                }
+            ],
+            "class": "Brink.Class"
+        },
+        {
+            "file": "src/brink/core/Class.js",
+            "line": 117,
+            "description": "Unsubscribe from notifications of type `name`.",
+            "itemtype": "method",
+            "name": "unsubscribe",
+            "params": [
+                {
+                    "name": "name",
+                    "description": "The name of the notifications to unsubscrube from.",
+                    "type": "String"
+                }
+            ],
+            "class": "Brink.Class"
+        },
+        {
+            "file": "src/brink/core/Class.js",
+            "line": 131,
+            "description": "Unsubscribe from all notifications.\n\nThis gets called automatically during `destroy()`, it's not very common\nyou would want to call this directly.",
+            "itemtype": "method",
+            "name": "unsubscribeAll",
+            "class": "Brink.Class"
+        },
+        {
+            "file": "src/brink/core/Class.js",
+            "line": 152,
+            "description": "Publish a notification.",
+            "itemtype": "method",
+            "name": "publish",
+            "params": [
+                {
+                    "name": "name",
+                    "description": "The name of the notification to publish.",
+                    "type": "String"
+                },
+                {
+                    "name": "handler",
+                    "description": "A function to handle the notifications.",
+                    "type": "Function"
+                },
+                {
+                    "name": "args",
+                    "description": "The arguments you want to send to the notification handlers.",
+                    "type": "Any",
+                    "optional": true,
+                    "multiple": true
+                }
+            ],
+            "class": "Brink.Class"
+        },
+        {
+            "file": "src/brink/core/NotificationManager.js",
+            "line": 98,
+            "description": "Notified all subscribers, notification is no longer needed,\nunless it has a callback to be called later via notification.respond()",
+            "class": "Brink.Object"
+        },
+        {
+            "file": "src/brink/core/Object.js",
+            "line": 231,
+            "description": "Invalidate one or more properties. This will trigger any bound and computed properties\ndepending on these properties to also get updated.\n\nThis will also trigger any watchers of this property in the next Run Loop.",
+            "itemtype": "method",
+            "name": "propertyDidChange",
+            "params": [
+                {
+                    "name": "props",
+                    "description": "A single property or an array of properties.",
+                    "type": "Array|String"
+                }
+            ],
+            "class": "Brink.Object"
+        },
+        {
+            "file": "src/brink/core/Object.js",
+            "line": 251,
+            "description": "Gets a subset of properties on this object.",
+            "itemtype": "method",
+            "name": "getProperties",
+            "params": [
+                {
+                    "name": "keys",
+                    "description": "A listof keys you want to get",
+                    "type": "Array"
+                }
+            ],
+            "return": {
+                "description": "Object of key : value pairs for properties in `keys`.",
+                "type": "Object"
+            },
+            "class": "Brink.Object"
+        },
+        {
+            "file": "src/brink/core/Object.js",
+            "line": 284,
+            "description": "Gets all properties that have changed since the last Run Loop.",
+            "itemtype": "method",
+            "name": "getChangedProperties",
+            "return": {
+                "description": "Object of key : value pairs for all changed properties.",
+                "type": "Object"
+            },
+            "class": "Brink.Object"
+        },
+        {
+            "file": "src/brink/core/Object.js",
+            "line": 294,
+            "description": "Get or create a property descriptor.",
+            "itemtype": "method",
+            "name": "prop",
+            "params": [
+                {
+                    "name": "key",
+                    "description": "Poperty name.",
+                    "type": "String"
+                },
+                {
+                    "name": "val",
+                    "description": "Default value to use for the property.",
+                    "optional": true
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "PropertyDescriptor"
+            },
+            "class": "Brink.Object"
+        },
+        {
+            "file": "src/brink/core/Object.js",
+            "line": 343,
+            "description": "Bind a property to a property on another object.\n\nThis can also be achieved with : `a.prop('name').bindTo(b, 'name');`",
+            "itemtype": "method",
+            "name": "bindProperty",
+            "params": [
+                {
+                    "name": "key",
+                    "description": "Poperty name on ObjectA.",
+                    "type": "String"
+                },
+                {
+                    "name": "obj",
+                    "description": "ObjectB, whose property you want to bind to.",
+                    "type": "Brink.Object"
+                },
+                {
+                    "name": "key2",
+                    "description": "Property name on ObjectB.",
+                    "type": "String"
+                }
+            ],
+            "class": "Brink.Object"
+        },
+        {
+            "file": "src/brink/core/Object.js",
+            "line": 357,
+            "description": "Get the value of a property.\n\nThis is identical to doing `obj.key` or `obj[key]`,\nunless you are supporting <= IE8.",
+            "itemtype": "method",
+            "name": "get",
+            "params": [
+                {
+                    "name": "key",
+                    "description": "The property to get.",
+                    "type": "String"
+                }
+            ],
+            "return": {
+                "description": "The value of the property or `undefined`."
+            },
+            "class": "Brink.Object"
+        },
+        {
+            "file": "src/brink/core/Object.js",
+            "line": 371,
+            "description": "Set the value of a property.\n\nThis is identical to doing `obj.key = val` or `obj[key] = val`,\nunless you are supporting <= IE8.\n\nYou can also use this to set nested properties.\nI.e. `obj.set('some.nexted.key', val)`",
+            "itemtype": "method",
+            "name": "set",
+            "params": [
+                {
+                    "name": "key",
+                    "description": "The property to set.",
+                    "type": "String"
+                },
+                {
+                    "name": "val",
+                    "description": "The value to set."
+                }
+            ],
+            "return": {
+                "description": "The value returned from the property's setter."
+            },
+            "class": "Brink.Object"
+        },
+        {
+            "file": "src/brink/core/Object.js",
+            "line": 389,
+            "description": "Watch a property or properties for changes.\n\n```javascript\n\nvar obj = $b.Object.create({\n\n    color : 'green',\n    firstName : 'Joe',\n    lastName : 'Schmoe',\n\n    init : function () {\n        this.watch('color', this.colorChanged.bind(this));\n        this.watch(['firstName', 'lastName'], this.nameChanged.bind(this));\n    },\n\n    colorChanged : function () {\n        console.log(this.color);\n    },\n\n    nameChanged : function () {\n        console.log(this.firstName + ' ' + this.lastName);\n    }\n});\n\nobj.color = 'red';\nobj.firstName = 'John';\nobj.lastName = 'Doe';\n\n```\n\nWatcher functions are only invoked once per Run Loop, this means that the `nameChanged`\nmethod above will only be called once, even though we changed two properties that\n`nameChanged` watches.\n\nYou can skip the `props` argument to watch all properties on the Object.",
+            "itemtype": "method",
+            "name": "watch",
+            "params": [
+                {
+                    "name": "props",
+                    "description": "The property or properties to watch.",
+                    "type": "Null|String|Array"
+                },
+                {
+                    "name": "fn",
+                    "description": "The function to call upon property changes.",
+                    "type": "Function"
+                }
+            ],
+            "class": "Brink.Object"
+        },
+        {
+            "file": "src/brink/core/Object.js",
+            "line": 465,
+            "description": "Remove a watcher.",
+            "itemtype": "method",
+            "name": "unwatch",
+            "params": [
+                {
+                    "name": "fns",
+                    "description": "The function(s) you no longer want to trigger on property changes.",
+                    "type": "Function|Array"
+                }
+            ],
+            "class": "Brink.Object"
+        },
+        {
+            "file": "src/brink/core/Object.js",
+            "line": 483,
+            "description": "Remove all watchers watching properties this object.\n\nUSE WITH CAUTION.\n\nThis gets called automatically during `destroy()`, it's not very common\nyou would want to call this directly.\n\nAny and all other objects that have bound properties,\nwatchers or computed properties dependent on this Object instance will\nstop working.",
+            "itemtype": "method",
+            "name": "unwatchAll",
+            "class": "Brink.Object"
+        },
+        {
+            "file": "src/brink/core/Object.js",
+            "line": 518,
+            "description": "Destroys an object, removes all bindings and watchers and clears all metadata.\n\nIn addition to calling `destroy()` be sure to remove all\nreferences to the object so that it gets Garbage Collected.",
+            "itemtype": "method",
+            "name": "destroy",
+            "class": "Brink.Object"
+        },
+        {
+            "file": "src/brink/core/Object.js",
+            "line": 539,
+            "description": "Extends an object's prototype and creates a new subclass.\n\nThe new subclass will inherit all properties and methods of the Object being\nextended.\n\n```javascript\n\nvar Animal = $b.Object.extend({\n\n    numLegs : 4,\n\n    walk : function () {\n        for (var i = 1; i <= this.numLegs; i ++) {\n            console.log('moving leg #' + i);\n        }\n    }\n});\n\nvar Dog = Animal.extend({\n\n    bark : function () {\n        console.log('woof!!');\n    },\n\n    walkAndBark : function () {\n        this.bark();\n        this.walk();\n    }\n});\n\nvar doggy = Dog.create();\ndoggy.walkAndBark();\n\n```\n\nIf you want `super()` method support, use {{#crossLink \"Brink.Class\"}}{{/crossLink}}\n\n```javascript\n\nvar Animal = $b.Class.extend({\n\n    numLegs : 4,\n\n    walk : function () {\n        for (var i = 1; i <= this.numLegs; i ++) {\n            console.log('moving leg #' + i);\n        }\n    }\n});\n\nvar Dog = Animal.extend({\n\n    bark : function () {\n        console.log('woof!!');\n    },\n\n    walk : function () {\n        this._super();\n        console.log('all ' + this.numLegs + ' legs moved successfully.');\n    },\n\n    walkAndBark : function () {\n        this.bark();\n        this.walk();\n    }\n});\n\nvar doggy = Dog.create();\ndoggy.walkAndBark();\n\n```",
+            "itemtype": "method",
+            "name": "extend",
+            "class": "Brink.Object"
+        },
+        {
+            "file": "src/brink/utils/alias.js",
+            "line": 14,
+            "description": "Alias a property to another property on the object.\n\n```javascript\n\nvar obj = $b.Object.create({\n    a : 'test',\n    b : $b.alias('a')\n});\n\nconsole.log(obj.a, obj.b); //test, test\nthis.b = 'test2';\nconsole.log(obj.a, obj.b); // test2, test2\n\n\n```\n\n```javascript\n\nvar obj = $b.Object.create({a : 'test'});\nobj.prop('b', $b.alias('a'));\n\nconsole.log(obj.a, obj.b); // test, test\n\nobj.b = 'test2';\n\nconsole.log(obj.a, obj.b); // test2, test2\n\n```",
+            "itemtype": "method",
+            "name": "alias",
+            "params": [
+                {
+                    "name": "key",
+                    "description": "The property to alias.",
+                    "type": "String"
+                }
+            ],
+            "class": "Brink"
+        },
+        {
+            "file": "src/brink/utils/bindFunction.js",
+            "line": 11,
+            "description": "Bind a function to a specific scope. Like `Function.prototype.bind()`, but does\nnot modify the original function.\n\n```javascript\n\nvar obj = $b.Object.create({\n    a : 'test'\n});\n\nfunction test () {\n    console.log(this.a);\n}\n\nvar boundTest = $b.bindFunction(test, obj);\nboundTest(); // test\n\n```",
+            "itemtype": "method",
+            "name": "bindFunction",
+            "params": [
+                {
+                    "name": "fn",
+                    "description": "The function to bind.",
+                    "type": "Function"
+                },
+                {
+                    "name": "The",
+                    "description": "scope to bind to.",
+                    "type": "Brink.Object|Brink.Class"
+                }
+            ],
+            "return": {
+                "description": "The bound version of the function.",
+                "type": "Function"
+            },
+            "class": "Brink"
+        }
+    ],
+    "warnings": [
+        {
+            "message": "Missing item type\nNotified all subscribers, notification is no longer needed,\nunless it has a callback to be called later via notification.respond()",
+            "line": " src/brink/core/NotificationManager.js:98"
+        }
+    ]
+}

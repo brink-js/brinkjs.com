@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>src/brink/core/Object.js - brink.js</title>
+    <link rel="stylesheet" href="">
+    <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
+    <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
+    <link rel="stylesheet" href="../assets/css/custom.css">
+    <link rel="stylesheet" href="../assets/css/lucid.css">
+    <link rel="stylesheet" href="../assets/vendor/bootstrap/css/bootstrap.css">
+    <link rel="shortcut icon" type="image/png" href="../assets/favicon.png">
+</head>
+<body class="yui3-skin-sam">
+<div class="navbar navbar-fixed-top">
+    <div class="navbar-inner">
+        <h1 class="brand" style="padding: 10px 16px 10px; height: 20px; line-height: 20px; margin-left: 0;">
+            brink.js
+        </h1>
+	<div class="nav">
+            <li class="divider-vertical"></li>
+            <li>
+                <p class="navbar-text">
+                    API Docs for Version: <b>1.0.0</b>
+                </p>
+            </li>
+        </div>
+        <form class="navbar-form pull-right" style="line-height: 40px; height: 40px;">
+            <input style="margin-top: 0;" type="text" class="search-query" placeholder="Search for classes/modules..." data-obj='["classes/Brink", "classes/Brink.Class", "classes/Brink.CoreObject", "classes/Brink.Object"]'>
+        </form>
+    </div>
+</div>
+<div class="container">
+    <div class="row">
+        <div class="span3">
+	    <div>
+	        <div id="sidebar">
+	        <div id="classes">
+	            <ul id="api-classes" class="nav nav-list">
+	                    <li><a href="../classes/Brink.html">Brink</a></li>
+	                    <li><a href="../classes/Brink.Class.html">Brink.Class</a></li>
+	                    <li><a href="../classes/Brink.CoreObject.html">Brink.CoreObject</a></li>
+	                    <li><a href="../classes/Brink.Object.html">Brink.Object</a></li>
+	            </ul>
+	        </div>
+	        </div>
+	    </div>
+        </div>
+        <div class="span9">
+                <form id="options-form" class="form-inline pull-right">
+                    Show:
+                    <label for="api-show-inherited" class="checkbox">
+                        <input type="checkbox" id="api-show-inherited" checked>
+                        Inherited
+                    </label>
+            
+                    <label for="api-show-protected" class="checkbox">
+                        <input type="checkbox" id="api-show-protected">
+                        Protected
+                    </label>
+            
+                    <label for="api-show-private" class="checkbox">
+                        <input type="checkbox" id="api-show-private">
+                        Private
+                    </label>
+                    <label for="api-show-deprecated" class="checkbox">
+                        <input type="checkbox" id="api-show-deprecated">
+                        Deprecated
+                    </label>
+            
+                </form>
+            
+            <div class="apidocs">
+                <div id="docs-main">
+                    <div class="content">
+<div class="page-header">
+    <h1>src/brink/core/Object.js <small>File</small></h1>
+</div>
+
+<div class="file">
+    <pre class="prettyprint linenums">
+$b(
+
+    [
+        &#x27;../config&#x27;,
+        &#x27;./CoreObject&#x27;,
+        &#x27;../utils/get&#x27;,
+        &#x27;../utils/set&#x27;,
+        &#x27;../utils/clone&#x27;,
+        &#x27;../utils/merge&#x27;,
+        &#x27;../utils/bindTo&#x27;,
+        &#x27;../utils/flatten&#x27;,
+        &#x27;../utils/intersect&#x27;,
+        &#x27;../utils/isFunction&#x27;,
+        &#x27;../utils/expandProps&#x27;,
+        &#x27;../utils/bindFunction&#x27;,
+        &#x27;../utils/getObjKeyPair&#x27;,
+        &#x27;../utils/defineProperty&#x27;
+
+    ],
+
+    function (
+        config,
+        CoreObject,
+        get,
+        set,
+        clone,
+        merge,
+        bindTo,
+        flatten,
+        intersect,
+        isFunction,
+        expandProps,
+        bindFunction,
+        getObjKeyPair,
+        defineProperty
+    ) {
+
+        &#x27;use strict&#x27;;
+
+        var Obj;
+
+        Obj = CoreObject.extend({
+
+            /***********************************************************************
+
+            &#x60;Brink.Object&#x60; is the primary base Class. Most of your Objects will
+            extend this Class, unless you need the added functionality of Brink.Class.
+
+            @class Brink.Object
+            @extends Brink.CoreObject
+            @constructor
+            ************************************************************************/
+            __init : function (o) {
+
+                var p,
+                    meta;
+
+                if (!this.__meta) {
+                    this.__parsePrototype.call(this);
+                    meta = this.__meta;
+                }
+
+                else {
+                    meta = this.__buildMeta();
+                }
+
+                if (o &amp;&amp; typeof o === &#x27;object&#x27; &amp;&amp; !Array.isArray(o)) {
+
+                    o = clone(o);
+
+                    for (p in o) {
+                        this.prop(p, o[p]);
+                    }
+                }
+
+                for (p in meta.properties) {
+                    this.__defineProperty.call(this, p, meta.properties[p]);
+                }
+
+                if (this.init) {
+                    this.init.apply(this, arguments);
+                }
+
+                meta.isInitialized = true;
+
+                if ($b.instanceManager) {
+                    $b.instanceManager.add(this, meta);
+                }
+
+                return this;
+            },
+
+            __buildMeta : function () {
+
+                var meta;
+
+                meta = this.__meta = clone(this.__meta || {});
+
+                meta.getters = clone(meta.getters || {});
+                meta.setters = clone(meta.setters || {});
+
+                meta.properties = clone(meta.properties || {});
+                meta.methods = clone(meta.methods || []);
+                meta.dependencies = clone(meta.dependencies || []);
+
+                meta.values = {};
+                meta.watchers = {
+                    fns : [],
+                    props : []
+                };
+
+                return meta;
+            },
+
+            __parsePrototype : function () {
+
+                var p,
+                    v,
+                    meta;
+
+                meta = this.__buildMeta();
+
+                for (p in this) {
+
+                    v = this[p];
+
+                    if (isFunction(v)) {
+                        if (p !== &#x27;constructor&#x27; &amp;&amp; !~meta.methods.indexOf(p)) {
+                           meta.methods.push(p);
+                        }
+                    }
+
+                    else if (this.hasOwnProperty(p)) {
+
+                        if (p !== &#x27;__meta&#x27;) {
+
+                            if (v &amp;&amp; v.__isRequire &amp;&amp; ~!meta.dependencies.indexOf(p)) {
+                                meta.dependencies.push(p);
+                            }
+
+                            else {
+                                this.prop.call(this, p, v);
+                            }
+                        }
+                    }
+                }
+
+            },
+
+            __defineProperty : function (p, d) {
+
+                if (!config.DIRTY_CHECK) {
+
+                    d = clone(d);
+
+                   // Modern browsers, IE9 +
+                    if (Object.defineProperty) {
+                        Object.defineProperty(this, p, d);
+                    }
+
+                    // Old FF
+                    else if (this.__defineGetter__) {
+                        this.__defineGetter__(p, d.get);
+                        this.__defineSetter__(p, d.set);
+                    }
+
+                    else {
+                        this.__meta.pojoStyle = true;
+                    }
+
+                    if (typeof d.defaultValue !== &#x27;undefined&#x27;) {
+                        this.set(p, d.defaultValue, true, true);
+                    }
+                }
+
+                else {
+                    this.__meta.pojoStyle = true;
+                    this[p] = d.defaultValue;
+                }
+
+                if (d.watch &amp;&amp; d.watch.length) {
+                    this.watch(d.watch, d.didChange);
+                }
+            },
+
+            __undefineProperties : function () {
+
+                var p;
+
+                for (p in this.__meta.properties) {
+                    delete this[p];
+                }
+            },
+
+            __readOnly : function (p) {
+
+                if (this.__meta.pojoStyle) {
+                    return $b.error(&#x27;Tried to write to a read-only property &#x60;&#x27; + p + &#x27;&#x60; on &#x27; + this);
+                }
+            },
+
+            __writeOnly : function (p) {
+
+                if (this.__meta.pojoStyle) {
+                    return $b.error(&#x27;Tried to read a write-only property &#x60;&#x27; + p + &#x27;&#x60; on &#x27; + this);
+                }
+            },
+
+            __defineGetter : function (p, fn) {
+
+                if (isFunction(fn)) {
+                    this.__meta.getters[p] = fn;
+                }
+
+                return function () {
+                    return this.get(p);
+                };
+            },
+
+            __defineSetter : function (p, fn) {
+
+                if (isFunction(fn)) {
+                    this.__meta.setters[p] = fn;
+                }
+
+                return function (val) {
+                    return this.set(p, val);
+                };
+            },
+
+            /***********************************************************************
+            Invalidate one or more properties. This will trigger any bound and computed properties
+            depending on these properties to also get updated.
+
+            This will also trigger any watchers of this property in the next Run Loop.
+
+            @method propertyDidChange
+            @param  {Array|String} props A single property or an array of properties.
+            ************************************************************************/
+            propertyDidChange : function () {
+
+                var props;
+
+                props = flatten([].slice.call(arguments, 0, arguments.length));
+
+                if ($b.instanceManager) {
+                    $b.instanceManager.propertyDidChange(this, props);
+                }
+            },
+
+            /***********************************************************************
+            Gets a subset of properties on this object.
+
+            @method getProperties
+            @param {Array} keys A listof keys you want to get
+            @return {Object} Object of key : value pairs for properties in &#x60;keys&#x60;.
+            ************************************************************************/
+            getProperties : function () {
+
+                var i,
+                    p,
+                    o,
+                    props;
+
+                props = flatten([].slice.call(arguments, 0, arguments.length));
+                o = {};
+
+                if (props.length) {
+
+                    for (i = 0; i &lt; props.length; i ++) {
+                        o[props[i]] = this.get(props[i]);
+                    }
+
+                    return o;
+                }
+
+                for (p in this.__meta.properties) {
+                    o[p] = this.get(p);
+                }
+
+                return o;
+            },
+
+            /***********************************************************************
+            Gets all properties that have changed since the last Run Loop.
+
+            @method getChangedProperties
+            @return {Object} Object of key : value pairs for all changed properties.
+            ************************************************************************/
+            getChangedProperties : function () {
+                return this.getProperties.apply(this, this.__meta.changedProps);
+            },
+
+            /***********************************************************************
+            Get or create a property descriptor.
+
+            @method prop
+            @param {String} key Poperty name.
+            @param [val] Default value to use for the property.
+            @return {PropertyDescriptor}
+            ************************************************************************/
+            prop : function (key, val) {
+
+                var obj;
+
+                obj = getObjKeyPair(this, key);
+                key = obj[1];
+                obj = obj[0];
+
+                if (typeof obj.__meta.properties[key] !== &#x27;undefined&#x27;) {
+                    if (typeof val === &#x27;undefined&#x27;) {
+                        return obj.__meta.properties[key];
+                    }
+                }
+
+                if (!val || !val.__isComputed) {
+
+                    val = {
+                        get : true,
+                        set : true,
+                        value : val
+                    };
+                }
+
+                val = obj.__meta.properties[key] = defineProperty(obj, key, val);
+                val.key = key;
+
+                val.bindTo = bindFunction(function (o, p) {
+                    o.prop(p, bindTo(obj, key, true));
+                }, obj);
+
+                val.didChange = bindFunction(function () {
+                    obj.propertyDidChange(key);
+                }, obj);
+
+                if (obj.__meta.isInitialized) {
+                    obj.__defineProperty(key, val);
+                }
+
+                return val;
+            },
+
+            /***********************************************************************
+            Bind a property to a property on another object.
+
+            This can also be achieved with : &#x60;a.prop(&#x27;name&#x27;).bindTo(b, &#x27;name&#x27;);&#x60;
+
+            @method bindProperty
+            @param {String} key Poperty name on ObjectA.
+            @param {Brink.Object} obj ObjectB, whose property you want to bind to.
+            @param {String} key2 Property name on ObjectB.
+            ***********************************************************************/
+            bindProperty : function (key, obj, key2) {
+                return this.prop(key).bindTo(obj, key2);
+            },
+
+            /***********************************************************************
+            Get the value of a property.
+
+            This is identical to doing &#x60;obj.key&#x60; or &#x60;obj[key]&#x60;,
+            unless you are supporting &lt;= IE8.
+
+            @method get
+            @param {String} key The property to get.
+            @return The value of the property or &#x60;undefined&#x60;.
+            ***********************************************************************/
+            get : function (key) {
+                return get(this, key);
+            },
+
+            /***********************************************************************
+            Set the value of a property.
+
+            This is identical to doing &#x60;obj.key = val&#x60; or &#x60;obj[key] = val&#x60;,
+            unless you are supporting &lt;= IE8.
+
+            You can also use this to set nested properties.
+            I.e. &#x60;obj.set(&#x27;some.nexted.key&#x27;, val)&#x60;
+
+            @method set
+            @param {String} key The property to set.
+            @param val The value to set.
+            @return The value returned from the property&#x27;s setter.
+            ***********************************************************************/
+            set : function (key, val, quiet, skipCompare) {
+                return set(this, key, val, quiet, skipCompare);
+            },
+
+            /***********************************************************************
+            Watch a property or properties for changes.
+
+            &#x60;&#x60;&#x60;javascript
+
+            var obj = $b.Object.create({
+
+                color : &#x27;green&#x27;,
+                firstName : &#x27;Joe&#x27;,
+                lastName : &#x27;Schmoe&#x27;,
+
+                init : function () {
+                    this.watch(&#x27;color&#x27;, this.colorChanged.bind(this));
+                    this.watch([&#x27;firstName&#x27;, &#x27;lastName&#x27;], this.nameChanged.bind(this));
+                },
+
+                colorChanged : function () {
+                    console.log(this.color);
+                },
+
+                nameChanged : function () {
+                    console.log(this.firstName + &#x27; &#x27; + this.lastName);
+                }
+            });
+
+            obj.color = &#x27;red&#x27;;
+            obj.firstName = &#x27;John&#x27;;
+            obj.lastName = &#x27;Doe&#x27;;
+
+            &#x60;&#x60;&#x60;
+
+            Watcher functions are only invoked once per Run Loop, this means that the &#x60;nameChanged&#x60;
+            method above will only be called once, even though we changed two properties that
+            &#x60;nameChanged&#x60; watches.
+
+            You can skip the &#x60;props&#x60; argument to watch all properties on the Object.
+
+            @method watch
+            @param {null|String|Array} props The property or properties to watch.
+            @param {Function} fn The function to call upon property changes.
+            ***********************************************************************/
+            watch : function () {
+
+                var fn,
+                    props;
+
+                props = arguments[0];
+                fn = arguments[1];
+
+                if ($b.instanceManager) {
+
+                    if (typeof fn !== &#x27;function&#x27;) {
+
+                        fn = [].slice.call(arguments, arguments.length - 1, arguments.length)[0];
+
+                        if (arguments.length === 1) {
+                            props = [];
+                        }
+
+                        else {
+                            props = expandProps(flatten([].slice.call(arguments, 0, arguments.length - 1)));
+                        }
+                    }
+
+                    else {
+                        props = expandProps([].concat(props));
+                    }
+
+                    $b.instanceManager.watch(this, props, fn);
+                }
+
+                else {
+                    $b.error(&#x27;InstanceManager does not exist, can\&#x27;t watch for property changes.&#x27;);
+                }
+            },
+
+            /***********************************************************************
+            Remove a watcher.
+
+            @method unwatch
+            @param {Function|Array} fns The function(s) you no longer want to trigger on property changes.
+            ***********************************************************************/
+            unwatch : function () {
+
+                if ($b.instanceManager) {
+                    $b.instanceManager.unwatch(this, flatten(arguments));
+                }
+
+                else {
+                    $b.error(&#x27;InstanceManager does not exist, can\&#x27;t watch for property changes.&#x27;);
+                }
+
+            },
+
+            /***********************************************************************
+            Remove all watchers watching properties this object.
+
+            USE WITH CAUTION.
+
+            This gets called automatically during &#x60;destroy()&#x60;, it&#x27;s not very common
+            you would want to call this directly.
+
+            Any and all other objects that have bound properties,
+            watchers or computed properties dependent on this Object instance will
+            stop working.
+
+            @method unwatchAll
+            ***********************************************************************/
+            unwatchAll : function () {
+
+                if ($b.instanceManager) {
+                    $b.instanceManager.unwatchAll(this);
+                }
+
+                else {
+                    $b.error(&#x27;InstanceManager does not exist, can\&#x27;t watch for property changes.&#x27;);
+                }
+            },
+
+            willNotifyWatchers : function () {
+
+            },
+
+            didNotifyWatchers : function () {
+                if (this.__meta) {
+                    this.__meta.changedProps = [];
+                }
+            },
+
+            /***********************************************************************
+            Destroys an object, removes all bindings and watchers and clears all metadata.
+
+            In addition to calling &#x60;destroy()&#x60; be sure to remove all
+            references to the object so that it gets Garbage Collected.
+
+            @method destroy
+            ***********************************************************************/
+            destroy : function () {
+
+                this.unwatchAll();
+                this.__undefineProperties();
+
+                if ($b.instanceManager) {
+                    $b.instanceManager.remove(this);
+                }
+
+                this.__meta = null;
+            }
+        });
+
+        /***********************************************************************
+        Extends an object&#x27;s prototype and creates a new subclass.
+
+        The new subclass will inherit all properties and methods of the Object being
+        extended.
+
+        &#x60;&#x60;&#x60;javascript
+
+        var Animal = $b.Object.extend({
+
+            numLegs : 4,
+
+            walk : function () {
+                for (var i = 1; i &lt;= this.numLegs; i ++) {
+                    console.log(&#x27;moving leg #&#x27; + i);
+                }
+            }
+        });
+
+        var Dog = Animal.extend({
+
+            bark : function () {
+                console.log(&#x27;woof!!&#x27;);
+            },
+
+            walkAndBark : function () {
+                this.bark();
+                this.walk();
+            }
+        });
+
+        var doggy = Dog.create();
+        doggy.walkAndBark();
+
+        &#x60;&#x60;&#x60;
+
+        If you want &#x60;super()&#x60; method support, use {{#crossLink &quot;Brink.Class&quot;}}{{/crossLink}}
+
+        &#x60;&#x60;&#x60;javascript
+
+        var Animal = $b.Class.extend({
+
+            numLegs : 4,
+
+            walk : function () {
+                for (var i = 1; i &lt;= this.numLegs; i ++) {
+                    console.log(&#x27;moving leg #&#x27; + i);
+                }
+            }
+        });
+
+        var Dog = Animal.extend({
+
+            bark : function () {
+                console.log(&#x27;woof!!&#x27;);
+            },
+
+            walk : function () {
+                this._super();
+                console.log(&#x27;all &#x27; + this.numLegs + &#x27; legs moved successfully.&#x27;);
+            },
+
+            walkAndBark : function () {
+                this.bark();
+                this.walk();
+            }
+        });
+
+        var doggy = Dog.create();
+        doggy.walkAndBark();
+
+        &#x60;&#x60;&#x60;
+
+        @method extend
+        ***********************************************************************/
+        Obj.extend = function () {
+
+            var proto,
+                SubObj;
+
+            SubObj = CoreObject.extend.apply(this, arguments);
+
+            proto = SubObj.prototype;
+            proto.__parsePrototype.call(proto);
+
+            return SubObj;
+        };
+
+        Obj.define = function () {
+            $b.define(this.prototype.__dependencies, bindFunction(this.resolveDependencies, this));
+            return this;
+        };
+
+        Obj.resolveDependencies = function () {
+
+            var proto,
+                p;
+
+            proto = this.prototype;
+
+            for (p in proto.__dependencies) {
+                proto[p] = proto.__dependencies[p].resolve();
+            }
+
+            this.__meta.dependenciesResolved = true;
+
+            return this;
+        };
+
+        Obj.load = function (cb) {
+
+            cb = typeof cb === &#x27;function&#x27; ? cb : function () {};
+
+            if (this.__meta.dependenciesResolved) {
+                cb(this);
+            }
+
+            $b.require(this.prototype.__dependencies, bindFunction(function () {
+                this.resolveDependencies.call(this);
+                cb(this);
+            }, this));
+
+            return this;
+        };
+
+        Obj.__meta = merge(Obj.__meta || {}, {isObject: true});
+
+        return Obj;
+    }
+
+).attach(&#x27;$b&#x27;);
+    </pre>
+</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="../assets/vendor/jquery/jquery-1.8.2.min.js"></script>
+<script src="../assets/vendor/bootstrap/js/bootstrap.js"></script>
+<script src="../assets/vendor/prettify/prettify-min.js"></script>
+<script src="../assets/js/yuidoc-bootstrap.js"></script>
+<script>prettyPrint();</script>
+</body>
+</html>

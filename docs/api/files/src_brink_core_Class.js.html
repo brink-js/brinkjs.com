@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>src/brink/core/Class.js - brink.js</title>
+    <link rel="stylesheet" href="">
+    <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
+    <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
+    <link rel="stylesheet" href="../assets/css/custom.css">
+    <link rel="stylesheet" href="../assets/css/lucid.css">
+    <link rel="stylesheet" href="../assets/vendor/bootstrap/css/bootstrap.css">
+    <link rel="shortcut icon" type="image/png" href="../assets/favicon.png">
+</head>
+<body class="yui3-skin-sam">
+<div class="navbar navbar-fixed-top">
+    <div class="navbar-inner">
+        <h1 class="brand" style="padding: 10px 16px 10px; height: 20px; line-height: 20px; margin-left: 0;">
+            brink.js
+        </h1>
+	<div class="nav">
+            <li class="divider-vertical"></li>
+            <li>
+                <p class="navbar-text">
+                    API Docs for Version: <b>1.0.0</b>
+                </p>
+            </li>
+        </div>
+        <form class="navbar-form pull-right" style="line-height: 40px; height: 40px;">
+            <input style="margin-top: 0;" type="text" class="search-query" placeholder="Search for classes/modules..." data-obj='["classes/Brink", "classes/Brink.Class", "classes/Brink.CoreObject", "classes/Brink.Object"]'>
+        </form>
+    </div>
+</div>
+<div class="container">
+    <div class="row">
+        <div class="span3">
+	    <div>
+	        <div id="sidebar">
+	        <div id="classes">
+	            <ul id="api-classes" class="nav nav-list">
+	                    <li><a href="../classes/Brink.html">Brink</a></li>
+	                    <li><a href="../classes/Brink.Class.html">Brink.Class</a></li>
+	                    <li><a href="../classes/Brink.CoreObject.html">Brink.CoreObject</a></li>
+	                    <li><a href="../classes/Brink.Object.html">Brink.Object</a></li>
+	            </ul>
+	        </div>
+	        </div>
+	    </div>
+        </div>
+        <div class="span9">
+                <form id="options-form" class="form-inline pull-right">
+                    Show:
+                    <label for="api-show-inherited" class="checkbox">
+                        <input type="checkbox" id="api-show-inherited" checked>
+                        Inherited
+                    </label>
+            
+                    <label for="api-show-protected" class="checkbox">
+                        <input type="checkbox" id="api-show-protected">
+                        Protected
+                    </label>
+            
+                    <label for="api-show-private" class="checkbox">
+                        <input type="checkbox" id="api-show-private">
+                        Private
+                    </label>
+                    <label for="api-show-deprecated" class="checkbox">
+                        <input type="checkbox" id="api-show-deprecated">
+                        Deprecated
+                    </label>
+            
+                </form>
+            
+            <div class="apidocs">
+                <div id="docs-main">
+                    <div class="content">
+<div class="page-header">
+    <h1>src/brink/core/Class.js <small>File</small></h1>
+</div>
+
+<div class="file">
+    <pre class="prettyprint linenums">
+$b(
+
+    [
+        &#x27;../config&#x27;,
+        &#x27;./Object&#x27;,
+        &#x27;./NotificationManager&#x27;,
+        &#x27;../utils/bindFunction&#x27;,
+        &#x27;../utils/merge&#x27;
+    ],
+
+    function (config, Obj, NotificationManager, bindFunction, merge) {
+
+        &#x27;use strict&#x27;;
+
+        var Class,
+            doesCallSuper;
+
+        function superfy (fn, superFn) {
+
+            return function () {
+
+                var r, tmp = this._super || null;
+
+                // Reference the prototypes method, as super temporarily
+                this._super = superFn;
+
+                r = fn.apply(this, arguments);
+
+                // Reset _super
+                this._super = tmp;
+                return r;
+            };
+        }
+
+        /*
+        If Function.toString() works as expected, return a regex that checks for &#x60;this._super&#x60;
+        otherwise return a regex that passes everything.
+        */
+
+        doesCallSuper = (/xyz/).test(function () {
+            var xyz;
+            xyz = true;
+        }) ? (/\bthis\._super\b/) : (/.*/);
+
+        Class = Obj({
+
+            /***********************************************************************
+
+            &#x60;Brink.Class&#x60; provides several useful inheritance helpers
+            and other utilities not found on &#x60;Brink.Object&#x60;:
+
+            - &#x60;super()&#x60; method support.
+
+            - Automatically bound methods.
+
+            - Publish/Subscribe system.
+
+            @class Brink.Class
+            @extends Brink.Object
+            @constructor
+            ************************************************************************/
+            __init : superfy(function () {
+
+                var i,
+                    p,
+                    meta;
+
+                this._super.apply(this, arguments);
+
+                meta = this.__meta;
+
+                /*
+                    Auto-binding methods is very expensive as we have to do
+                    it every time an instance is created. It roughly doubles
+                    the time it takes to instantiate
+
+                    Still, it&#x27;s not really an issue unless you are creating thousands
+                    of instances at once. Creating 10,000 instances with auto-bound
+                    methods should still take &lt; 500ms.
+
+                    We auto-bind on $b.Class and not on $b.Object because it&#x27;s
+                    far more likely you&#x27;d be creating a lot of Object instances at once
+                    and shouldn&#x27;t need the overhead of this.
+                */
+                if (config.AUTO_BIND_METHODS || 1) {
+                    for (i = 0; i &lt; meta.methods.length; i ++) {
+                        p = meta.methods[i];
+                        if (!~p.indexOf(&#x27;__&#x27;)) {
+                            this[p] = bindFunction(this[p], this);
+                        }
+                    }
+                }
+
+                return this;
+
+            }, Obj.prototype.__init),
+
+            /***********************************************************************
+            Subscribe to notifications of type &#x60;name&#x60;.
+
+            @method subscribe
+            @param {String} name The name of the notifications to subscribe to.
+            @param {Function} handler A function to handle the notifications.
+            @param {Number} [priority] Lower is higher priority (priority of 0 will hear about the notifications before any other handler)
+            ************************************************************************/
+            subscribe : function (name, handler, priority) {
+
+                this._interestHandlers = this._interestHandlers || {};
+
+                if (handler &amp;&amp; !this._interestHandlers[name]) {
+                    handler = handler;
+                    NotificationManager.subscribe(name, handler, priority);
+                    this._interestHandlers[name] = handler;
+                }
+            },
+
+            /***********************************************************************
+            Unsubscribe from notifications of type &#x60;name&#x60;.
+
+            @method unsubscribe
+            @param {String} name The name of the notifications to unsubscrube from.
+            ************************************************************************/
+            unsubscribe : function (name) {
+
+                if (this._interestHandlers &amp;&amp; this._interestHandlers[name]) {
+                    NotificationManager.unsubscribe(name, this._interestHandlers[name]);
+                    delete this._interestHandlers[name];
+                }
+            },
+
+            /***********************************************************************
+            Unsubscribe from all notifications.
+
+            This gets called automatically during &#x60;destroy()&#x60;, it&#x27;s not very common
+            you would want to call this directly.
+
+            @method unsubscribeAll
+            ************************************************************************/
+            unsubscribeAll : function () {
+
+                var interest;
+
+                for (interest in this._interestHandlers) {
+                    if (this._interestHandlers.hasOwnProperty(interest)) {
+                        this.unsubscribe(interest);
+                    }
+                }
+
+                this._interestHandlers = [];
+            },
+
+            /***********************************************************************
+            Publish a notification.
+
+            @method publish
+            @param {String} name The name of the notification to publish.
+            @param {Function} handler A function to handle the notifications.
+            @param {Any} [...args] The arguments you want to send to the notification handlers.
+            ************************************************************************/
+            publish : function (/*name, arg1, arg2, arg3..., callback*/) {
+                var args = Array.prototype.slice.call(arguments);
+                NotificationManager.publish.apply(NotificationManager, [].concat(args, this));
+            },
+
+            destroy : superfy(function () {
+                this.unsubscribeAll();
+                return this._super.apply(this, arguments);
+            }, Obj.prototype.destroy)
+        });
+
+        Class.buildPrototype = function (props) {
+
+            var p,
+                proto;
+
+            proto = Obj.buildPrototype.call(this, props);
+
+            for (p in props) {
+
+                if (
+                    typeof props[p] === &#x27;function&#x27; &amp;&amp;
+                    typeof this.prototype[p] === &#x27;function&#x27; &amp;&amp;
+                    doesCallSuper.test(props[p])
+                ) {
+                    // this._super() magic, as-needed
+                    proto[p] = superfy(props[p], this.prototype[p]);
+                }
+
+                else if (
+                    typeof props[p] === &#x27;object&#x27; &amp;&amp; (
+                        p === &#x27;concatProps&#x27; ||
+                        ~(props.concatProps || []).indexOf(p) ||
+                        ~(this.prototype.concatProps || []).indexOf(p)
+                    )
+                ) {
+                    proto[p] = merge(this.prototype[p], props[p]);
+                }
+            }
+
+            return proto;
+        };
+
+        return Class;
+    }
+
+).attach(&#x27;$b&#x27;);
+    </pre>
+</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="../assets/vendor/jquery/jquery-1.8.2.min.js"></script>
+<script src="../assets/vendor/bootstrap/js/bootstrap.js"></script>
+<script src="../assets/vendor/prettify/prettify-min.js"></script>
+<script src="../assets/js/yuidoc-bootstrap.js"></script>
+<script>prettyPrint();</script>
+</body>
+</html>

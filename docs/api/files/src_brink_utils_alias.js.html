@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>src/brink/utils/alias.js - brink.js</title>
+    <link rel="stylesheet" href="">
+    <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
+    <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
+    <link rel="stylesheet" href="../assets/css/custom.css">
+    <link rel="stylesheet" href="../assets/css/lucid.css">
+    <link rel="stylesheet" href="../assets/vendor/bootstrap/css/bootstrap.css">
+    <link rel="shortcut icon" type="image/png" href="../assets/favicon.png">
+</head>
+<body class="yui3-skin-sam">
+<div class="navbar navbar-fixed-top">
+    <div class="navbar-inner">
+        <h1 class="brand" style="padding: 10px 16px 10px; height: 20px; line-height: 20px; margin-left: 0;">
+            brink.js
+        </h1>
+	<div class="nav">
+            <li class="divider-vertical"></li>
+            <li>
+                <p class="navbar-text">
+                    API Docs for Version: <b>1.0.0</b>
+                </p>
+            </li>
+        </div>
+        <form class="navbar-form pull-right" style="line-height: 40px; height: 40px;">
+            <input style="margin-top: 0;" type="text" class="search-query" placeholder="Search for classes/modules..." data-obj='["classes/Brink", "classes/Brink.Class", "classes/Brink.CoreObject", "classes/Brink.Object"]'>
+        </form>
+    </div>
+</div>
+<div class="container">
+    <div class="row">
+        <div class="span3">
+	    <div>
+	        <div id="sidebar">
+	        <div id="classes">
+	            <ul id="api-classes" class="nav nav-list">
+	                    <li><a href="../classes/Brink.html">Brink</a></li>
+	                    <li><a href="../classes/Brink.Class.html">Brink.Class</a></li>
+	                    <li><a href="../classes/Brink.CoreObject.html">Brink.CoreObject</a></li>
+	                    <li><a href="../classes/Brink.Object.html">Brink.Object</a></li>
+	            </ul>
+	        </div>
+	        </div>
+	    </div>
+        </div>
+        <div class="span9">
+                <form id="options-form" class="form-inline pull-right">
+                    Show:
+                    <label for="api-show-inherited" class="checkbox">
+                        <input type="checkbox" id="api-show-inherited" checked>
+                        Inherited
+                    </label>
+            
+                    <label for="api-show-protected" class="checkbox">
+                        <input type="checkbox" id="api-show-protected">
+                        Protected
+                    </label>
+            
+                    <label for="api-show-private" class="checkbox">
+                        <input type="checkbox" id="api-show-private">
+                        Private
+                    </label>
+                    <label for="api-show-deprecated" class="checkbox">
+                        <input type="checkbox" id="api-show-deprecated">
+                        Deprecated
+                    </label>
+            
+                </form>
+            
+            <div class="apidocs">
+                <div id="docs-main">
+                    <div class="content">
+<div class="page-header">
+    <h1>src/brink/utils/alias.js <small>File</small></h1>
+</div>
+
+<div class="file">
+    <pre class="prettyprint linenums">
+$b(
+
+    [
+        &#x27;./computed&#x27;
+    ],
+
+    function (computed) {
+
+        &#x27;use strict&#x27;;
+        /***********************************************************************
+        @class Brink
+        ************************************************************************/
+        return function (s) {
+            /***********************************************************************
+            Alias a property to another property on the object.
+
+            &#x60;&#x60;&#x60;javascript
+
+            var obj = $b.Object.create({
+                a : &#x27;test&#x27;,
+                b : $b.alias(&#x27;a&#x27;)
+            });
+
+            console.log(obj.a, obj.b); //test, test
+            this.b = &#x27;test2&#x27;;
+            console.log(obj.a, obj.b); // test2, test2
+
+
+            &#x60;&#x60;&#x60;
+
+            &#x60;&#x60;&#x60;javascript
+
+            var obj = $b.Object.create({a : &#x27;test&#x27;});
+            obj.prop(&#x27;b&#x27;, $b.alias(&#x27;a&#x27;));
+
+            console.log(obj.a, obj.b); // test, test
+
+            obj.b = &#x27;test2&#x27;;
+
+            console.log(obj.a, obj.b); // test2, test2
+
+            &#x60;&#x60;&#x60;
+
+            @method alias
+            @param {String} key The property to alias.
+            ************************************************************************/
+            return computed({
+
+                watch : [s],
+
+                get : function () {
+                    return this.get(s);
+                },
+
+                set : function (val) {
+                    return this.set(s, val);
+                }
+            });
+        };
+    }
+
+).attach(&#x27;$b&#x27;);
+
+    </pre>
+</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="../assets/vendor/jquery/jquery-1.8.2.min.js"></script>
+<script src="../assets/vendor/bootstrap/js/bootstrap.js"></script>
+<script src="../assets/vendor/prettify/prettify-min.js"></script>
+<script src="../assets/js/yuidoc-bootstrap.js"></script>
+<script>prettyPrint();</script>
+</body>
+</html>

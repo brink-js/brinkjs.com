@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>src/brink/core/NotificationManager.js - brink.js</title>
+    <link rel="stylesheet" href="">
+    <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
+    <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
+    <link rel="stylesheet" href="../assets/css/custom.css">
+    <link rel="stylesheet" href="../assets/css/lucid.css">
+    <link rel="stylesheet" href="../assets/vendor/bootstrap/css/bootstrap.css">
+    <link rel="shortcut icon" type="image/png" href="../assets/favicon.png">
+</head>
+<body class="yui3-skin-sam">
+<div class="navbar navbar-fixed-top">
+    <div class="navbar-inner">
+        <h1 class="brand" style="padding: 10px 16px 10px; height: 20px; line-height: 20px; margin-left: 0;">
+            brink.js
+        </h1>
+	<div class="nav">
+            <li class="divider-vertical"></li>
+            <li>
+                <p class="navbar-text">
+                    API Docs for Version: <b>1.0.0</b>
+                </p>
+            </li>
+        </div>
+        <form class="navbar-form pull-right" style="line-height: 40px; height: 40px;">
+            <input style="margin-top: 0;" type="text" class="search-query" placeholder="Search for classes/modules..." data-obj='["classes/Brink", "classes/Brink.Class", "classes/Brink.CoreObject", "classes/Brink.Object"]'>
+        </form>
+    </div>
+</div>
+<div class="container">
+    <div class="row">
+        <div class="span3">
+	    <div>
+	        <div id="sidebar">
+	        <div id="classes">
+	            <ul id="api-classes" class="nav nav-list">
+	                    <li><a href="../classes/Brink.html">Brink</a></li>
+	                    <li><a href="../classes/Brink.Class.html">Brink.Class</a></li>
+	                    <li><a href="../classes/Brink.CoreObject.html">Brink.CoreObject</a></li>
+	                    <li><a href="../classes/Brink.Object.html">Brink.Object</a></li>
+	            </ul>
+	        </div>
+	        </div>
+	    </div>
+        </div>
+        <div class="span9">
+                <form id="options-form" class="form-inline pull-right">
+                    Show:
+                    <label for="api-show-inherited" class="checkbox">
+                        <input type="checkbox" id="api-show-inherited" checked>
+                        Inherited
+                    </label>
+            
+                    <label for="api-show-protected" class="checkbox">
+                        <input type="checkbox" id="api-show-protected">
+                        Protected
+                    </label>
+            
+                    <label for="api-show-private" class="checkbox">
+                        <input type="checkbox" id="api-show-private">
+                        Private
+                    </label>
+                    <label for="api-show-deprecated" class="checkbox">
+                        <input type="checkbox" id="api-show-deprecated">
+                        Deprecated
+                    </label>
+            
+                </form>
+            
+            <div class="apidocs">
+                <div id="docs-main">
+                    <div class="content">
+<div class="page-header">
+    <h1>src/brink/core/NotificationManager.js <small>File</small></h1>
+</div>
+
+<div class="file">
+    <pre class="prettyprint linenums">
+$b(
+
+    [
+        &#x27;../utils/isFunction&#x27;
+    ],
+
+    function (isFunction) {
+
+        &#x27;use strict&#x27;;
+
+        var _interests,
+            _pendingNotifications,
+
+            Notification,
+            NotificationManager;
+
+        _pendingNotifications = [];
+        _interests = {};
+
+        Notification = function (name, args, callback) {
+            this.name = name;
+            this.args = args;
+            this.data = args &amp;&amp; args.length === 1 ? args[0] : null;
+            this.callback = callback;
+            return this;
+        };
+
+        Notification.prototype.data = {};
+        Notification.prototype.name = &#x27;&#x27;;
+        Notification.prototype.dispatcher = null;
+        Notification.prototype.status = 0;
+        Notification.prototype.pointer = 0;
+        Notification.prototype.callback = null;
+
+        Notification.prototype.hold = function () {
+            this.status = 2;
+        };
+
+        Notification.prototype.release = function () {
+            this.status = 1;
+            NotificationManager.releaseNotification(this);
+        };
+
+        Notification.prototype.cancel = function () {
+            this.data = {};
+            this.name = &#x27;&#x27;;
+            this.status = 0;
+            this.pointer = 0;
+            this.dispatcher = null;
+            this.callback = null;
+
+            NotificationManager.cancelNotification(this);
+        };
+
+        Notification.prototype.dispatch = function (obj) {
+            this.status = 1;
+            this.pointer = 0;
+            this.dispatcher = obj;
+            NotificationManager.publishNotification(this);
+        };
+
+        Notification.prototype.respond = function () {
+            if (this.callback) {
+                this.callback.apply(this.dispatcher, arguments);
+                this.cancel();
+            }
+        };
+
+        function _publishNotification(notification) {
+            _pendingNotifications.push(notification);
+            _notifyObjects(notification);
+        }
+
+        function _notifyObjects(notification) {
+
+            var name,
+                subs,
+                len;
+
+            name = notification.name;
+
+            if (_interests[name]) {
+
+                subs = _interests[name].slice(0);
+                len = subs.length;
+
+                while (notification.pointer &lt; len) {
+                    if (notification.status === 1) {
+                        subs[notification.pointer].apply(null, [].concat(notification, notification.args));
+                        notification.pointer ++;
+                    } else {
+                        return;
+                    }
+                }
+
+                subs = null;
+
+                /**
+                * Notified all subscribers, notification is no longer needed,
+                * unless it has a callback to be called later via notification.respond()
+                */
+                if (notification.status === 1 &amp;&amp; !notification.callback) {
+                    notification.cancel();
+                }
+            }
+        }
+
+        NotificationManager = {};
+
+        NotificationManager.subscribe = function (name, fn, priority) {
+
+            priority = isNaN(priority) ? -1 : priority;
+            _interests[name] = _interests[name] || [];
+
+            if (priority &lt;= -1 || priority &gt;= _interests[name].length) {
+                _interests[name].push(fn);
+            } else {
+                _interests[name].splice(priority, 0, fn);
+            }
+        };
+
+        NotificationManager.unsubscribe = function (name, fn) {
+            var fnIndex = _interests[name].indexOf(fn);
+            if (fnIndex &gt; -1) {
+                _interests[name].splice(fnIndex, 1);
+            }
+        };
+
+        NotificationManager.publish = function () {
+
+            var notification,
+                args = Array.prototype.slice.call(arguments),
+                name = args[0],
+                dispatcher = args[args.length - 1],
+                callback = args[args.length - 2];
+
+            callback = isFunction(callback) ? callback : null;
+
+            args = args.slice(1, (callback ? args.length - 2 : args.length - 1));
+
+            notification = new Notification(name, args, callback);
+            notification.status = 1;
+            notification.pointer = 0;
+            notification.dispatcher = dispatcher;
+            _publishNotification(notification);
+        };
+
+        NotificationManager.releaseNotification = function (notification) {
+            notification.status = 1;
+            if (_pendingNotifications.indexOf(notification) &gt; -1) {
+                _notifyObjects(notification);
+            }
+        };
+
+        NotificationManager.cancelNotification = function (notification) {
+            _pendingNotifications.splice(_pendingNotifications.indexOf(notification), 1);
+            notification = null;
+        };
+
+         $b.define(&#x27;notificationManager&#x27;, NotificationManager).attach(&#x27;$b&#x27;);
+
+        return NotificationManager;
+    }
+
+).attach(&#x27;$b.__&#x27;);
+    </pre>
+</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="../assets/vendor/jquery/jquery-1.8.2.min.js"></script>
+<script src="../assets/vendor/bootstrap/js/bootstrap.js"></script>
+<script src="../assets/vendor/prettify/prettify-min.js"></script>
+<script src="../assets/js/yuidoc-bootstrap.js"></script>
+<script>prettyPrint();</script>
+</body>
+</html>
