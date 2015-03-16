@@ -4,7 +4,7 @@
         "description": "MVC.next",
         "url": "http://brinkjs.com",
         "logo": "../../img/brink-logo.png",
-        "version": "0.0.8"
+        "version": "0.0.9"
     },
     "files": {
         "src/brink/core/Class.js": {
@@ -51,6 +51,139 @@
         "src/brink/utils/bindFunction.js": {
             "name": "src/brink/utils/bindFunction.js",
             "modules": {},
+            "classes": {},
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/brink/utils/bindTo.js": {
+            "name": "src/brink/utils/bindTo.js",
+            "modules": {},
+            "classes": {},
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/brink/utils/clone.js": {
+            "name": "src/brink/utils/clone.js",
+            "modules": {},
+            "classes": {},
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/brink/utils/computed.js": {
+            "name": "src/brink/utils/computed.js",
+            "modules": {},
+            "classes": {},
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/brink/utils/configure.js": {
+            "name": "src/brink/utils/configure.js",
+            "modules": {},
+            "classes": {},
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/brink/utils/defineProperty.js": {
+            "name": "src/brink/utils/defineProperty.js",
+            "modules": {},
+            "classes": {},
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/brink/utils/expandProps.js": {
+            "name": "src/brink/utils/expandProps.js",
+            "modules": {},
+            "classes": {},
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/brink/utils/extend.js": {
+            "name": "src/brink/utils/extend.js",
+            "modules": {},
+            "classes": {},
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/brink/utils/flatten.js": {
+            "name": "src/brink/utils/flatten.js",
+            "modules": {},
+            "classes": {},
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/brink/utils/get.js": {
+            "name": "src/brink/utils/get.js",
+            "modules": {},
+            "classes": {},
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/brink/utils/getObjKeyPair.js": {
+            "name": "src/brink/utils/getObjKeyPair.js",
+            "modules": {},
+            "classes": {},
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/brink/utils/inject.js": {
+            "name": "src/brink/utils/inject.js",
+            "modules": {},
+            "classes": {},
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/brink/utils/intersect.js": {
+            "name": "src/brink/utils/intersect.js",
+            "modules": {},
+            "classes": {},
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/brink/utils/isBrinkInstance.js": {
+            "name": "src/brink/utils/isBrinkInstance.js",
+            "modules": {},
+            "classes": {},
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/brink/utils/isBrinkObject.js": {
+            "name": "src/brink/utils/isBrinkObject.js",
+            "modules": {},
+            "classes": {},
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/brink/utils/isFunction.js": {
+            "name": "src/brink/utils/isFunction.js",
+            "modules": {},
+            "classes": {},
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/brink/utils/isObject.js": {
+            "name": "src/brink/utils/isObject.js",
+            "modules": {},
+            "classes": {},
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/brink/utils/merge.js": {
+            "name": "src/brink/utils/merge.js",
+            "modules": {},
+            "classes": {},
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/brink/utils/set.js": {
+            "name": "src/brink/utils/set.js",
+            "modules": {},
+            "classes": {},
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/brink/utils/trim.js": {
+            "name": "src/brink/utils/trim.js",
+            "modules": {},
             "classes": {
                 "Brink": 1
             },
@@ -84,7 +217,7 @@
             "extension_for": [],
             "file": "src/brink/core/CoreObject.js",
             "line": 13,
-            "description": "`Brink.CoreObject` is not meant to be used directly.\n        Instead, use $b.Object or Brink.Class.",
+            "description": "`Brink.CoreObject` is not meant to be used directly.\n        Instead, use {{#crossLink \"Brink.Object\"}}{{/crossLink}} or {{#crossLink \"Brink.Class\"}}{{/crossLink}}.",
             "is_constructor": 1
         },
         "Brink.Object": {
@@ -109,8 +242,8 @@
             "extensions": [],
             "plugin_for": [],
             "extension_for": [],
-            "file": "src/brink/utils/bindFunction.js",
-            "line": 5
+            "file": "src/brink/utils/trim.js",
+            "line": 3
         }
     },
     "classitems": [
@@ -312,7 +445,7 @@
         {
             "file": "src/brink/core/Object.js",
             "line": 371,
-            "description": "Set the value of a property.\n\nThis is identical to doing `obj.key = val` or `obj[key] = val`,\nunless you are supporting <= IE8.\n\nYou can also use this to set nested properties.\nI.e. `obj.set('some.nexted.key', val)`",
+            "description": "Set the value of a property.\n\nThis is identical to doing `obj.key = val` or `obj[key] = val`,\nunless you are supporting <= IE8.\n\nYou can also use this to set nested properties.\nI.e. `obj.set('some.nested.key', val)`",
             "itemtype": "method",
             "name": "set",
             "params": [
@@ -392,7 +525,7 @@
         },
         {
             "file": "src/brink/utils/alias.js",
-            "line": 14,
+            "line": 13,
             "description": "Alias a property to another property on the object.\n\n```javascript\n\nvar obj = $b.Object.create({\n    a : 'test',\n    b : $b.alias('a')\n});\n\nconsole.log(obj.a, obj.b); //test, test\nthis.b = 'test2';\nconsole.log(obj.a, obj.b); // test2, test2\n\n\n```\n\n```javascript\n\nvar obj = $b.Object.create({a : 'test'});\nobj.prop('b', $b.alias('a'));\n\nconsole.log(obj.a, obj.b); // test, test\n\nobj.b = 'test2';\n\nconsole.log(obj.a, obj.b); // test2, test2\n\n```",
             "itemtype": "method",
             "name": "alias",
@@ -403,12 +536,16 @@
                     "type": "String"
                 }
             ],
+            "return": {
+                "description": "A computed property with a getter/setter that references the alias.",
+                "type": "ComputedProperty"
+            },
             "class": "Brink"
         },
         {
             "file": "src/brink/utils/bindFunction.js",
             "line": 11,
-            "description": "Bind a function to a specific scope. Like `Function.prototype.bind()`, but does\nnot modify the original function.\n\n```javascript\n\nvar obj = $b.Object.create({\n    a : 'test'\n});\n\nfunction test () {\n    console.log(this.a);\n}\n\nvar boundTest = $b.bindFunction(test, obj);\nboundTest(); // test\n\n```",
+            "description": "Bind a function to a specific scope. Like `Function.prototype.bind()`. Does\nnot modify the original function.\n\n```javascript\n\nvar obj = $b.Object.create({\n    a : 'test'\n});\n\nfunction test () {\n    console.log(this.a);\n}\n\nvar boundTest = $b.bindFunction(test, obj);\nboundTest(); // test\n\n```",
             "itemtype": "method",
             "name": "bindFunction",
             "params": [
@@ -426,6 +563,390 @@
             "return": {
                 "description": "The bound version of the function.",
                 "type": "Function"
+            },
+            "class": "Brink"
+        },
+        {
+            "file": "src/brink/utils/bindTo.js",
+            "line": 15,
+            "description": "Two-way bind a property on `A` to a property on `B`\n\n```javascript\n\nvar a = $b.Object.create({\n    test : 'test'\n});\n\nvar b = $b.Object.create({\n    test : $b.bindTo(a, 'test')\n});\n\nconsole.log(a.test, b.test); // test, test\nb.test = 'test2';\nconsole.log(a.test, b.test); // test2, test2\n\n```",
+            "itemtype": "method",
+            "name": "bindTo",
+            "params": [
+                {
+                    "name": "obj",
+                    "description": "The object that contains the property to alias.",
+                    "type": "Brink.Object"
+                },
+                {
+                    "name": "key",
+                    "description": "The property to alias.",
+                    "type": "String"
+                }
+            ],
+            "class": "Brink"
+        },
+        {
+            "file": "src/brink/utils/clone.js",
+            "line": 15,
+            "description": "Creates a copy of a plain Object or Array. (Do not use on Brink.Object/Array instances).",
+            "itemtype": "method",
+            "name": "clone",
+            "params": [
+                {
+                    "name": "obj",
+                    "description": "The object or array to clone.",
+                    "type": "Object|Array"
+                },
+                {
+                    "name": "deep",
+                    "description": "Whether or not to deep copy (`true`) or shallow copy (`false`)",
+                    "type": "Boolean",
+                    "optional": true,
+                    "optdefault": "false"
+                }
+            ],
+            "class": "Brink"
+        },
+        {
+            "file": "src/brink/utils/computed.js",
+            "line": 16,
+            "description": "Create a computed property on a {{#crossLink \"Brink.Object\"}}{{/crossLink}}\ninstance or subclass.\n\nThere are two ways to define computed properties, both methods are given below.\n\n**METHOD 1:**\n```javascript\n\nvar Person = $b.Object.extend({\n    firstName : '',\n    lastLame : '',\n    fullName : $b.computed(function () {\n        return this.firstName + ' ' + this.lastName;\n    }, 'firstName', 'lastName')\n});\n\npersonInstance = Person.create({firstName : 'Jane', lastName : 'Doe'});\nconsole.log(personInstance.fullName); // 'Jane Doe';\n\npersonInstance.lastName = 'Smith';\nconsole.log(personInstance.fullName); // 'Jane Smith';\n\n```\n**METHOD 2:**\n```javascript\nvar personInstance = $b.Object.create({\n    firstName : 'Jane',\n    lastName : 'Smith',\n    fullName : $b.computed({\n\n        watch : ['firstName', 'lastName'],\n\n        get : function () {\n            return [this.firstName, this.lastName].join(' ');\n        },\n\n        set : function (val) {\n            val = val.split(' ');\n            this.firstName = val[0];\n            this.lastName = val[1] || '';\n            return val.join(' ');\n        }\n    })\n});\n\nconsole.log(personInstance.fullName); // 'Jane Smith';\npersonInstance.fullName = 'John Doe';\nconsole.log(personInstance.firstName, personInstance.lastName); // 'John', 'Doe';\n\n```\n\nYou can use the second method with a getter AND setter, only a getter or only a setter.\nThe first method only allows supplying a getter.\n\nThe `watch` property is an array of properties that will cause this computed\nproperty to return a new value. In the first method, these properties\ncan be specified after the getter.\n\nIf you just want getter/setter support for a property you can specify an\nempty array for the `watch` property or not define it at all.",
+            "itemtype": "method",
+            "name": "computed",
+            "params": [
+                {
+                    "name": "fn",
+                    "description": "The getter for the computed property.",
+                    "type": "Function"
+                },
+                {
+                    "name": "watch",
+                    "description": "The properties to watch.",
+                    "type": "String",
+                    "multiple": true
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "ComputedProperty"
+            },
+            "class": "Brink"
+        },
+        {
+            "file": "src/brink/utils/configure.js",
+            "line": 15,
+            "description": "Set Brink configuration properties at runtime.",
+            "itemtype": "method",
+            "name": "configure",
+            "params": [
+                {
+                    "name": "obj",
+                    "description": "Object of configuration properties.",
+                    "type": "Object"
+                }
+            ],
+            "class": "Brink"
+        },
+        {
+            "file": "src/brink/utils/defineProperty.js",
+            "line": 14,
+            "description": "Used by `Brink.Object.prototype.prop()` for property descriptors.",
+            "itemtype": "method",
+            "name": "defineProperty",
+            "access": "private",
+            "tagname": "",
+            "class": "Brink"
+        },
+        {
+            "file": "src/brink/utils/extend.js",
+            "line": 12,
+            "description": "Used by `Brink.CoreObject` for inheritance and mixins.",
+            "itemtype": "method",
+            "name": "extend",
+            "access": "private",
+            "tagname": "",
+            "class": "Brink"
+        },
+        {
+            "file": "src/brink/utils/flatten.js",
+            "line": 14,
+            "description": "Flatten an array.\n\nThis will go through each item in the array and if the value\nis also an array, will merge it into the parent array.\n\nDoes not modify the original array.",
+            "itemtype": "method",
+            "name": "flatten",
+            "params": [
+                {
+                    "name": "arr",
+                    "description": "The array to flatten.",
+                    "type": "Array"
+                },
+                {
+                    "name": "keepDuplicates",
+                    "description": "Whether or not to keep duplicate values when flattening.",
+                    "type": "Boolean",
+                    "optional": true,
+                    "optdefault": "false"
+                }
+            ],
+            "return": {
+                "description": "The flattened array.",
+                "type": "Array"
+            },
+            "class": "Brink"
+        },
+        {
+            "file": "src/brink/utils/get.js",
+            "line": 12,
+            "description": "Get a property or nested property on an object. Works on POJOs as well\nas `Brink.Object` instances.\n\n```javascript\nvar obj = {\n    test : 'test',\n    some : {\n        nested : {\n            key : 'test2'\n        }\n    }\n};\n\nconsole.log($b.get(obj, 'test')); // 'test';\nconsole.log($b.get(obj, 'some.nested.key')); // 'test2';\n```",
+            "itemtype": "method",
+            "name": "get",
+            "params": [
+                {
+                    "name": "The",
+                    "description": "object containing the property.",
+                    "type": "Object"
+                },
+                {
+                    "name": "key",
+                    "description": "The property or nested property to get.",
+                    "type": "String"
+                }
+            ],
+            "return": {
+                "description": "The value of the property.",
+                "type": "Any"
+            },
+            "class": "Brink"
+        },
+        {
+            "file": "src/brink/utils/getObjKeyPair.js",
+            "line": 14,
+            "description": "Given an object and a 'nested property', return the sub-object and key name.\n\n```javascript\nvar obj = {\n    some : {\n        nested : {\n            key : 'test'\n        }\n    }\n};\n\nconsole.log($b.getObjKeyPair(obj, 'some.nested.key')) // [ { key: 'test' }, 'key' ]\n```",
+            "itemtype": "method",
+            "name": "getObjKeyPair",
+            "params": [
+                {
+                    "name": "The",
+                    "description": "object containing the nested key.",
+                    "type": "Object"
+                },
+                {
+                    "name": "key",
+                    "description": "The nested key.",
+                    "type": "String"
+                },
+                {
+                    "name": "createIfNull",
+                    "description": "Whether to create objects for nested keys if the path would be invalid.",
+                    "type": "Boolean",
+                    "optional": true,
+                    "optdefault": "false"
+                }
+            ],
+            "return": {
+                "description": "An `Array` of `[obj, unNestedKeyName]`",
+                "type": "Array"
+            },
+            "class": "Brink"
+        },
+        {
+            "file": "src/brink/utils/inject.js",
+            "line": 12,
+            "description": "Inject a property into a subclass' prototype.",
+            "itemtype": "method",
+            "name": "inject",
+            "params": [
+                {
+                    "name": "A",
+                    "description": "single key (`String`) or object of key : value pairs.",
+                    "type": "String|Object"
+                },
+                {
+                    "name": "val",
+                    "description": "If setting a single property, the value of the property.",
+                    "type": "Any",
+                    "optional": true
+                }
+            ],
+            "class": "Brink"
+        },
+        {
+            "file": "src/brink/utils/intersect.js",
+            "line": 14,
+            "description": "Compare two arrays and return an `Array` with items that exist\nin both arrays.",
+            "itemtype": "method",
+            "name": "intersect",
+            "params": [
+                {
+                    "name": "arr1",
+                    "description": "The first `Array` to compare.",
+                    "type": "Array"
+                },
+                {
+                    "name": "arr2",
+                    "description": "The second `Array` to compare.",
+                    "type": "Array"
+                }
+            ],
+            "return": {
+                "description": "`Array` of items that exist in both arrays.",
+                "type": "Array"
+            },
+            "class": "Brink"
+        },
+        {
+            "file": "src/brink/utils/isBrinkInstance.js",
+            "line": 14,
+            "description": "Test whether or not a value is an instance of `Brink.Object` or `Brink.Object` subclass.",
+            "itemtype": "method",
+            "name": "isBrinkInstance",
+            "params": [
+                {
+                    "name": "obj",
+                    "description": "The value to check.",
+                    "type": "Any"
+                }
+            ],
+            "return": {
+                "description": "Whether or not the value is an instance of `Brink.Object`.",
+                "type": "Boolean"
+            },
+            "class": "Brink"
+        },
+        {
+            "file": "src/brink/utils/isBrinkObject.js",
+            "line": 10,
+            "description": "Test whether or not a value is a `Brink.Object` subclass.",
+            "itemtype": "method",
+            "name": "isBrinkObject",
+            "params": [
+                {
+                    "name": "obj",
+                    "description": "The value to check.",
+                    "type": "Any"
+                }
+            ],
+            "return": {
+                "description": "Whether or not the value is a `Brink.Object` subclass.",
+                "type": "Boolean"
+            },
+            "class": "Brink"
+        },
+        {
+            "file": "src/brink/utils/isFunction.js",
+            "line": 10,
+            "description": "Test whether or not a value is a `Function`.",
+            "itemtype": "method",
+            "name": "isFunction",
+            "params": [
+                {
+                    "name": "fn",
+                    "description": "The value to check.",
+                    "type": "Any"
+                }
+            ],
+            "return": {
+                "description": "Whether or not the value is a `Function`.",
+                "type": "Boolean"
+            },
+            "class": "Brink"
+        },
+        {
+            "file": "src/brink/utils/isObject.js",
+            "line": 16,
+            "description": "Test whether or not a value is an `Object`.",
+            "itemtype": "method",
+            "name": "isObject",
+            "params": [
+                {
+                    "name": "obj",
+                    "description": "The value to check.",
+                    "type": "Any"
+                }
+            ],
+            "return": {
+                "description": "Whether or not the value is an `Object`.",
+                "type": "Boolean"
+            },
+            "class": "Brink"
+        },
+        {
+            "file": "src/brink/utils/merge.js",
+            "line": 14,
+            "description": "Merge one `Array` or `Object` into another `Array` or `Object`.\nModifies the first `Object` or `Array` passed in as an argument.",
+            "itemtype": "method",
+            "name": "merge",
+            "params": [
+                {
+                    "name": "obj1",
+                    "description": "The `Object` or `Array` to merge into.",
+                    "type": "Object|Array"
+                },
+                {
+                    "name": "obj2",
+                    "description": "The `Object` or `Array` containing values to merge.",
+                    "type": "Object|Array"
+                },
+                {
+                    "name": "deep",
+                    "description": "Whether or not to deep copy objects when merging (`true`) or shallow copy (`false`)",
+                    "type": "Boolean",
+                    "optional": true,
+                    "optdefault": "false"
+                }
+            ],
+            "return": {
+                "description": "The merged `Object` or `Array`.",
+                "type": "Object|Array"
+            },
+            "class": "Brink"
+        },
+        {
+            "file": "src/brink/utils/set.js",
+            "line": 15,
+            "description": "Set property/properties or a nested property on an `Object`. Works on POJOs as well\nas `Brink.Object` instances.\n\n**Setting single properties:**\n\n```javascript\nvar obj = {};\n\n$b.set(obj, 'test', 'test');\n$b.set(obj, 'some.nested.key', 'test2');\n\nconsole.log(obj); // { test: 'test', some: { nested: { key: 'test2' } } }\n\n```\n\n**Setting multiple properties:**\n\n```javascript\nvar obj = {};\n\n$b.set(obj, {test : 'test', test2 : 'test2'});\n\nconsole.log(obj); // { test: 'test', test2: 'test2' }\n\n```",
+            "itemtype": "method",
+            "name": "set",
+            "params": [
+                {
+                    "name": "obj",
+                    "description": "The object containing the property/properties to set.",
+                    "type": "Object"
+                },
+                {
+                    "name": "key",
+                    "description": "The name of the property to set. If setting multiple properties, an `Object` containing key : value pairs.",
+                    "type": "String|Object"
+                },
+                {
+                    "name": "val",
+                    "description": "The value of the property.",
+                    "type": "Any",
+                    "optional": true
+                }
+            ],
+            "return": {
+                "description": "The Object passed in as the first argument.",
+                "type": "Object"
+            },
+            "class": "Brink"
+        },
+        {
+            "file": "src/brink/utils/trim.js",
+            "line": 10,
+            "description": "Replaces all whitespace at the beginning and end of a `String`.",
+            "itemtype": "method",
+            "name": "trim",
+            "params": [
+                {
+                    "name": "str",
+                    "description": "The `String` to trim.",
+                    "type": "String"
+                }
+            ],
+            "return": {
+                "description": "The trimmed string.",
+                "type": "String"
             },
             "class": "Brink"
         }

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>src/brink/core/CoreObject.js - brink.js</title>
+    <title>src/brink/utils/merge.js - brink.js</title>
     <link rel="stylesheet" href="">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -74,7 +74,7 @@
                 <div id="docs-main">
                     <div class="content">
 <div class="page-header">
-    <h1>src/brink/core/CoreObject.js <small>File</small></h1>
+    <h1>src/brink/utils/merge.js <small>File</small></h1>
 </div>
 
 <div class="file">
@@ -82,111 +82,79 @@
 $b(
 
     [
-        &#x27;../utils/extend&#x27;
+        &#x27;./isObject&#x27;
     ],
 
-    function (extend) {
+    /***********************************************************************
+    @class Brink
+    ************************************************************************/
+    function (isObject) {
 
         &#x27;use strict&#x27;;
 
-        var CoreObject;
-
         /***********************************************************************
+        Merge one &#x60;Array&#x60; or &#x60;Object&#x60; into another &#x60;Array&#x60; or &#x60;Object&#x60;.
+        Modifies the first &#x60;Object&#x60; or &#x60;Array&#x60; passed in as an argument.
 
-        &#x60;Brink.CoreObject&#x60; is not meant to be used directly.
-        Instead, use {{#crossLink &quot;Brink.Object&quot;}}{{/crossLink}} or {{#crossLink &quot;Brink.Class&quot;}}{{/crossLink}}.
-
-        @class Brink.CoreObject
-        @constructor
+        @method merge
+        @param {Object|Array} obj1 The &#x60;Object&#x60; or &#x60;Array&#x60; to merge into.
+        @param {Object|Array} obj2 The &#x60;Object&#x60; or &#x60;Array&#x60; containing values to merge.
+        @param {Boolean} [deep=false] Whether or not to deep copy objects when merging (&#x60;true&#x60;) or shallow copy (&#x60;false&#x60;)
+        @return {Object|Array} The merged &#x60;Object&#x60; or &#x60;Array&#x60;.
         ************************************************************************/
-        CoreObject = function () {};
+        return function merge (a, b, deep) {
 
-        CoreObject.extend = function (props) {
+            var p,
+                o,
+                d;
 
-            var C,
-                i,
-                proto;
-
-            if (arguments.length &gt; 1) {
-
-                i = 0;
-                C = this;
-
-                while (i &lt; arguments.length - 1) {
-                    C = C.extend(arguments[i]);
-                    i ++;
-                }
-
-                return C;
+            function arrayOrObject (o) {
+                return Array.isArray(o) ? [] : isObject(o) ? {} : false;
             }
 
-            proto = this.buildPrototype.call(this, props);
+            if (Array.isArray(a) || Array.isArray(b)) {
 
-            function BrinkObject (callInit) {
+                a = a || [];
+                b = b || [];
 
-                var fn;
+                for (p = 0; p &lt; b.length; p ++) {
 
-                if (callInit === true || callInit === false) {
+                    o = b[p];
 
-                    if (callInit) {
-                        fn = this.__init || this.init || this.constructor;
-                        fn.call(this);
+                    if (!~a.indexOf(o)) {
+                        d = deep ? arrayOrObject(o) : null;
+                        a.push(d ? merge(d, o, true) : o);
+                    }
+                }
+                return a;
+            }
+
+            else if (isObject(a) || isObject(b)) {
+
+                a = a || {};
+                b = b || {};
+
+                for (p in b) {
+
+                    o = b[p];
+
+                    if (!b.hasOwnProperty(p)) {
+                        continue;
                     }
 
-                    return this;
+                    d = deep ? arrayOrObject(o) : null;
+                    a[p] = d ? merge(d, o, true) : o;
                 }
 
-                return BrinkObject.extend.apply(BrinkObject, arguments);
+                return a;
             }
 
-            BrinkObject.prototype = proto;
-            extend(BrinkObject, this, proto.statics || {});
+            return null;
 
-            BrinkObject.prototype.constructor = BrinkObject;
-
-            return BrinkObject;
         };
-
-        CoreObject.buildPrototype = function (props) {
-            var BrinkPrototype = function () {};
-            BrinkPrototype.prototype = this.prototype;
-            return extend(new BrinkPrototype(), props);
-        };
-
-        CoreObject.inject = function (p, v) {
-
-            if (typeof p === &#x27;object&#x27;) {
-                extend(this.prototype, p);
-            }
-
-            else {
-                this.prototype[p] = v;
-            }
-
-            return this;
-        };
-
-        CoreObject.create = function () {
-
-            var init,
-                instance;
-
-            instance = new this(false);
-
-            init = instance.__init || instance.init;
-
-            if (init) {
-                instance = init.apply(instance, arguments) || instance;
-            }
-
-            return instance;
-        };
-
-        return CoreObject;
     }
 
 ).attach(&#x27;$b&#x27;);
-
     </pre>
 </div>
                     </div>

@@ -21,7 +21,7 @@
             <li class="divider-vertical"></li>
             <li>
                 <p class="navbar-text">
-                    API Docs for Version: <b>0.0.8</b>
+                    API Docs for Version: <b>0.0.9</b>
                 </p>
             </li>
         </div>
@@ -85,46 +85,48 @@ $b(
         &#x27;./computed&#x27;
     ],
 
+    /***********************************************************************
+    @class Brink
+    ************************************************************************/
     function (computed) {
 
         &#x27;use strict&#x27;;
         /***********************************************************************
-        @class Brink
+        Alias a property to another property on the object.
+
+        &#x60;&#x60;&#x60;javascript
+
+        var obj = $b.Object.create({
+            a : &#x27;test&#x27;,
+            b : $b.alias(&#x27;a&#x27;)
+        });
+
+        console.log(obj.a, obj.b); //test, test
+        this.b = &#x27;test2&#x27;;
+        console.log(obj.a, obj.b); // test2, test2
+
+
+        &#x60;&#x60;&#x60;
+
+        &#x60;&#x60;&#x60;javascript
+
+        var obj = $b.Object.create({a : &#x27;test&#x27;});
+        obj.prop(&#x27;b&#x27;, $b.alias(&#x27;a&#x27;));
+
+        console.log(obj.a, obj.b); // test, test
+
+        obj.b = &#x27;test2&#x27;;
+
+        console.log(obj.a, obj.b); // test2, test2
+
+        &#x60;&#x60;&#x60;
+
+        @method alias
+        @param {String} key The property to alias.
+        @return {ComputedProperty} A computed property with a getter/setter that references the alias.
         ************************************************************************/
         return function (s) {
-            /***********************************************************************
-            Alias a property to another property on the object.
 
-            &#x60;&#x60;&#x60;javascript
-
-            var obj = $b.Object.create({
-                a : &#x27;test&#x27;,
-                b : $b.alias(&#x27;a&#x27;)
-            });
-
-            console.log(obj.a, obj.b); //test, test
-            this.b = &#x27;test2&#x27;;
-            console.log(obj.a, obj.b); // test2, test2
-
-
-            &#x60;&#x60;&#x60;
-
-            &#x60;&#x60;&#x60;javascript
-
-            var obj = $b.Object.create({a : &#x27;test&#x27;});
-            obj.prop(&#x27;b&#x27;, $b.alias(&#x27;a&#x27;));
-
-            console.log(obj.a, obj.b); // test, test
-
-            obj.b = &#x27;test2&#x27;;
-
-            console.log(obj.a, obj.b); // test2, test2
-
-            &#x60;&#x60;&#x60;
-
-            @method alias
-            @param {String} key The property to alias.
-            ************************************************************************/
             return computed({
 
                 watch : [s],

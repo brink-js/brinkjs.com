@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>src/brink/core/CoreObject.js - brink.js</title>
+    <title>src/brink/utils/set.js - brink.js</title>
     <link rel="stylesheet" href="">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -74,7 +74,7 @@
                 <div id="docs-main">
                     <div class="content">
 <div class="page-header">
-    <h1>src/brink/core/CoreObject.js <small>File</small></h1>
+    <h1>src/brink/utils/set.js <small>File</small></h1>
 </div>
 
 <div class="file">
@@ -82,107 +82,103 @@
 $b(
 
     [
-        &#x27;../utils/extend&#x27;
+        &#x27;./get&#x27;,
+        &#x27;./getObjKeyPair&#x27;
     ],
 
-    function (extend) {
+    /***********************************************************************
+    @class Brink
+    ************************************************************************/
+    function (get, getObjKeyPair) {
 
         &#x27;use strict&#x27;;
 
-        var CoreObject;
-
         /***********************************************************************
+        Set property/properties or a nested property on an &#x60;Object&#x60;. Works on POJOs as well
+        as &#x60;Brink.Object&#x60; instances.
 
-        &#x60;Brink.CoreObject&#x60; is not meant to be used directly.
-        Instead, use {{#crossLink &quot;Brink.Object&quot;}}{{/crossLink}} or {{#crossLink &quot;Brink.Class&quot;}}{{/crossLink}}.
+        **Setting single properties:**
 
-        @class Brink.CoreObject
-        @constructor
+        &#x60;&#x60;&#x60;javascript
+        var obj = {};
+
+        $b.set(obj, &#x27;test&#x27;, &#x27;test&#x27;);
+        $b.set(obj, &#x27;some.nested.key&#x27;, &#x27;test2&#x27;);
+
+        console.log(obj); // { test: &#x27;test&#x27;, some: { nested: { key: &#x27;test2&#x27; } } }
+
+        &#x60;&#x60;&#x60;
+
+        **Setting multiple properties:**
+
+        &#x60;&#x60;&#x60;javascript
+        var obj = {};
+
+        $b.set(obj, {test : &#x27;test&#x27;, test2 : &#x27;test2&#x27;});
+
+        console.log(obj); // { test: &#x27;test&#x27;, test2: &#x27;test2&#x27; }
+
+        &#x60;&#x60;&#x60;
+
+        @method set
+        @param {Object} obj The object containing the property/properties to set.
+        @param {String|Object} key The name of the property to set. If setting multiple properties, an &#x60;Object&#x60; containing key : value pairs.
+        @param {Any} [val] The value of the property.
+        @return {Object} The Object passed in as the first argument.
         ************************************************************************/
-        CoreObject = function () {};
+        var set = function (obj, key, val, quiet, skipCompare) {
 
-        CoreObject.extend = function (props) {
+            var i;
 
-            var C,
-                i,
-                proto;
+            if (typeof key === &#x27;string&#x27;) {
 
-            if (arguments.length &gt; 1) {
+                obj = getObjKeyPair(obj, key, true);
+                key = obj[1];
+                obj = obj[0];
 
-                i = 0;
-                C = this;
+                if (skipCompare || get(obj, key) !== val) {
 
-                while (i &lt; arguments.length - 1) {
-                    C = C.extend(arguments[i]);
-                    i ++;
-                }
+                    if (obj instanceof $b.Object) {
 
-                return C;
-            }
+                        if (obj.__meta.setters[key]) {
+                            val = obj.__meta.setters[key].call(obj, val, key);
+                        }
 
-            proto = this.buildPrototype.call(this, props);
+                        else {
 
-            function BrinkObject (callInit) {
+                            if (obj.__meta.pojoStyle) {
+                                obj[key] = val;
+                            }
 
-                var fn;
+                            obj.__meta.values[key] = val;
+                        }
 
-                if (callInit === true || callInit === false) {
-
-                    if (callInit) {
-                        fn = this.__init || this.init || this.constructor;
-                        fn.call(this);
+                        if (!quiet) {
+                            obj.propertyDidChange(key);
+                        }
                     }
 
-                    return this;
+                    else {
+                        obj[key] = val;
+                    }
                 }
 
-                return BrinkObject.extend.apply(BrinkObject, arguments);
+                return obj;
             }
 
-            BrinkObject.prototype = proto;
-            extend(BrinkObject, this, proto.statics || {});
+            else if (arguments.length === 2) {
 
-            BrinkObject.prototype.constructor = BrinkObject;
+                for (i in key) {
+                    set(obj, i, key[i], val, quiet);
+                }
 
-            return BrinkObject;
-        };
-
-        CoreObject.buildPrototype = function (props) {
-            var BrinkPrototype = function () {};
-            BrinkPrototype.prototype = this.prototype;
-            return extend(new BrinkPrototype(), props);
-        };
-
-        CoreObject.inject = function (p, v) {
-
-            if (typeof p === &#x27;object&#x27;) {
-                extend(this.prototype, p);
+                return obj;
             }
 
-            else {
-                this.prototype[p] = v;
-            }
-
-            return this;
+            $b.error(&#x27;Tried to call &#x60;set&#x60; with unsupported arguments&#x27;, arguments);
         };
 
-        CoreObject.create = function () {
-
-            var init,
-                instance;
-
-            instance = new this(false);
-
-            init = instance.__init || instance.init;
-
-            if (init) {
-                instance = init.apply(instance, arguments) || instance;
-            }
-
-            return instance;
-        };
-
-        return CoreObject;
+        return set;
     }
 
 ).attach(&#x27;$b&#x27;);

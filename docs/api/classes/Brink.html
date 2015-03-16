@@ -21,7 +21,7 @@
             <li class="divider-vertical"></li>
             <li>
                 <p class="navbar-text">
-                    API Docs for Version: <b>0.0.8</b>
+                    API Docs for Version: <b>0.0.9</b>
                 </p>
             </li>
         </div>
@@ -93,6 +93,24 @@
 			<ul>
 				<li><a href="#method-alias"><span class="im">alias</span>(<span class="ia">key</span>)</a></li>
 				<li><a href="#method-bindFunction"><span class="im">bindFunction</span>(<span class="ia">fn</span><span class="ia">The</span>)</a></li>
+				<li><a href="#method-bindTo"><span class="im">bindTo</span>(<span class="ia">obj</span><span class="ia">key</span>)</a></li>
+				<li><a href="#method-clone"><span class="im">clone</span>(<span class="ia">obj</span><span class="ia">deep</span>)</a></li>
+				<li><a href="#method-computed"><span class="im">computed</span>(<span class="ia">fn</span><span class="ia">watch</span>)</a></li>
+				<li><a href="#method-configure"><span class="im">configure</span>(<span class="ia">obj</span>)</a></li>
+				<li><a href="#method-defineProperty"><span class="im">defineProperty</span>()</a></li>
+				<li><a href="#method-extend"><span class="im">extend</span>()</a></li>
+				<li><a href="#method-flatten"><span class="im">flatten</span>(<span class="ia">arr</span><span class="ia">keepDuplicates</span>)</a></li>
+				<li><a href="#method-get"><span class="im">get</span>(<span class="ia">The</span><span class="ia">key</span>)</a></li>
+				<li><a href="#method-getObjKeyPair"><span class="im">getObjKeyPair</span>(<span class="ia">The</span><span class="ia">key</span><span class="ia">createIfNull</span>)</a></li>
+				<li><a href="#method-inject"><span class="im">inject</span>(<span class="ia">A</span><span class="ia">val</span>)</a></li>
+				<li><a href="#method-intersect"><span class="im">intersect</span>(<span class="ia">arr1</span><span class="ia">arr2</span>)</a></li>
+				<li><a href="#method-isBrinkInstance"><span class="im">isBrinkInstance</span>(<span class="ia">obj</span>)</a></li>
+				<li><a href="#method-isBrinkObject"><span class="im">isBrinkObject</span>(<span class="ia">obj</span>)</a></li>
+				<li><a href="#method-isFunction"><span class="im">isFunction</span>(<span class="ia">fn</span>)</a></li>
+				<li><a href="#method-isObject"><span class="im">isObject</span>(<span class="ia">obj</span>)</a></li>
+				<li><a href="#method-merge"><span class="im">merge</span>(<span class="ia">obj1</span><span class="ia">obj2</span><span class="ia">deep</span>)</a></li>
+				<li><a href="#method-set"><span class="im">set</span>(<span class="ia">obj</span><span class="ia">key</span><span class="ia">val</span>)</a></li>
+				<li><a href="#method-trim"><span class="im">trim</span>(<span class="ia">str</span>)</a></li>
 			</ul>
 		</li>
 
@@ -118,6 +136,9 @@
 				</li>
 			</ul><span class="paren">)</span>
 		</div>
+		<span class="returns-inline">
+			<span class="type">ComputedProperty</span>
+		</span>
 	</div>
 
 
@@ -128,7 +149,7 @@
 	<div class="meta">
 				<p>
 				Defined in
-		<a href="../files/src_brink_utils_alias.js.html#l14"><code>src&#x2F;brink&#x2F;utils&#x2F;alias.js:14</code></a>
+		<a href="../files/src_brink_utils_alias.js.html#l13"><code>src&#x2F;brink&#x2F;utils&#x2F;alias.js:13</code></a>
 		</p>
 
 
@@ -177,6 +198,15 @@ console.log(obj.a, obj.b); // test2, test2
 			</ul>
 		</div>
 
+		<div class="returns">
+			<h4>Returns:</h4>
+
+			<div class="returns-description">
+						<span class="type">ComputedProperty</span>:
+					<p>A computed property with a getter/setter that references the alias.</p>
+
+			</div>
+		</div>
 
 </div>
 <div id="method-bindFunction" class="method item">
@@ -213,7 +243,7 @@ console.log(obj.a, obj.b); // test2, test2
 
 	</div>
 
-	<div class="description"><p>Bind a function to a specific scope. Like <code>Function.prototype.bind()</code>, but does
+	<div class="description"><p>Bind a function to a specific scope. Like <code>Function.prototype.bind()</code>. Does
 not modify the original function.</p>
 <pre class="code prettyprint"><code class="language-javascript">
 var obj = $b.Object.create({
@@ -261,6 +291,1265 @@ boundTest(); // test
 			<div class="returns-description">
 						<span class="type">Function</span>:
 					<p>The bound version of the function.</p>
+
+			</div>
+		</div>
+
+</div>
+<div id="method-bindTo" class="method item">
+	<div class="method-signature">
+	<span class="name"><code>bindTo</code></span>
+
+		<div class="args">
+			<span class="paren">(</span><ul class="args-list inline commas">
+				<li class="arg">
+						<code>obj</code>
+				</li>
+				<li class="arg">
+						<code>key</code>
+				</li>
+			</ul><span class="paren">)</span>
+		</div>
+	</div>
+
+
+
+
+
+
+	<div class="meta">
+				<p>
+				Defined in
+		<a href="../files/src_brink_utils_bindTo.js.html#l15"><code>src&#x2F;brink&#x2F;utils&#x2F;bindTo.js:15</code></a>
+		</p>
+
+
+
+	</div>
+
+	<div class="description"><p>Two-way bind a property on <code>A</code> to a property on <code>B</code></p>
+<pre class="code prettyprint"><code class="language-javascript">
+var a = $b.Object.create({
+    test : 'test'
+});
+
+var b = $b.Object.create({
+    test : $b.bindTo(a, 'test')
+});
+
+console.log(a.test, b.test); // test, test
+b.test = 'test2';
+console.log(a.test, b.test); // test2, test2
+
+</code></pre>
+</div>
+
+		<div class="params">
+			<h4>Parameters:</h4>
+
+			<ul class="params-list">
+				<li class="param">
+						<code class="param-name">obj</code>
+						<span class="type"><a href="../classes/Brink.Object.html" class="crosslink">Brink.Object</a></span>
+
+
+					<div class="param-description"><p>The object that contains the property to alias.</p>
+</div>
+
+				</li>
+				<li class="param">
+						<code class="param-name">key</code>
+						<span class="type">String</span>
+
+
+					<div class="param-description"><p>The property to alias.</p>
+</div>
+
+				</li>
+			</ul>
+		</div>
+
+
+</div>
+<div id="method-clone" class="method item">
+	<div class="method-signature">
+	<span class="name"><code>clone</code></span>
+
+		<div class="args">
+			<span class="paren">(</span><ul class="args-list inline commas">
+				<li class="arg">
+						<code>obj</code>
+				</li>
+				<li class="arg">
+						<code class="optional">deep=false</code>
+				</li>
+			</ul><span class="paren">)</span>
+		</div>
+	</div>
+
+
+
+
+
+
+	<div class="meta">
+				<p>
+				Defined in
+		<a href="../files/src_brink_utils_clone.js.html#l15"><code>src&#x2F;brink&#x2F;utils&#x2F;clone.js:15</code></a>
+		</p>
+
+
+
+	</div>
+
+	<div class="description"><p>Creates a copy of a plain Object or Array. (Do not use on Brink.Object/Array instances).</p>
+</div>
+
+		<div class="params">
+			<h4>Parameters:</h4>
+
+			<ul class="params-list">
+				<li class="param">
+						<code class="param-name">obj</code>
+						<span class="type">Object  |  Array</span>
+
+
+					<div class="param-description"><p>The object or array to clone.</p>
+</div>
+
+				</li>
+				<li class="param">
+						<code class="param-name optional">[deep=false]</code>
+						<span class="type">Boolean</span>
+						<span class="flag optional" title="This parameter is optional.">optional</span>
+
+
+					<div class="param-description"><p>Whether or not to deep copy (<code>true</code>) or shallow copy (<code>false</code>)</p>
+</div>
+
+				</li>
+			</ul>
+		</div>
+
+
+</div>
+<div id="method-computed" class="method item">
+	<div class="method-signature">
+	<span class="name"><code>computed</code></span>
+
+		<div class="args">
+			<span class="paren">(</span><ul class="args-list inline commas">
+				<li class="arg">
+						<code>fn</code>
+				</li>
+				<li class="arg">
+						<code>watch</code>
+				</li>
+			</ul><span class="paren">)</span>
+		</div>
+		<span class="returns-inline">
+			<span class="type">ComputedProperty</span>
+		</span>
+	</div>
+
+
+
+
+
+
+	<div class="meta">
+				<p>
+				Defined in
+		<a href="../files/src_brink_utils_computed.js.html#l16"><code>src&#x2F;brink&#x2F;utils&#x2F;computed.js:16</code></a>
+		</p>
+
+
+
+	</div>
+
+	<div class="description"><p>Create a computed property on a <a href="../classes/Brink.Object.html" class="crosslink">Brink.Object</a>
+instance or subclass.</p>
+<p>There are two ways to define computed properties, both methods are given below.</p>
+<p><strong>METHOD 1:</strong></p>
+<pre class="code prettyprint"><code class="language-javascript">
+var Person = $b.Object.extend({
+    firstName : '',
+    lastLame : '',
+    fullName : $b.computed(function () {
+        return this.firstName + ' ' + this.lastName;
+    }, 'firstName', 'lastName')
+});
+
+personInstance = Person.create({firstName : 'Jane', lastName : 'Doe'});
+console.log(personInstance.fullName); // 'Jane Doe';
+
+personInstance.lastName = 'Smith';
+console.log(personInstance.fullName); // 'Jane Smith';
+
+</code></pre>
+<p><strong>METHOD 2:</strong></p>
+<pre class="code prettyprint"><code class="language-javascript">var personInstance = $b.Object.create({
+    firstName : 'Jane',
+    lastName : 'Smith',
+    fullName : $b.computed({
+
+        watch : ['firstName', 'lastName'],
+
+        get : function () {
+            return [this.firstName, this.lastName].join(' ');
+        },
+
+        set : function (val) {
+            val = val.split(' ');
+            this.firstName = val[0];
+            this.lastName = val[1] || '';
+            return val.join(' ');
+        }
+    })
+});
+
+console.log(personInstance.fullName); // 'Jane Smith';
+personInstance.fullName = 'John Doe';
+console.log(personInstance.firstName, personInstance.lastName); // 'John', 'Doe';
+
+</code></pre>
+<p>You can use the second method with a getter AND setter, only a getter or only a setter.
+The first method only allows supplying a getter.</p>
+<p>The <code>watch</code> property is an array of properties that will cause this computed
+property to return a new value. In the first method, these properties
+can be specified after the getter.</p>
+<p>If you just want getter/setter support for a property you can specify an
+empty array for the <code>watch</code> property or not define it at all.</p>
+</div>
+
+		<div class="params">
+			<h4>Parameters:</h4>
+
+			<ul class="params-list">
+				<li class="param">
+						<code class="param-name">fn</code>
+						<span class="type">Function</span>
+
+
+					<div class="param-description"><p>The getter for the computed property.</p>
+</div>
+
+				</li>
+				<li class="param">
+						<code class="param-name">watch</code>
+						<span class="type">String</span>
+
+						<span class="flag multiple" title="This argument may occur one or more times.">multiple</span>
+
+					<div class="param-description"><p>The properties to watch.</p>
+</div>
+
+				</li>
+			</ul>
+		</div>
+
+		<div class="returns">
+			<h4>Returns:</h4>
+
+			<div class="returns-description">
+						<span class="type">ComputedProperty</span>
+			</div>
+		</div>
+
+</div>
+<div id="method-configure" class="method item">
+	<div class="method-signature">
+	<span class="name"><code>configure</code></span>
+
+		<div class="args">
+			<span class="paren">(</span><ul class="args-list inline commas">
+				<li class="arg">
+						<code>obj</code>
+				</li>
+			</ul><span class="paren">)</span>
+		</div>
+	</div>
+
+
+
+
+
+
+	<div class="meta">
+				<p>
+				Defined in
+		<a href="../files/src_brink_utils_configure.js.html#l15"><code>src&#x2F;brink&#x2F;utils&#x2F;configure.js:15</code></a>
+		</p>
+
+
+
+	</div>
+
+	<div class="description"><p>Set Brink configuration properties at runtime.</p>
+</div>
+
+		<div class="params">
+			<h4>Parameters:</h4>
+
+			<ul class="params-list">
+				<li class="param">
+						<code class="param-name">obj</code>
+						<span class="type">Object</span>
+
+
+					<div class="param-description"><p>Object of configuration properties.</p>
+</div>
+
+				</li>
+			</ul>
+		</div>
+
+
+</div>
+<div id="method-defineProperty" class="method item private">
+	<div class="method-signature">
+	<span class="name"><code>defineProperty</code></span>
+
+		<span class="paren">()</span>
+	</div>
+
+
+		<span class="flag private">private</span>
+
+
+
+
+	<div class="meta">
+				<p>
+				Defined in
+		<a href="../files/src_brink_utils_defineProperty.js.html#l14"><code>src&#x2F;brink&#x2F;utils&#x2F;defineProperty.js:14</code></a>
+		</p>
+
+
+
+	</div>
+
+	<div class="description"><p>Used by <code>Brink.Object.prototype.prop()</code> for property descriptors.</p>
+</div>
+
+
+
+</div>
+<div id="method-extend" class="method item private">
+	<div class="method-signature">
+	<span class="name"><code>extend</code></span>
+
+		<span class="paren">()</span>
+	</div>
+
+
+		<span class="flag private">private</span>
+
+
+
+
+	<div class="meta">
+				<p>
+				Defined in
+		<a href="../files/src_brink_utils_extend.js.html#l12"><code>src&#x2F;brink&#x2F;utils&#x2F;extend.js:12</code></a>
+		</p>
+
+
+
+	</div>
+
+	<div class="description"><p>Used by <code>Brink.CoreObject</code> for inheritance and mixins.</p>
+</div>
+
+
+
+</div>
+<div id="method-flatten" class="method item">
+	<div class="method-signature">
+	<span class="name"><code>flatten</code></span>
+
+		<div class="args">
+			<span class="paren">(</span><ul class="args-list inline commas">
+				<li class="arg">
+						<code>arr</code>
+				</li>
+				<li class="arg">
+						<code class="optional">keepDuplicates=false</code>
+				</li>
+			</ul><span class="paren">)</span>
+		</div>
+		<span class="returns-inline">
+			<span class="type">Array</span>
+		</span>
+	</div>
+
+
+
+
+
+
+	<div class="meta">
+				<p>
+				Defined in
+		<a href="../files/src_brink_utils_flatten.js.html#l14"><code>src&#x2F;brink&#x2F;utils&#x2F;flatten.js:14</code></a>
+		</p>
+
+
+
+	</div>
+
+	<div class="description"><p>Flatten an array.</p>
+<p>This will go through each item in the array and if the value
+is also an array, will merge it into the parent array.</p>
+<p>Does not modify the original array.</p>
+</div>
+
+		<div class="params">
+			<h4>Parameters:</h4>
+
+			<ul class="params-list">
+				<li class="param">
+						<code class="param-name">arr</code>
+						<span class="type">Array</span>
+
+
+					<div class="param-description"><p>The array to flatten.</p>
+</div>
+
+				</li>
+				<li class="param">
+						<code class="param-name optional">[keepDuplicates=false]</code>
+						<span class="type">Boolean</span>
+						<span class="flag optional" title="This parameter is optional.">optional</span>
+
+
+					<div class="param-description"><p>Whether or not to keep duplicate values when flattening.</p>
+</div>
+
+				</li>
+			</ul>
+		</div>
+
+		<div class="returns">
+			<h4>Returns:</h4>
+
+			<div class="returns-description">
+						<span class="type">Array</span>:
+					<p>The flattened array.</p>
+
+			</div>
+		</div>
+
+</div>
+<div id="method-get" class="method item">
+	<div class="method-signature">
+	<span class="name"><code>get</code></span>
+
+		<div class="args">
+			<span class="paren">(</span><ul class="args-list inline commas">
+				<li class="arg">
+						<code>The</code>
+				</li>
+				<li class="arg">
+						<code>key</code>
+				</li>
+			</ul><span class="paren">)</span>
+		</div>
+		<span class="returns-inline">
+			<span class="type">Any</span>
+		</span>
+	</div>
+
+
+
+
+
+
+	<div class="meta">
+				<p>
+				Defined in
+		<a href="../files/src_brink_utils_get.js.html#l12"><code>src&#x2F;brink&#x2F;utils&#x2F;get.js:12</code></a>
+		</p>
+
+
+
+	</div>
+
+	<div class="description"><p>Get a property or nested property on an object. Works on POJOs as well
+as <code>Brink.Object</code> instances.</p>
+<pre class="code prettyprint"><code class="language-javascript">var obj = {
+    test : 'test',
+    some : {
+        nested : {
+            key : 'test2'
+        }
+    }
+};
+
+console.log($b.get(obj, 'test')); // 'test';
+console.log($b.get(obj, 'some.nested.key')); // 'test2';
+</code></pre>
+</div>
+
+		<div class="params">
+			<h4>Parameters:</h4>
+
+			<ul class="params-list">
+				<li class="param">
+						<code class="param-name">The</code>
+						<span class="type">Object</span>
+
+
+					<div class="param-description"><p>object containing the property.</p>
+</div>
+
+				</li>
+				<li class="param">
+						<code class="param-name">key</code>
+						<span class="type">String</span>
+
+
+					<div class="param-description"><p>The property or nested property to get.</p>
+</div>
+
+				</li>
+			</ul>
+		</div>
+
+		<div class="returns">
+			<h4>Returns:</h4>
+
+			<div class="returns-description">
+						<span class="type">Any</span>:
+					<p>The value of the property.</p>
+
+			</div>
+		</div>
+
+</div>
+<div id="method-getObjKeyPair" class="method item">
+	<div class="method-signature">
+	<span class="name"><code>getObjKeyPair</code></span>
+
+		<div class="args">
+			<span class="paren">(</span><ul class="args-list inline commas">
+				<li class="arg">
+						<code>The</code>
+				</li>
+				<li class="arg">
+						<code>key</code>
+				</li>
+				<li class="arg">
+						<code class="optional">createIfNull=false</code>
+				</li>
+			</ul><span class="paren">)</span>
+		</div>
+		<span class="returns-inline">
+			<span class="type">Array</span>
+		</span>
+	</div>
+
+
+
+
+
+
+	<div class="meta">
+				<p>
+				Defined in
+		<a href="../files/src_brink_utils_getObjKeyPair.js.html#l14"><code>src&#x2F;brink&#x2F;utils&#x2F;getObjKeyPair.js:14</code></a>
+		</p>
+
+
+
+	</div>
+
+	<div class="description"><p>Given an object and a 'nested property', return the sub-object and key name.</p>
+<pre class="code prettyprint"><code class="language-javascript">var obj = {
+    some : {
+        nested : {
+            key : 'test'
+        }
+    }
+};
+
+console.log($b.getObjKeyPair(obj, 'some.nested.key')) // [ { key: 'test' }, 'key' ]
+</code></pre>
+</div>
+
+		<div class="params">
+			<h4>Parameters:</h4>
+
+			<ul class="params-list">
+				<li class="param">
+						<code class="param-name">The</code>
+						<span class="type">Object</span>
+
+
+					<div class="param-description"><p>object containing the nested key.</p>
+</div>
+
+				</li>
+				<li class="param">
+						<code class="param-name">key</code>
+						<span class="type">String</span>
+
+
+					<div class="param-description"><p>The nested key.</p>
+</div>
+
+				</li>
+				<li class="param">
+						<code class="param-name optional">[createIfNull=false]</code>
+						<span class="type">Boolean</span>
+						<span class="flag optional" title="This parameter is optional.">optional</span>
+
+
+					<div class="param-description"><p>Whether to create objects for nested keys if the path would be invalid.</p>
+</div>
+
+				</li>
+			</ul>
+		</div>
+
+		<div class="returns">
+			<h4>Returns:</h4>
+
+			<div class="returns-description">
+						<span class="type">Array</span>:
+					<p>An <code>Array</code> of <code>[obj, unNestedKeyName]</code></p>
+
+			</div>
+		</div>
+
+</div>
+<div id="method-inject" class="method item">
+	<div class="method-signature">
+	<span class="name"><code>inject</code></span>
+
+		<div class="args">
+			<span class="paren">(</span><ul class="args-list inline commas">
+				<li class="arg">
+						<code>A</code>
+				</li>
+				<li class="arg">
+						<code class="optional">val</code>
+				</li>
+			</ul><span class="paren">)</span>
+		</div>
+	</div>
+
+
+
+
+
+
+	<div class="meta">
+				<p>
+				Defined in
+		<a href="../files/src_brink_utils_inject.js.html#l12"><code>src&#x2F;brink&#x2F;utils&#x2F;inject.js:12</code></a>
+		</p>
+
+
+
+	</div>
+
+	<div class="description"><p>Inject a property into a subclass' prototype.</p>
+</div>
+
+		<div class="params">
+			<h4>Parameters:</h4>
+
+			<ul class="params-list">
+				<li class="param">
+						<code class="param-name">A</code>
+						<span class="type">String  |  Object</span>
+
+
+					<div class="param-description"><p>single key (<code>String</code>) or object of key : value pairs.</p>
+</div>
+
+				</li>
+				<li class="param">
+						<code class="param-name optional">[val]</code>
+						<span class="type">Any</span>
+						<span class="flag optional" title="This parameter is optional.">optional</span>
+
+
+					<div class="param-description"><p>If setting a single property, the value of the property.</p>
+</div>
+
+				</li>
+			</ul>
+		</div>
+
+
+</div>
+<div id="method-intersect" class="method item">
+	<div class="method-signature">
+	<span class="name"><code>intersect</code></span>
+
+		<div class="args">
+			<span class="paren">(</span><ul class="args-list inline commas">
+				<li class="arg">
+						<code>arr1</code>
+				</li>
+				<li class="arg">
+						<code>arr2</code>
+				</li>
+			</ul><span class="paren">)</span>
+		</div>
+		<span class="returns-inline">
+			<span class="type">Array</span>
+		</span>
+	</div>
+
+
+
+
+
+
+	<div class="meta">
+				<p>
+				Defined in
+		<a href="../files/src_brink_utils_intersect.js.html#l14"><code>src&#x2F;brink&#x2F;utils&#x2F;intersect.js:14</code></a>
+		</p>
+
+
+
+	</div>
+
+	<div class="description"><p>Compare two arrays and return an <code>Array</code> with items that exist
+in both arrays.</p>
+</div>
+
+		<div class="params">
+			<h4>Parameters:</h4>
+
+			<ul class="params-list">
+				<li class="param">
+						<code class="param-name">arr1</code>
+						<span class="type">Array</span>
+
+
+					<div class="param-description"><p>The first <code>Array</code> to compare.</p>
+</div>
+
+				</li>
+				<li class="param">
+						<code class="param-name">arr2</code>
+						<span class="type">Array</span>
+
+
+					<div class="param-description"><p>The second <code>Array</code> to compare.</p>
+</div>
+
+				</li>
+			</ul>
+		</div>
+
+		<div class="returns">
+			<h4>Returns:</h4>
+
+			<div class="returns-description">
+						<span class="type">Array</span>:
+					<p><code>Array</code> of items that exist in both arrays.</p>
+
+			</div>
+		</div>
+
+</div>
+<div id="method-isBrinkInstance" class="method item">
+	<div class="method-signature">
+	<span class="name"><code>isBrinkInstance</code></span>
+
+		<div class="args">
+			<span class="paren">(</span><ul class="args-list inline commas">
+				<li class="arg">
+						<code>obj</code>
+				</li>
+			</ul><span class="paren">)</span>
+		</div>
+		<span class="returns-inline">
+			<span class="type">Boolean</span>
+		</span>
+	</div>
+
+
+
+
+
+
+	<div class="meta">
+				<p>
+				Defined in
+		<a href="../files/src_brink_utils_isBrinkInstance.js.html#l14"><code>src&#x2F;brink&#x2F;utils&#x2F;isBrinkInstance.js:14</code></a>
+		</p>
+
+
+
+	</div>
+
+	<div class="description"><p>Test whether or not a value is an instance of <code>Brink.Object</code> or <code>Brink.Object</code> subclass.</p>
+</div>
+
+		<div class="params">
+			<h4>Parameters:</h4>
+
+			<ul class="params-list">
+				<li class="param">
+						<code class="param-name">obj</code>
+						<span class="type">Any</span>
+
+
+					<div class="param-description"><p>The value to check.</p>
+</div>
+
+				</li>
+			</ul>
+		</div>
+
+		<div class="returns">
+			<h4>Returns:</h4>
+
+			<div class="returns-description">
+						<span class="type">Boolean</span>:
+					<p>Whether or not the value is an instance of <code>Brink.Object</code>.</p>
+
+			</div>
+		</div>
+
+</div>
+<div id="method-isBrinkObject" class="method item">
+	<div class="method-signature">
+	<span class="name"><code>isBrinkObject</code></span>
+
+		<div class="args">
+			<span class="paren">(</span><ul class="args-list inline commas">
+				<li class="arg">
+						<code>obj</code>
+				</li>
+			</ul><span class="paren">)</span>
+		</div>
+		<span class="returns-inline">
+			<span class="type">Boolean</span>
+		</span>
+	</div>
+
+
+
+
+
+
+	<div class="meta">
+				<p>
+				Defined in
+		<a href="../files/src_brink_utils_isBrinkObject.js.html#l10"><code>src&#x2F;brink&#x2F;utils&#x2F;isBrinkObject.js:10</code></a>
+		</p>
+
+
+
+	</div>
+
+	<div class="description"><p>Test whether or not a value is a <code>Brink.Object</code> subclass.</p>
+</div>
+
+		<div class="params">
+			<h4>Parameters:</h4>
+
+			<ul class="params-list">
+				<li class="param">
+						<code class="param-name">obj</code>
+						<span class="type">Any</span>
+
+
+					<div class="param-description"><p>The value to check.</p>
+</div>
+
+				</li>
+			</ul>
+		</div>
+
+		<div class="returns">
+			<h4>Returns:</h4>
+
+			<div class="returns-description">
+						<span class="type">Boolean</span>:
+					<p>Whether or not the value is a <code>Brink.Object</code> subclass.</p>
+
+			</div>
+		</div>
+
+</div>
+<div id="method-isFunction" class="method item">
+	<div class="method-signature">
+	<span class="name"><code>isFunction</code></span>
+
+		<div class="args">
+			<span class="paren">(</span><ul class="args-list inline commas">
+				<li class="arg">
+						<code>fn</code>
+				</li>
+			</ul><span class="paren">)</span>
+		</div>
+		<span class="returns-inline">
+			<span class="type">Boolean</span>
+		</span>
+	</div>
+
+
+
+
+
+
+	<div class="meta">
+				<p>
+				Defined in
+		<a href="../files/src_brink_utils_isFunction.js.html#l10"><code>src&#x2F;brink&#x2F;utils&#x2F;isFunction.js:10</code></a>
+		</p>
+
+
+
+	</div>
+
+	<div class="description"><p>Test whether or not a value is a <code>Function</code>.</p>
+</div>
+
+		<div class="params">
+			<h4>Parameters:</h4>
+
+			<ul class="params-list">
+				<li class="param">
+						<code class="param-name">fn</code>
+						<span class="type">Any</span>
+
+
+					<div class="param-description"><p>The value to check.</p>
+</div>
+
+				</li>
+			</ul>
+		</div>
+
+		<div class="returns">
+			<h4>Returns:</h4>
+
+			<div class="returns-description">
+						<span class="type">Boolean</span>:
+					<p>Whether or not the value is a <code>Function</code>.</p>
+
+			</div>
+		</div>
+
+</div>
+<div id="method-isObject" class="method item">
+	<div class="method-signature">
+	<span class="name"><code>isObject</code></span>
+
+		<div class="args">
+			<span class="paren">(</span><ul class="args-list inline commas">
+				<li class="arg">
+						<code>obj</code>
+				</li>
+			</ul><span class="paren">)</span>
+		</div>
+		<span class="returns-inline">
+			<span class="type">Boolean</span>
+		</span>
+	</div>
+
+
+
+
+
+
+	<div class="meta">
+				<p>
+				Defined in
+		<a href="../files/src_brink_utils_isObject.js.html#l16"><code>src&#x2F;brink&#x2F;utils&#x2F;isObject.js:16</code></a>
+		</p>
+
+
+
+	</div>
+
+	<div class="description"><p>Test whether or not a value is an <code>Object</code>.</p>
+</div>
+
+		<div class="params">
+			<h4>Parameters:</h4>
+
+			<ul class="params-list">
+				<li class="param">
+						<code class="param-name">obj</code>
+						<span class="type">Any</span>
+
+
+					<div class="param-description"><p>The value to check.</p>
+</div>
+
+				</li>
+			</ul>
+		</div>
+
+		<div class="returns">
+			<h4>Returns:</h4>
+
+			<div class="returns-description">
+						<span class="type">Boolean</span>:
+					<p>Whether or not the value is an <code>Object</code>.</p>
+
+			</div>
+		</div>
+
+</div>
+<div id="method-merge" class="method item">
+	<div class="method-signature">
+	<span class="name"><code>merge</code></span>
+
+		<div class="args">
+			<span class="paren">(</span><ul class="args-list inline commas">
+				<li class="arg">
+						<code>obj1</code>
+				</li>
+				<li class="arg">
+						<code>obj2</code>
+				</li>
+				<li class="arg">
+						<code class="optional">deep=false</code>
+				</li>
+			</ul><span class="paren">)</span>
+		</div>
+		<span class="returns-inline">
+			<span class="type">Object  |  Array</span>
+		</span>
+	</div>
+
+
+
+
+
+
+	<div class="meta">
+				<p>
+				Defined in
+		<a href="../files/src_brink_utils_merge.js.html#l14"><code>src&#x2F;brink&#x2F;utils&#x2F;merge.js:14</code></a>
+		</p>
+
+
+
+	</div>
+
+	<div class="description"><p>Merge one <code>Array</code> or <code>Object</code> into another <code>Array</code> or <code>Object</code>.
+Modifies the first <code>Object</code> or <code>Array</code> passed in as an argument.</p>
+</div>
+
+		<div class="params">
+			<h4>Parameters:</h4>
+
+			<ul class="params-list">
+				<li class="param">
+						<code class="param-name">obj1</code>
+						<span class="type">Object  |  Array</span>
+
+
+					<div class="param-description"><p>The <code>Object</code> or <code>Array</code> to merge into.</p>
+</div>
+
+				</li>
+				<li class="param">
+						<code class="param-name">obj2</code>
+						<span class="type">Object  |  Array</span>
+
+
+					<div class="param-description"><p>The <code>Object</code> or <code>Array</code> containing values to merge.</p>
+</div>
+
+				</li>
+				<li class="param">
+						<code class="param-name optional">[deep=false]</code>
+						<span class="type">Boolean</span>
+						<span class="flag optional" title="This parameter is optional.">optional</span>
+
+
+					<div class="param-description"><p>Whether or not to deep copy objects when merging (<code>true</code>) or shallow copy (<code>false</code>)</p>
+</div>
+
+				</li>
+			</ul>
+		</div>
+
+		<div class="returns">
+			<h4>Returns:</h4>
+
+			<div class="returns-description">
+						<span class="type">Object  |  Array</span>:
+					<p>The merged <code>Object</code> or <code>Array</code>.</p>
+
+			</div>
+		</div>
+
+</div>
+<div id="method-set" class="method item">
+	<div class="method-signature">
+	<span class="name"><code>set</code></span>
+
+		<div class="args">
+			<span class="paren">(</span><ul class="args-list inline commas">
+				<li class="arg">
+						<code>obj</code>
+				</li>
+				<li class="arg">
+						<code>key</code>
+				</li>
+				<li class="arg">
+						<code class="optional">val</code>
+				</li>
+			</ul><span class="paren">)</span>
+		</div>
+		<span class="returns-inline">
+			<span class="type">Object</span>
+		</span>
+	</div>
+
+
+
+
+
+
+	<div class="meta">
+				<p>
+				Defined in
+		<a href="../files/src_brink_utils_set.js.html#l15"><code>src&#x2F;brink&#x2F;utils&#x2F;set.js:15</code></a>
+		</p>
+
+
+
+	</div>
+
+	<div class="description"><p>Set property/properties or a nested property on an <code>Object</code>. Works on POJOs as well
+as <code>Brink.Object</code> instances.</p>
+<p><strong>Setting single properties:</strong></p>
+<pre class="code prettyprint"><code class="language-javascript">var obj = {};
+
+$b.set(obj, 'test', 'test');
+$b.set(obj, 'some.nested.key', 'test2');
+
+console.log(obj); // { test: 'test', some: { nested: { key: 'test2' } } }
+
+</code></pre>
+<p><strong>Setting multiple properties:</strong></p>
+<pre class="code prettyprint"><code class="language-javascript">var obj = {};
+
+$b.set(obj, {test : 'test', test2 : 'test2'});
+
+console.log(obj); // { test: 'test', test2: 'test2' }
+
+</code></pre>
+</div>
+
+		<div class="params">
+			<h4>Parameters:</h4>
+
+			<ul class="params-list">
+				<li class="param">
+						<code class="param-name">obj</code>
+						<span class="type">Object</span>
+
+
+					<div class="param-description"><p>The object containing the property/properties to set.</p>
+</div>
+
+				</li>
+				<li class="param">
+						<code class="param-name">key</code>
+						<span class="type">String  |  Object</span>
+
+
+					<div class="param-description"><p>The name of the property to set. If setting multiple properties, an <code>Object</code> containing key : value pairs.</p>
+</div>
+
+				</li>
+				<li class="param">
+						<code class="param-name optional">[val]</code>
+						<span class="type">Any</span>
+						<span class="flag optional" title="This parameter is optional.">optional</span>
+
+
+					<div class="param-description"><p>The value of the property.</p>
+</div>
+
+				</li>
+			</ul>
+		</div>
+
+		<div class="returns">
+			<h4>Returns:</h4>
+
+			<div class="returns-description">
+						<span class="type">Object</span>:
+					<p>The Object passed in as the first argument.</p>
+
+			</div>
+		</div>
+
+</div>
+<div id="method-trim" class="method item">
+	<div class="method-signature">
+	<span class="name"><code>trim</code></span>
+
+		<div class="args">
+			<span class="paren">(</span><ul class="args-list inline commas">
+				<li class="arg">
+						<code>str</code>
+				</li>
+			</ul><span class="paren">)</span>
+		</div>
+		<span class="returns-inline">
+			<span class="type">String</span>
+		</span>
+	</div>
+
+
+
+
+
+
+	<div class="meta">
+				<p>
+				Defined in
+		<a href="../files/src_brink_utils_trim.js.html#l10"><code>src&#x2F;brink&#x2F;utils&#x2F;trim.js:10</code></a>
+		</p>
+
+
+
+	</div>
+
+	<div class="description"><p>Replaces all whitespace at the beginning and end of a <code>String</code>.</p>
+</div>
+
+		<div class="params">
+			<h4>Parameters:</h4>
+
+			<ul class="params-list">
+				<li class="param">
+						<code class="param-name">str</code>
+						<span class="type">String</span>
+
+
+					<div class="param-description"><p>The <code>String</code> to trim.</p>
+</div>
+
+				</li>
+			</ul>
+		</div>
+
+		<div class="returns">
+			<h4>Returns:</h4>
+
+			<div class="returns-description">
+						<span class="type">String</span>:
+					<p>The trimmed string.</p>
 
 			</div>
 		</div>
