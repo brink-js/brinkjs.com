@@ -21,7 +21,7 @@
             <li class="divider-vertical"></li>
             <li>
                 <p class="navbar-text">
-                    API Docs for Version: <b>0.0.9</b>
+                    API Docs for Version: <b>0.0.10</b>
                 </p>
             </li>
         </div>
@@ -122,7 +122,7 @@ $b(
 
             for (i = 0; i &lt; key.length - 1; i ++) {
                 val = get(obj, key[i]);
-                if (val == null) {
+                if (val == null &amp;&amp; createIfNull) {
                     val = obj[key[i]] = {};
                 }
                 obj = val;
