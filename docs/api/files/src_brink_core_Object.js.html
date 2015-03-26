@@ -21,7 +21,7 @@
             <li class="divider-vertical"></li>
             <li>
                 <p class="navbar-text">
-                    API Docs for Version: <b>0.0.10</b>
+                    API Docs for Version: <b>0.1.0</b>
                 </p>
             </li>
         </div>
@@ -286,15 +286,29 @@ $b(
                     this.__meta.pojoStyle = true;
                     this[p] = d.defaultValue;
                 }
-
-                if (d.watch &amp;&amp; d.watch.length) {
-                    this.watch(d.watch, d.didChange);
-                }
             },
 
             __undefineProperties : function () {
 
-                var p;
+                var b,
+                    p,
+                    i,
+                    meta,
+                    bindings;
+
+                meta = this.__meta;
+                bindings = meta.externalBindings || {};
+
+                // Cleanup external bindings
+                for (p in bindings) {
+
+                    for (i = 0; i &lt; bindings[p].length; i ++) {
+                        b = bindings[p][i];
+                        if (!b.obj.isDestroyed) {
+                            b.obj.unwatch(b.localProp.didChange);
+                        }
+                    }
+                }
 
                 for (p in this.__meta.properties) {
                     delete this[p];
@@ -337,6 +351,108 @@ $b(
                 };
             },
 
+            __hasReference : function (obj) {
+                this.__meta.references = this.__meta.references || $b.Dictionary.create();
+                return this.__meta.references.has(obj);
+            },
+
+            __addReference : function (obj, key) {
+                this.__meta.references = this.__meta.references || $b.Dictionary.create();
+                this.__meta.references.add(obj, key);
+            },
+
+            __removeReference : function (obj) {
+                this.__meta.references = this.__meta.references || $b.Dictionary.create();
+                this.__meta.references.remove(obj);
+            },
+
+            __propertiesDidChange : function (props, skipReference) {
+
+                var i,
+                    j,
+                    p,
+                    tmp,
+                    meta,
+                    bindings,
+                    changedProps;
+
+                if ($b.instanceManager &amp;&amp; props.length) {
+
+                    meta = this.__meta;
+                    changedProps = meta.changedProps || [];
+                    bindings = meta.bindings;
+
+                    if (props.length) {
+
+                        for (i = 0; i &lt; props.length; i ++) {
+
+                            p = props[i];
+
+                            if (changedProps.indexOf(p) &gt; -1) {
+                                props.splice(i, 1);
+                                i --;
+                            }
+
+                            else if (bindings[p] &amp;&amp; bindings[p].length) {
+                                props = props.concat(bindings[p]);
+                            }
+
+                            else if (changedProps.length) {
+                                for (j = 0; j &lt; changedProps.length; j ++) {
+                                    if (new RegExp(changedProps[j] + &#x27;\.&#x27;).test(p)) {
+                                        props.splice(i, 1);
+                                        i --;
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    if (props.length) {
+
+                        for (i = 0; i &lt; props.length; i ++) {
+                            p = props[i].split(&#x27;.&#x27;);
+                            tmp = p[p.length - 1];
+
+                            if (p.length &gt; 2) {
+                                p = p.splice(0, p.length - 1).join(&#x27;.&#x27;);
+
+                                if (bindings[p] &amp;&amp; bindings[p].length) {
+                                    for (j = 0; j &lt; bindings[p].length; j ++) {
+                                        props.push(bindings[p][j] + &#x27;.&#x27; + tmp);
+                                    }
+                                }
+                            }
+                        }
+
+                        $b.instanceManager.propertyDidChange(this, props);
+
+                        if (meta.references) {
+                            meta.references.forEach(function (key, instance) {
+
+                                var subProps = [];
+
+                                if (instance.isDestroyed) {
+                                    this.__removeReference(instance);
+                                    return;
+                                }
+
+                                for (i = 0; i &lt; props.length; i ++) {
+                                    p = (key ? key + &#x27;.&#x27; : &#x27;&#x27;) + props[i];
+
+                                    if (skipReference !== instance &amp;&amp; get(instance, p) !== this) {
+                                        subProps.push(p);
+                                    }
+                                }
+
+                                instance.__propertiesDidChange(subProps, this);
+
+                            }, this);
+                        }
+                    }
+                }
+            },
+
             /***********************************************************************
             Invalidate one or more properties. This will trigger any bound and computed properties
             depending on these properties to also get updated.
@@ -346,15 +462,9 @@ $b(
             @method propertyDidChange
             @param  {Array|String} props A single property or an array of properties.
             ************************************************************************/
-            propertyDidChange : function () {
-
-                var props;
-
+            propertyDidChange : function (props) {
                 props = flatten([].slice.call(arguments, 0, arguments.length));
-
-                if ($b.instanceManager) {
-                    $b.instanceManager.propertyDidChange(this, props);
-                }
+                return this.__propertiesDidChange(props);
             },
 
             /***********************************************************************
@@ -410,15 +520,22 @@ $b(
             ************************************************************************/
             prop : function (key, val) {
 
-                var obj;
+                var a,
+                    i,
+                    obj,
+                    meta;
 
                 obj = getObjKeyPair(this, key);
                 key = obj[1];
-                obj = obj[0];
+                obj = obj[0] || this;
 
-                if (typeof obj.__meta.properties[key] !== &#x27;undefined&#x27;) {
+                meta = obj.__meta;
+                meta.bindings = meta.bindings || {};
+                meta.externalBindings = meta.externalBindings || {};
+
+                if (typeof meta.properties[key] !== &#x27;undefined&#x27;) {
                     if (typeof val === &#x27;undefined&#x27;) {
-                        return obj.__meta.properties[key];
+                        return meta.properties[key];
                     }
                 }
 
@@ -431,18 +548,35 @@ $b(
                     };
                 }
 
-                val = obj.__meta.properties[key] = defineProperty(obj, key, val);
+                val = meta.properties[key] = defineProperty(obj, key, val);
                 val.key = key;
 
+                if (val.watch &amp;&amp; val.watch.length) {
+                    for (i = 0; i &lt; val.watch.length; i ++) {
+                        a = meta.bindings[val.watch[i]] = meta.bindings[val.watch[i]] || [];
+                        a.push(key);
+                    }
+                }
+
                 val.bindTo = bindFunction(function (o, p) {
-                    o.prop(p, bindTo(obj, key, true));
+                    this.prop(p, bindTo(o, p));
                 }, obj);
 
                 val.didChange = bindFunction(function () {
                     obj.propertyDidChange(key);
                 }, obj);
 
-                if (obj.__meta.isInitialized) {
+                if (val.boundTo) {
+                    a = meta.externalBindings[key] = meta.externalBindings[key] || [];
+                    a.push({
+                        obj : val.boundTo[0],
+                        key : val.boundTo[1],
+                        localProp : val
+                    });
+                    val.boundTo[0].watch(val.boundTo[1], val.didChange);
+                }
+
+                if (meta.isInitialized) {
                     obj.__defineProperty(key, val);
                 }
 
@@ -633,7 +767,6 @@ $b(
             @method destroy
             ***********************************************************************/
             destroy : function () {
-
                 this.unwatchAll();
                 this.__undefineProperties();
 
@@ -642,6 +775,7 @@ $b(
                 }
 
                 this.__meta = null;
+                this.isDestroyed = true;
             }
         });
 

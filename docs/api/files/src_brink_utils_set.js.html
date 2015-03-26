@@ -21,7 +21,7 @@
             <li class="divider-vertical"></li>
             <li>
                 <p class="navbar-text">
-                    API Docs for Version: <b>0.0.10</b>
+                    API Docs for Version: <b>0.1.0</b>
                 </p>
             </li>
         </div>
@@ -129,20 +129,43 @@ $b(
         ************************************************************************/
         var set = function (obj, key, val, quiet, skipCompare) {
 
-            var i;
+            var i,
+                old,
+                isDiff;
 
             if (typeof key === &#x27;string&#x27;) {
 
                 obj = getObjKeyPair(obj, key, true);
                 key = obj[1];
                 obj = obj[0];
+                old = get(obj, key);
 
-                if (skipCompare || get(obj, key) !== val) {
+                isDiff = old !== val;
+
+                if (skipCompare || isDiff) {
 
                     if (obj instanceof $b.Object) {
 
+                        if (isDiff) {
+                            if (old instanceof $b.Object) {
+                                old.__removeReference(obj);
+                            }
+
+                            if (val instanceof $b.Object) {
+                                val.__addReference(
+                                    obj,
+                                    (
+                                        key === &#x27;proxy&#x27; &amp;&amp;
+                                        val instanceof $b.ObjectProxy ?
+                                        &#x27;&#x27; :
+                                        key
+                                    )
+                                );
+                            }
+                        }
+
                         if (obj.__meta.setters[key]) {
-                            val = obj.__meta.setters[key].call(obj, val, key);
+                            obj.__meta.setters[key].call(obj, val, key);
                         }
 
                         else {
