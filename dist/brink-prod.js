@@ -1152,168 +1152,6 @@
     
     ).attach('$b');
 
-    $b('brink/utils/isObject', 
-    
-        /***********************************************************************
-        @class Brink
-        ************************************************************************/
-        function () {
-    
-            'use strict';
-    
-            var objectTypes = {
-                'function' : true,
-                'object' : true,
-                'unknown' : true
-            };
-    
-            /***********************************************************************
-            Test whether or not a value is an `Object`.
-    
-            @method isObject
-            @param {Any} obj The value to check.
-            @return {Boolean} Whether or not the value is an `Object`.
-            ************************************************************************/
-            return function (obj) {
-                return obj ? !!objectTypes[typeof obj] : false;
-            };
-        }
-    
-    ).attach('$b');
-
-    $b('brink/utils/merge', 
-    
-        [
-            './isObject'
-        ],
-    
-        /***********************************************************************
-        @class Brink
-        ************************************************************************/
-        function (isObject) {
-    
-            'use strict';
-    
-            /***********************************************************************
-            Merge one `Array` or `Object` into another `Array` or `Object`.
-            Modifies the first `Object` or `Array` passed in as an argument.
-    
-            @method merge
-            @param {Object|Array} obj1 The `Object` or `Array` to merge into.
-            @param {Object|Array} obj2 The `Object` or `Array` containing values to merge.
-            @param {Boolean} [deep=false] Whether or not to deep copy objects when merging
-            (`true`) or shallow copy (`false`)
-            @return {Object|Array} The merged `Object` or `Array`.
-            ************************************************************************/
-            return function merge (a, b, deep) {
-    
-                var p,
-                    o,
-                    d;
-    
-                function arrayOrObject (o) {
-                    return Array.isArray(o) ? [] : isObject(o) ? {} : false;
-                }
-    
-                if (Array.isArray(a) || Array.isArray(b)) {
-    
-                    a = a || [];
-                    b = b || [];
-    
-                    for (p = 0; p < b.length; p ++) {
-    
-                        o = b[p];
-    
-                        if (!~a.indexOf(o)) {
-                            d = deep ? arrayOrObject(o) : null;
-                            a.push(d ? merge(d, o, true) : o);
-                        }
-                    }
-                    return a;
-                }
-    
-                else if (isObject(a) || isObject(b)) {
-    
-                    a = a || {};
-                    b = b || {};
-    
-                    for (p in b) {
-    
-                        o = b[p];
-    
-                        if (!b.hasOwnProperty(p)) {
-                            continue;
-                        }
-    
-                        d = deep ? arrayOrObject(o) : null;
-                        a[p] = d ? merge(d, o, true) : o;
-                    }
-    
-                    return a;
-                }
-    
-                return null;
-    
-            };
-        }
-    
-    ).attach('$b');
-
-    $b('brink/utils/flatten', 
-    
-        [
-            './merge'
-        ],
-    
-        /***********************************************************************
-        @class Brink
-        ************************************************************************/
-        function (merge) {
-    
-            'use strict';
-    
-            /***********************************************************************
-            Flatten an array.
-    
-            This will go through each item in the array and if the value
-            is also an array, will merge it into the parent array.
-    
-            Does not modify the original array.
-    
-            @method flatten
-            @param {Array} arr The array to flatten.
-            @param {Boolean} [keepDuplicates=false] Whether or not to keep duplicate values when flattening.
-            @return {Array} The flattened array.
-            ************************************************************************/
-            return function flatten (a, keepDuplicates) {
-    
-                var i,
-                    b,
-                    c;
-    
-                b = [];
-    
-                for (i = 0; i < a.length; i ++) {
-    
-                    c = a[i];
-    
-                    if (Array.isArray(c)) {
-                        c = flatten(c);
-                    }
-    
-                    b = b.concat(c);
-                }
-    
-                if (!keepDuplicates) {
-                    merge([], b);
-                }
-    
-                return b;
-            };
-        }
-    
-    ).attach('$b');
-
     $b('brink/utils/isFunction', 
     
         /***********************************************************************
@@ -1337,77 +1175,16 @@
     
     ).attach('$b');
 
-    $b('brink/utils/expandProps', 
-    
-        /***********************************************************************
-        @class Brink
-        ************************************************************************/
-        function () {
-    
-            'use strict';
-    
-            return function (a, skipRoot) {
-    
-                var b,
-                    i,
-                    j,
-                    p,
-                    n,
-                    s;
-    
-                a = [].concat(a);
-    
-                s = [];
-    
-                for (i = 0; i < a.length; i ++) {
-    
-                    p = a[i];
-    
-                    if (!skipRoot && ~p.indexOf('.')) {
-    
-                        b = p.split('.');
-                        b.splice(b.length - 1, 1);
-                        n = null;
-    
-                        while (b.length) {
-                            n = n ? n + '.' : '';
-                            n += b.splice(0, 1)[0];
-                            s.push(n);
-                        }
-                    }
-    
-                    if (~p.indexOf(',')) {
-                        p = p.split('.');
-                        n = p.splice(0, p.length - 1).join('.');
-                        b = p[0].split(',');
-                        p = [];
-    
-                        for (j = 0; j < b.length; j ++) {
-                            p.push([n, b[j]].join(n ? '.' : ''));
-                        }
-                    }
-    
-                    s = s.concat(p);
-                }
-    
-                return s;
-            };
-        }
-    
-    ).attach('$b');
-
     $b('brink/utils/computed', 
     
         [
-            './flatten',
-            './isFunction',
-            './expandProps'
+            './isFunction'
         ],
     
         /***********************************************************************
         @class Brink
         ************************************************************************/
-        function (flatten, isFunction, expandProps) {
+        function (isFunction) {
     
             'use strict';
     
@@ -1482,7 +1259,7 @@
     
                 if (isFunction(o)) {
                     o = {
-                        watch : flatten([].slice.call(arguments, 1)),
+                        watch : arguments[1],
                         get : o
                     };
                 }
@@ -1491,7 +1268,7 @@
                     o.value = o.defaultValue;
                 }
     
-                o.watch = expandProps(o.watch ? [].concat(o.watch) : []);
+                o.watch = o.watch ? [].concat(o.watch) : [];
                 o.__isComputed = true;
     
                 return o;
@@ -1812,6 +1589,113 @@
     
     ).attach('$b');
 
+    $b('brink/utils/isObject', 
+    
+        /***********************************************************************
+        @class Brink
+        ************************************************************************/
+        function () {
+    
+            'use strict';
+    
+            var objectTypes = {
+                'function' : true,
+                'object' : true,
+                'unknown' : true
+            };
+    
+            /***********************************************************************
+            Test whether or not a value is an `Object`.
+    
+            @method isObject
+            @param {Any} obj The value to check.
+            @return {Boolean} Whether or not the value is an `Object`.
+            ************************************************************************/
+            return function (obj) {
+                return obj ? !!objectTypes[typeof obj] : false;
+            };
+        }
+    
+    ).attach('$b');
+
+    $b('brink/utils/merge', 
+    
+        [
+            './isObject'
+        ],
+    
+        /***********************************************************************
+        @class Brink
+        ************************************************************************/
+        function (isObject) {
+    
+            'use strict';
+    
+            /***********************************************************************
+            Merge one `Array` or `Object` into another `Array` or `Object`.
+            Modifies the first `Object` or `Array` passed in as an argument.
+    
+            @method merge
+            @param {Object|Array} obj1 The `Object` or `Array` to merge into.
+            @param {Object|Array} obj2 The `Object` or `Array` containing values to merge.
+            @param {Boolean} [deep=false] Whether or not to deep copy objects when merging
+            (`true`) or shallow copy (`false`)
+            @return {Object|Array} The merged `Object` or `Array`.
+            ************************************************************************/
+            return function merge (a, b, deep) {
+    
+                var p,
+                    o,
+                    d;
+    
+                function arrayOrObject (o) {
+                    return Array.isArray(o) ? [] : isObject(o) ? {} : false;
+                }
+    
+                if (Array.isArray(a) || Array.isArray(b)) {
+    
+                    a = a || [];
+                    b = b || [];
+    
+                    for (p = 0; p < b.length; p ++) {
+    
+                        o = b[p];
+    
+                        if (!~a.indexOf(o)) {
+                            d = deep ? arrayOrObject(o) : null;
+                            a.push(d ? merge(d, o, true) : o);
+                        }
+                    }
+                    return a;
+                }
+    
+                else if (isObject(a) || isObject(b)) {
+    
+                    a = a || {};
+                    b = b || {};
+    
+                    for (p in b) {
+    
+                        o = b[p];
+    
+                        if (!b.hasOwnProperty(p)) {
+                            continue;
+                        }
+    
+                        d = deep ? arrayOrObject(o) : null;
+                        a[p] = d ? merge(d, o, true) : o;
+                    }
+    
+                    return a;
+                }
+    
+                return null;
+    
+            };
+        }
+    
+    ).attach('$b');
+
     $b('brink/utils/clone', 
     
         [
@@ -1924,6 +1808,65 @@
     
     ).attach('$b');
 
+    $b('brink/utils/expandProps', 
+    
+        /***********************************************************************
+        @class Brink
+        ************************************************************************/
+        function () {
+    
+            'use strict';
+    
+            return function (a, skipRoot) {
+    
+                var b,
+                    i,
+                    j,
+                    p,
+                    n,
+                    s;
+    
+                a = [].concat(a);
+    
+                s = [];
+    
+                for (i = 0; i < a.length; i ++) {
+    
+                    p = a[i];
+    
+                    if (!skipRoot && ~p.indexOf('.')) {
+    
+                        b = p.split('.');
+                        b.splice(b.length - 1, 1);
+                        n = null;
+    
+                        while (b.length) {
+                            n = n ? n + '.' : '';
+                            n += b.splice(0, 1)[0];
+                            s.push(n);
+                        }
+                    }
+    
+                    if (~p.indexOf(',')) {
+                        p = p.split('.');
+                        n = p.splice(0, p.length - 1).join('.');
+                        b = p[0].split(',');
+                        p = [];
+    
+                        for (j = 0; j < b.length; j ++) {
+                            p.push([n, b[j]].join(n ? '.' : ''));
+                        }
+                    }
+    
+                    s = s.concat(p);
+                }
+    
+                return s;
+            };
+        }
+    
+    ).attach('$b');
+
     $b('brink/utils/extend', 
     
         [
@@ -2022,6 +1965,61 @@
     
     ).attach('$b');
 
+    $b('brink/utils/flatten', 
+    
+        [
+            './merge'
+        ],
+    
+        /***********************************************************************
+        @class Brink
+        ************************************************************************/
+        function (merge) {
+    
+            'use strict';
+    
+            /***********************************************************************
+            Flatten an array.
+    
+            This will go through each item in the array and if the value
+            is also an array, will merge it into the parent array.
+    
+            Does not modify the original array.
+    
+            @method flatten
+            @param {Array} arr The array to flatten.
+            @param {Boolean} [keepDuplicates=false] Whether or not to keep duplicate values when flattening.
+            @return {Array} The flattened array.
+            ************************************************************************/
+            return function flatten (a, keepDuplicates) {
+    
+                var i,
+                    b,
+                    c;
+    
+                b = [];
+    
+                for (i = 0; i < a.length; i ++) {
+    
+                    c = a[i];
+    
+                    if (Array.isArray(c)) {
+                        c = flatten(c);
+                    }
+    
+                    b = b.concat(c);
+                }
+    
+                if (!keepDuplicates) {
+                    merge([], b);
+                }
+    
+                return b;
+            };
+        }
+    
+    ).attach('$b');
+
     $b('brink/utils/inject', 
     
         [],
@@ -2051,13 +2049,12 @@
     $b('brink/utils/intersect', 
     
         [
-            './flatten'
         ],
     
         /***********************************************************************
         @class Brink
         ************************************************************************/
-        function (flatten) {
+        function () {
     
             'use strict';
     
@@ -2073,14 +2070,20 @@
             return function (a, b) {
     
                 var i,
-                    c;
+                    c,
+                    d;
     
-                b = flatten([].slice.call(arguments, 1));
                 c = [];
+                i = b.length;
     
-                for (i = 0; i < b.length; i ++) {
-                    if (~a.indexOf(b[i])) {
-                        c.push(b[i]);
+                if (!a.length || !i) {
+                    return c;
+                }
+    
+                while (i--) {
+                    d = b[i];
+                    if (~a.indexOf(d)) {
+                        c.push(d);
                     }
                 }
     
@@ -2170,9 +2173,12 @@
     
                 if (typeof key === 'string') {
     
-                    obj = getObjKeyPair(obj, key, true);
-                    key = obj[1];
-                    obj = obj[0];
+                    if (key.indexOf('.') > -1) {
+                        obj = getObjKeyPair(obj, key, true);
+                        key = obj[1];
+                        obj = obj[0];
+                    }
+    
                     old = get(obj, key);
     
                     isDiff = old !== val;
@@ -2487,6 +2493,9 @@
                         meta = this.__buildMeta();
                     }
     
+                    meta.references = [];
+                    meta.referenceKeys = [];
+    
                     if (o && typeof o === 'object' && !Array.isArray(o)) {
     
                         o = clone(o);
@@ -2599,33 +2608,25 @@
     
                 __defineProperty : function (p, d) {
     
-                    if (!config.DIRTY_CHECK) {
+                    d = clone(d);
     
-                        d = clone(d);
+                   // Modern browsers, IE9 +
+                    if (Object.defineProperty) {
+                        Object.defineProperty(this, p, d);
+                    }
     
-                       // Modern browsers, IE9 +
-                        if (Object.defineProperty) {
-                            Object.defineProperty(this, p, d);
-                        }
-    
-                        // Old FF
-                        else if (this.__defineGetter__) {
-                            this.__defineGetter__(p, d.get);
-                            this.__defineSetter__(p, d.set);
-                        }
-    
-                        else {
-                            this.__meta.pojoStyle = true;
-                        }
-    
-                        if (typeof d.defaultValue !== 'undefined') {
-                            this.set(p, d.defaultValue, true, true);
-                        }
+                    // Old FF
+                    else if (this.__defineGetter__) {
+                        this.__defineGetter__(p, d.get);
+                        this.__defineSetter__(p, d.set);
                     }
     
                     else {
                         this.__meta.pojoStyle = true;
-                        this[p] = d.defaultValue;
+                    }
+    
+                    if (typeof d.defaultValue !== 'undefined') {
+                        this.set(p, d.defaultValue, true, true);
                     }
                 },
     
@@ -2638,7 +2639,7 @@
                         bindings;
     
                     meta = this.__meta;
-                    bindings = meta.externalBindings || {};
+                    bindings = meta.externalBindings;
     
                     // Cleanup external bindings
                     for (p in bindings) {
@@ -2693,104 +2694,27 @@
                 },
     
                 __hasReference : function (obj) {
-                    this.__meta.references = this.__meta.references || $b.Dictionary.create();
-                    return this.__meta.references.has(obj);
+                    var meta = this.__meta;
+                    return !!~meta.references.indexOf(obj);
                 },
     
                 __addReference : function (obj, key) {
-                    this.__meta.references = this.__meta.references || $b.Dictionary.create();
-                    this.__meta.references.add(obj, key);
+                    var meta = this.__meta;
+                    meta.references.push(obj);
+                    meta.referenceKeys.push(key);
                 },
     
                 __removeReference : function (obj) {
-                    this.__meta.references = this.__meta.references || $b.Dictionary.create();
-                    this.__meta.references.remove(obj);
-                },
     
-                __propertiesDidChange : function (props, skipReference) {
+                    var idx,
+                        meta;
     
-                    var i,
-                        j,
-                        p,
-                        tmp,
-                        meta,
-                        bindings,
-                        changedProps;
+                    meta = this.__meta;
+                    idx = meta.references.indexOf(obj);
     
-                    if ($b.instanceManager && props.length) {
-    
-                        meta = this.__meta;
-                        changedProps = meta.changedProps || [];
-                        bindings = meta.bindings;
-    
-                        if (props.length) {
-    
-                            for (i = 0; i < props.length; i ++) {
-    
-                                p = props[i];
-    
-                                if (changedProps.indexOf(p) > -1) {
-                                    props.splice(i, 1);
-                                    i --;
-                                }
-    
-                                else if (bindings[p] && bindings[p].length) {
-                                    props = props.concat(bindings[p]);
-                                }
-    
-                                else if (changedProps.length) {
-                                    for (j = 0; j < changedProps.length; j ++) {
-                                        if (new RegExp(changedProps[j] + '\.').test(p)) {
-                                            props.splice(i, 1);
-                                            i --;
-                                        }
-                                    }
-                                }
-                            }
-                        }
-    
-                        if (props.length) {
-    
-                            for (i = 0; i < props.length; i ++) {
-                                p = props[i].split('.');
-                                tmp = p[p.length - 1];
-    
-                                if (p.length > 2) {
-                                    p = p.splice(0, p.length - 1).join('.');
-    
-                                    if (bindings[p] && bindings[p].length) {
-                                        for (j = 0; j < bindings[p].length; j ++) {
-                                            props.push(bindings[p][j] + '.' + tmp);
-                                        }
-                                    }
-                                }
-                            }
-    
-                            $b.instanceManager.propertyDidChange(this, props);
-    
-                            if (meta.references) {
-                                meta.references.forEach(function (key, instance) {
-    
-                                    var subProps = [];
-    
-                                    if (instance.isDestroyed) {
-                                        this.__removeReference(instance);
-                                        return;
-                                    }
-    
-                                    for (i = 0; i < props.length; i ++) {
-                                        p = (key ? key + '.' : '') + props[i];
-    
-                                        if (skipReference !== instance && get(instance, p) !== this) {
-                                            subProps.push(p);
-                                        }
-                                    }
-    
-                                    instance.__propertiesDidChange(subProps, this);
-    
-                                }, this);
-                            }
-                        }
+                    if (~idx) {
+                        meta.references.splice(idx, 1);
+                        meta.referenceKeys.splice(idx, 1);
                     }
                 },
     
@@ -2798,14 +2722,16 @@
                 Invalidate one or more properties. This will trigger any bound and computed properties
                 depending on these properties to also get updated.
     
+                There is almost no need to ever call this manually, as Brink will call it for you
+                when setting a property.
+    
                 This will also trigger any watchers of this property in the next Run Loop.
     
                 @method propertyDidChange
-                @param  {Array|String} props A single property or an array of properties.
+                @param  {String} prop The property that changed.
                 ************************************************************************/
-                propertyDidChange : function (props) {
-                    props = flatten([].slice.call(arguments, 0, arguments.length));
-                    return this.__propertiesDidChange(props);
+                propertyDidChange : function (prop) {
+                    $b.instanceManager.propertyDidChange(this, prop);
                 },
     
                 /***********************************************************************
@@ -2825,7 +2751,7 @@
                     props = flatten([].slice.call(arguments, 0, arguments.length));
                     o = {};
     
-                    if (props.length) {
+                    if (arguments.length) {
     
                         for (i = 0; i < props.length; i ++) {
                             o[props[i]] = this.get(props[i]);
@@ -2848,7 +2774,7 @@
                 @return {Object} Object of key : value pairs for all changed properties.
                 ************************************************************************/
                 getChangedProperties : function () {
-                    return this.getProperties.apply(this, this.__meta.changedProps);
+                    return this.getProperties($b.instanceManager.getChangedProps(this));
                 },
     
                 /***********************************************************************
@@ -2863,16 +2789,21 @@
     
                     var a,
                         i,
+                        p,
                         obj,
-                        meta;
+                        tmp,
+                        meta,
+                        watched;
     
                     obj = getObjKeyPair(this, key);
                     key = obj[1];
                     obj = obj[0] || this;
     
                     meta = obj.__meta;
+    
                     meta.bindings = meta.bindings || {};
                     meta.externalBindings = meta.externalBindings || {};
+                    meta.memoizedBindings = meta.memoizedBindings || {};
     
                     if (typeof meta.properties[key] !== 'undefined') {
                         if (typeof val === 'undefined') {
@@ -2892,20 +2823,40 @@
                     val = meta.properties[key] = defineProperty(obj, key, val);
                     val.key = key;
     
-                    if (val.watch && val.watch.length) {
-                        for (i = 0; i < val.watch.length; i ++) {
-                            a = meta.bindings[val.watch[i]] = meta.bindings[val.watch[i]] || [];
-                            a.push(key);
+                    watched = val.watch;
+    
+                    if (watched && (i = watched.length)) {
+                        tmp = [];
+                        while (i--) {
+                            a = watched[i].split('.');
+                            p = null;
+                            while (a.length) {
+                                p = (p ? p.concat('.') : '').concat(a.splice(0, 1)[0]);
+                                tmp.push(p);
+                            }
+                        }
+    
+                        i = tmp.length;
+    
+                        if (i) {
+                            meta.memoizedBindings = {};
+                        }
+    
+                        while (i--) {
+                            a = meta.bindings[tmp[i]] = meta.bindings[tmp[i]] || [];
+                            if (!~a.indexOf(key)) {
+                                a.push(key);
+                            }
                         }
                     }
     
-                    val.bindTo = bindFunction(function (o, p) {
+                    val.bindTo = function (o, p) {
                         this.prop(p, bindTo(o, p));
-                    }, obj);
+                    }.bind(obj);
     
-                    val.didChange = bindFunction(function () {
+                    val.didChange = function () {
                         obj.propertyDidChange(key);
-                    }, obj);
+                    }.bind(obj);
     
                     if (val.boundTo) {
                         a = meta.externalBindings[key] = meta.externalBindings[key] || [];
@@ -3094,9 +3045,7 @@
                 },
     
                 didNotifyWatchers : function () {
-                    if (this.__meta) {
-                        this.__meta.changedProps = [];
-                    }
+    
                 },
     
                 /***********************************************************************
@@ -3929,7 +3878,6 @@
                     this.oldContent = this.content.concat();
     
                     if (this.__meta) {
-                        this.__meta.changedProps = [];
                         this.__meta.contentChanges = {};
                     }
     
@@ -4117,7 +4065,7 @@
     
             return CoreObject.extend({
     
-                __interval : 25,
+                __interval : 'raf',
                 __timerID : null,
                 __started : false,
     
@@ -4317,88 +4265,194 @@
     
             return CoreObject.extend({
     
-                init : function (instances) {
+                instanceManager : null,
     
-                    this.instances = instances;
+                init : function (instanceManager) {
+    
+                    var self;
+    
+                    self = this;
+    
+                    this.instanceManager = instanceManager;
     
                     this.runLoop = RunLoop.create();
-                    this.runLoop.loop(this.run.bind(this));
-    
-                    this.watchLoop = RunLoop.create();
-                    this.watchLoop.name = 'watchLoop';
-    
-                    if (config.DIRTY_CHECK) {
-                        this.start();
-                    }
+                    this.runLoop.loop(function () {
+                        self.run();
+                    });
     
                     return this;
                 },
     
-                dirtyCheck : function (meta, instance) {
+                processBindings : function (obj, props, meta, prefix, recursionLimit) {
     
                     var i,
-                        p;
+                        j,
+                        l,
+                        p,
+                        p2,
+                        arr,
+                        key,
+                        tmp,
+                        changed,
+                        bindings,
+                        memoized,
+                        prefixReset,
+                        memoizedBindings;
     
-                    for (i = 0; i < meta.watchedProps.length; i ++) {
+                    bindings = meta.bindings;
+                    memoizedBindings = meta.memoizedBindings = meta.memoizedBindings || {};
     
-                        p = meta.watchedProps[i];
+                    prefix = prefix ? prefix.concat('.') : '';
+                    changed = [];
+                    recursionLimit = recursionLimit || 20;
     
-                        if (meta.values[p] !== instance[p]) {
-                            instance.set(p, instance[p], false, true);
-                        }
-                    }
-                },
+                    for (i = 0, l = prefixReset = props.length; i < l; i ++) {
     
-                notifyWatchers : function (meta, instance) {
-    
-                    var i,
-                        fn,
-                        props,
-                        willNotify,
-                        intersected;
-    
-                    for (i = 0; i < meta.watchers.fns.length; i ++) {
-    
-                        fn = meta.watchers.fns[i];
-                        props = meta.watchers.props[i];
-                        intersected = props.length ? intersect(props, meta.changedProps) : meta.changedProps.concat();
-    
-                        if (!intersected.length) {
-                            continue;
+                        if (i < prefixReset) {
+                            p = prefix.concat(props[i]);
+                            props[i] = p;
                         }
     
-                        willNotify = true;
-                        this.watchLoop.once(fn, intersected);
+                        else {
+                            p = props[i];
+                        }
+    
+                        memoized = memoizedBindings[p];
+    
+                        if (memoized == null) {
+                            memoized = [];
+    
+                            if (bindings[p]) {
+                                memoized = bindings[p].concat();
+                            }
+    
+                            tmp = p.split('.');
+    
+                            if (tmp.length > 1) {
+                                key = '.'.concat(tmp.pop());
+                                p2 = tmp.join('.');
+                                arr = bindings[p2];
+    
+                                if (arr && (j = arr.length)) {
+                                    while (j--) {
+                                        memoized.push(arr[j].concat(key));
+                                    }
+                                }
+                            }
+                            memoizedBindings[p] = memoized;
+                        }
+    
+                        if (recursionLimit) {
+                            j = memoized.length;
+                            while (j--) {
+                                tmp = memoized[j];
+                                if (props.indexOf(tmp) === -1) {
+                                    props[l++] = tmp;
+                                }
+                            }
+                            recursionLimit--;
+                        }
                     }
-    
-                    if (willNotify) {
-                        instance.willNotifyWatchers.call(instance);
-                    }
-    
-                    while (this.watchLoop.run()) {
-    
-                    }
-    
-                    instance.didNotifyWatchers.call(instance);
+                    return props;
                 },
     
                 run : function () {
     
-                    this.instances.forEach(function (meta, instance) {
+                    var i,
+                        k,
+                        fn,
+                        iid,
+                        key,
+                        meta,
+                        meta2,
+                        looped,
+                        watched,
+                        changed,
+                        chProps,
+                        manager,
+                        instance,
+                        instances,
+                        reference,
+                        references,
+                        chInstances,
+                        intersected,
+                        referenceKeys;
     
-                        if (config.DIRTY_CHECK) {
-                            this.dirtyCheck(meta, instance);
+                    manager = this.instanceManager;
+                    instances = manager.instances;
+                    chProps = manager.changedProps;
+                    chInstances = manager.changedInstances;
+                    looped = [];
+    
+                    k = 0;
+    
+                    while (chInstances.length) {
+                        iid = chInstances[k];
+                        instance = instances[iid];
+    
+                        if (!instance) {
+                            chProps.splice(k, 1);
+                            chInstances.splice(k, 1);
+                            continue;
                         }
     
-                        if (meta.changedProps.length) {
-                            this.notifyWatchers(meta, instance);
+                        looped.push(instance);
+    
+                        meta = instance.__meta;
+                        references = meta.references;
+                        referenceKeys = meta.referenceKeys;
+    
+                        changed = chProps[k];
+                        this.processBindings(instance, changed, meta);
+    
+                        // Loop through all references and notify them too...
+                        if (changed.length && references.length) {
+    
+                            i = meta.references.length;
+    
+                            while (i --) {
+    
+                                reference = references[i];
+    
+                                if (~looped.indexOf(reference)) {
+                                    continue;
+                                }
+                                looped.push(reference);
+    
+                                key = referenceKeys[i];
+                                meta2 = reference.__meta;
+    
+                                /* TODO : Move this....
+                                if (reference.isDestroyed) {
+                                    instance.__removeReference(reference);
+                                    continue;
+                                }*/
+                                watched = this.processBindings(reference, changed.concat(), meta2, key);
+                                manager.propertiesDidChange(reference, watched);
+                            }
                         }
     
-                    }, this);
+                        i = meta.watchers.fns.length;
+                        instance.willNotifyWatchers.call(instance);
+                        while (i--) {
+                            fn = meta.watchers.fns[i];
+                            watched = meta.watchers.props[i];
+                            intersected = watched.length ? intersect(watched, changed) : changed.concat();
     
-                    if (!config.DIRTY_CHECK) {
-                        this.stop();
+                            if (!intersected.length) {
+                                continue;
+                            }
+                            fn.call(null, intersected);
+                        }
+                        instance.didNotifyWatchers.call(instance);
+                        chProps.splice(k, 1);
+                        chInstances.splice(k, 1);
                     }
+    
+                    manager.changedProps = [];
+                    manager.changedInstances = [];
+    
+                    this.stop();
                 },
     
                 start : function () {
@@ -4418,28 +4472,38 @@
     $b('brink/core/InstanceManager', 
     
         [
-            './CoreObject',
-            './Dictionary',
-            './InstanceWatcher',
             '../config',
+            './CoreObject',
+            './InstanceWatcher',
+            '../utils/get',
             '../utils/merge',
             '../utils/flatten'
         ],
     
-        function (CoreObject, Dictionary, InstanceWatcher, config, merge, flatten) {
+        function (config, CoreObject, InstanceWatcher, get, merge, flatten) {
     
             'use strict';
     
             var InstanceManager,
                 IID = 1;
     
+            if (typeof window !== 'undefined') {
+                window.count = 0;
+            }
+    
             InstanceManager = CoreObject.extend({
     
                 instances : null,
+                changedProps : null,
+                changedInstances : null,
     
                 init : function () {
-                    this.instances = Dictionary.create();
-                    this.watcher = InstanceWatcher.create(this.instances);
+    
+                    this.instances = {};
+                    this.changedProps = [];
+                    this.changedInstances = [];
+    
+                    this.watcher = InstanceWatcher.create(this);
                 },
     
                 buildMeta : function (meta) {
@@ -4447,60 +4511,108 @@
                     meta = meta || {};
                     meta.iid = IID ++;
     
-                    meta.changedProps = meta.changedProps || [];
-    
                     return meta;
                 },
     
                 add : function (instance, meta) {
-    
                     meta = this.buildMeta(meta);
-                    this.instances.add(instance, meta);
-    
+                    this.instances[meta.iid] = instance;
                     return meta;
                 },
     
-                remove : function () {
-                    this.instances.remove.apply(this.instances, arguments);
+                remove : function (instance) {
+                    this.instances[instance.__meta.iid] = null;
                 },
     
-                forEach : function (fn) {
-                    return this.instances.forEach(fn);
-                },
+                getChangedProps : function (obj) {
     
-                propertyDidChange : function (obj, props) {
-    
-                    var d,
-                        i,
-                        p,
-                        p2,
+                    var idx,
                         meta;
-    
-                    props = [].concat(props);
     
                     meta = obj.__meta;
     
-                    for (i = 0; i < props.length; i ++) {
+                    idx = this.changedInstances.indexOf(meta.iid);
+                    if (!~idx) {
+                        return [];
+                    }
     
+                    else {
+                        return this.changedProps[idx];
+                    }
+                },
+    
+                propertyDidChange : function (obj, p) {
+    
+                    var i,
+                        idx,
+                        meta,
+                        changed,
+                        chProps,
+                        chInstances;
+    
+                    meta = obj.__meta;
+    
+                    chInstances = this.changedInstances;
+                    chProps = this.changedProps;
+    
+                    idx = chInstances.indexOf(meta.iid);
+                    if (idx === -1) {
+                        chInstances.push(meta.iid);
+                        changed = [];
+                        chProps.push(changed);
+                    }
+    
+                    else {
+                        changed = chProps[idx];
+                    }
+    
+                    i = changed.length;
+                    if (changed.indexOf(p) === -1) {
+                        changed[i] = p;
+                    }
+    
+                    this.watcher.start();
+                    return changed;
+                },
+    
+                propertiesDidChange : function (obj, props) {
+    
+                    var i,
+                        j,
+                        p,
+                        idx,
+                        meta,
+                        changed,
+                        chProps,
+                        chInstances;
+    
+                    meta = obj.__meta;
+    
+                    chInstances = this.changedInstances;
+                    chProps = this.changedProps;
+    
+                    idx = chInstances.indexOf(meta.iid);
+                    if (idx === -1) {
+                        chInstances.push(meta.iid);
+                        changed = [];
+                        chProps.push(changed);
+                    }
+    
+                    else {
+                        changed = chProps[idx];
+                    }
+    
+                    i = props.length;
+                    j = changed.length;
+                    while (i--) {
                         p = props[i];
-    
-                        if (config.DIRTY_CHECK) {
-                            meta.values[p] = this[p];
-                        }
-    
-                        for (p2 in meta.properties) {
-    
-                            d = meta.properties[p2];
-    
-                            if (~(Array.isArray(d.watch) ? d.watch : []).indexOf(p)) {
-                                this.propertyDidChange(obj, p2);
-                            }
+                        if (changed.indexOf(p) === -1) {
+                            changed[j++] = p;
                         }
                     }
     
-                    merge(meta.changedProps, props);
-    
                     this.watcher.start();
+                    return changed;
                 },
     
                 watch : function (obj, props, fn) {
@@ -4512,7 +4624,7 @@
     
                     idx = meta.watchers.fns.indexOf(fn);
     
-                    if (!~idx) {
+                    if (idx === -1) {
                         meta.watchers.fns.push(fn);
                         idx = meta.watchers.fns.length - 1;
                     }
@@ -4659,9 +4771,7 @@
     
                     if (props && props.length) {
                         this.watch(props.concat('isLocked'), this.contextUpdated);
-                        setTimeout(function () {
-                            this.propertyDidChange(props);
-                        }.bind(this), 0);
+                        this.contextUpdated();
                     }
                 },
     
@@ -5161,7 +5271,7 @@
                         name = tmpl.getAttribute('name');
                         $b.assert('Embedded templates must specify a name... ' + tmpl.innerHTML, !!name);
     
-                        $b('templates/' + name, Template.create(tmpl));
+                        $b('templates/' + name, Template.create(tmpl.innerHTML));
                     }
                 });
             }
@@ -5597,7 +5707,7 @@
                     this.removeTemplateFromDOM(lDict.remove(item)[0]);
                 },
     
-                moveItem : function (item, newIndex) {
+                moveItem : function (item/*,newIndex*/) {
     
                     var lDict;
     

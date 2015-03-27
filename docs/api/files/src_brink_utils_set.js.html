@@ -21,7 +21,7 @@
             <li class="divider-vertical"></li>
             <li>
                 <p class="navbar-text">
-                    API Docs for Version: <b>0.1.0</b>
+                    API Docs for Version: <b>0.2.0</b>
                 </p>
             </li>
         </div>
@@ -135,9 +135,12 @@ $b(
 
             if (typeof key === &#x27;string&#x27;) {
 
-                obj = getObjKeyPair(obj, key, true);
-                key = obj[1];
-                obj = obj[0];
+                if (key.indexOf(&#x27;.&#x27;) &gt; -1) {
+                    obj = getObjKeyPair(obj, key, true);
+                    key = obj[1];
+                    obj = obj[0];
+                }
+
                 old = get(obj, key);
 
                 isDiff = old !== val;

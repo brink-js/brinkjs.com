@@ -4,7 +4,7 @@
         "description": "MVC.next",
         "url": "http://brinkjs.com",
         "logo": "../../img/brink-logo.png",
-        "version": "0.1.0"
+        "version": "0.2.0"
     },
     "files": {
         "src/brink/core/Class.js": {
@@ -331,22 +331,22 @@
         },
         {
             "file": "src/brink/core/Object.js",
-            "line": 375,
-            "description": "Invalidate one or more properties. This will trigger any bound and computed properties\ndepending on these properties to also get updated.\n\nThis will also trigger any watchers of this property in the next Run Loop.",
+            "line": 293,
+            "description": "Invalidate one or more properties. This will trigger any bound and computed properties\ndepending on these properties to also get updated.\n\nThere is almost no need to ever call this manually, as Brink will call it for you\nwhen setting a property.\n\nThis will also trigger any watchers of this property in the next Run Loop.",
             "itemtype": "method",
             "name": "propertyDidChange",
             "params": [
                 {
-                    "name": "props",
-                    "description": "A single property or an array of properties.",
-                    "type": "Array|String"
+                    "name": "prop",
+                    "description": "The property that changed.",
+                    "type": "String"
                 }
             ],
             "class": "Brink.Object"
         },
         {
             "file": "src/brink/core/Object.js",
-            "line": 389,
+            "line": 309,
             "description": "Gets a subset of properties on this object.",
             "itemtype": "method",
             "name": "getProperties",
@@ -365,7 +365,7 @@
         },
         {
             "file": "src/brink/core/Object.js",
-            "line": 422,
+            "line": 342,
             "description": "Gets all properties that have changed since the last Run Loop.",
             "itemtype": "method",
             "name": "getChangedProperties",
@@ -377,7 +377,7 @@
         },
         {
             "file": "src/brink/core/Object.js",
-            "line": 432,
+            "line": 352,
             "description": "Get or create a property descriptor.",
             "itemtype": "method",
             "name": "prop",
@@ -401,7 +401,7 @@
         },
         {
             "file": "src/brink/core/Object.js",
-            "line": 505,
+            "line": 450,
             "description": "Bind a property to a property on another object.\n\nThis can also be achieved with : `a.prop('name').bindTo(b, 'name');`",
             "itemtype": "method",
             "name": "bindProperty",
@@ -426,7 +426,7 @@
         },
         {
             "file": "src/brink/core/Object.js",
-            "line": 519,
+            "line": 464,
             "description": "Get the value of a property.\n\nThis is identical to doing `obj.key` or `obj[key]`,\nunless you are supporting <= IE8.",
             "itemtype": "method",
             "name": "get",
@@ -444,7 +444,7 @@
         },
         {
             "file": "src/brink/core/Object.js",
-            "line": 533,
+            "line": 478,
             "description": "Set the value of a property.\n\nThis is identical to doing `obj.key = val` or `obj[key] = val`,\nunless you are supporting <= IE8.\n\nYou can also use this to set nested properties.\nI.e. `obj.set('some.nested.key', val)`",
             "itemtype": "method",
             "name": "set",
@@ -466,7 +466,7 @@
         },
         {
             "file": "src/brink/core/Object.js",
-            "line": 551,
+            "line": 496,
             "description": "Watch a property or properties for changes.\n\n```javascript\n\nvar obj = $b.Object.create({\n\n    color : 'green',\n    firstName : 'Joe',\n    lastName : 'Schmoe',\n\n    init : function () {\n        this.watch('color', this.colorChanged.bind(this));\n        this.watch(['firstName', 'lastName'], this.nameChanged.bind(this));\n    },\n\n    colorChanged : function () {\n        console.log(this.color);\n    },\n\n    nameChanged : function () {\n        console.log(this.firstName + ' ' + this.lastName);\n    }\n});\n\nobj.color = 'red';\nobj.firstName = 'John';\nobj.lastName = 'Doe';\n\n```\n\nWatcher functions are only invoked once per Run Loop, this means that the `nameChanged`\nmethod above will only be called once, even though we changed two properties that\n`nameChanged` watches.\n\nYou can skip the `props` argument to watch all properties on the Object.",
             "itemtype": "method",
             "name": "watch",
@@ -486,7 +486,7 @@
         },
         {
             "file": "src/brink/core/Object.js",
-            "line": 627,
+            "line": 572,
             "description": "Remove a watcher.",
             "itemtype": "method",
             "name": "unwatch",
@@ -501,7 +501,7 @@
         },
         {
             "file": "src/brink/core/Object.js",
-            "line": 645,
+            "line": 590,
             "description": "Remove all watchers watching properties this object.\n\nUSE WITH CAUTION.\n\nThis gets called automatically during `destroy()`, it's not very common\nyou would want to call this directly.\n\nAny and all other objects that have bound properties,\nwatchers or computed properties dependent on this Object instance will\nstop working.",
             "itemtype": "method",
             "name": "unwatchAll",
@@ -509,7 +509,7 @@
         },
         {
             "file": "src/brink/core/Object.js",
-            "line": 680,
+            "line": 623,
             "description": "Destroys an object, removes all bindings and watchers and clears all metadata.\n\nIn addition to calling `destroy()` be sure to remove all\nreferences to the object so that it gets Garbage Collected.",
             "itemtype": "method",
             "name": "destroy",
@@ -517,7 +517,7 @@
         },
         {
             "file": "src/brink/core/Object.js",
-            "line": 701,
+            "line": 644,
             "description": "Extends an object's prototype and creates a new subclass.\n\nThe new subclass will inherit all properties and methods of the Object being\nextended.\n\n```javascript\n\nvar Animal = $b.Object.extend({\n\n    numLegs : 4,\n\n    walk : function () {\n        for (var i = 1; i <= this.numLegs; i ++) {\n            console.log('moving leg #' + i);\n        }\n    }\n});\n\nvar Dog = Animal.extend({\n\n    bark : function () {\n        console.log('woof!!');\n    },\n\n    walkAndBark : function () {\n        this.bark();\n        this.walk();\n    }\n});\n\nvar doggy = Dog.create();\ndoggy.walkAndBark();\n\n```\n\nIf you want `super()` method support, use {{#crossLink \"Brink.Class\"}}{{/crossLink}}\n\n```javascript\n\nvar Animal = $b.Class.extend({\n\n    numLegs : 4,\n\n    walk : function () {\n        for (var i = 1; i <= this.numLegs; i ++) {\n            console.log('moving leg #' + i);\n        }\n    }\n});\n\nvar Dog = Animal.extend({\n\n    bark : function () {\n        console.log('woof!!');\n    },\n\n    walk : function () {\n        this._super();\n        console.log('all ' + this.numLegs + ' legs moved successfully.');\n    },\n\n    walkAndBark : function () {\n        this.bark();\n        this.walk();\n    }\n});\n\nvar doggy = Dog.create();\ndoggy.walkAndBark();\n\n```",
             "itemtype": "method",
             "name": "extend",
@@ -610,7 +610,7 @@
         },
         {
             "file": "src/brink/utils/computed.js",
-            "line": 16,
+            "line": 14,
             "description": "Create a computed property on a {{#crossLink \"Brink.Object\"}}{{/crossLink}}\ninstance or subclass.\n\nThere are two ways to define computed properties, both methods are given below.\n\n**METHOD 1:**\n```javascript\n\nvar Person = $b.Object.extend({\n    firstName : '',\n    lastLame : '',\n    fullName : $b.computed(function () {\n        return this.firstName + ' ' + this.lastName;\n    }, 'firstName', 'lastName')\n});\n\npersonInstance = Person.create({firstName : 'Jane', lastName : 'Doe'});\nconsole.log(personInstance.fullName); // 'Jane Doe';\n\npersonInstance.lastName = 'Smith';\nconsole.log(personInstance.fullName); // 'Jane Smith';\n\n```\n**METHOD 2:**\n```javascript\nvar personInstance = $b.Object.create({\n    firstName : 'Jane',\n    lastName : 'Smith',\n    fullName : $b.computed({\n\n        watch : ['firstName', 'lastName'],\n\n        get : function () {\n            return [this.firstName, this.lastName].join(' ');\n        },\n\n        set : function (val) {\n            val = val.split(' ');\n            this.firstName = val[0];\n            this.lastName = val[1] || '';\n            return val.join(' ');\n        }\n    })\n});\n\nconsole.log(personInstance.fullName); // 'Jane Smith';\npersonInstance.fullName = 'John Doe';\nconsole.log(personInstance.firstName, personInstance.lastName); // 'John', 'Doe';\n\n```\n\nYou can use the second method with a getter AND setter, only a getter or only a setter.\nThe first method only allows supplying a getter.\n\nThe `watch` property is an array of properties that will cause this computed\nproperty to return a new value. In the first method, these properties\ncan be specified after the getter.\n\nIf you just want getter/setter support for a property you can specify an\nempty array for the `watch` property or not define it at all.",
             "itemtype": "method",
             "name": "computed",
@@ -772,7 +772,7 @@
         },
         {
             "file": "src/brink/utils/intersect.js",
-            "line": 14,
+            "line": 13,
             "description": "Compare two arrays and return an `Array` with items that exist\nin both arrays.",
             "itemtype": "method",
             "name": "intersect",

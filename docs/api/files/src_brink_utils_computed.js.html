@@ -21,7 +21,7 @@
             <li class="divider-vertical"></li>
             <li>
                 <p class="navbar-text">
-                    API Docs for Version: <b>0.1.0</b>
+                    API Docs for Version: <b>0.2.0</b>
                 </p>
             </li>
         </div>
@@ -82,15 +82,13 @@
 $b(
 
     [
-        &#x27;./flatten&#x27;,
-        &#x27;./isFunction&#x27;,
-        &#x27;./expandProps&#x27;
+        &#x27;./isFunction&#x27;
     ],
 
     /***********************************************************************
     @class Brink
     ************************************************************************/
-    function (flatten, isFunction, expandProps) {
+    function (isFunction) {
 
         &#x27;use strict&#x27;;
 
@@ -165,7 +163,7 @@ $b(
 
             if (isFunction(o)) {
                 o = {
-                    watch : flatten([].slice.call(arguments, 1)),
+                    watch : arguments[1],
                     get : o
                 };
             }
@@ -174,7 +172,7 @@ $b(
                 o.value = o.defaultValue;
             }
 
-            o.watch = expandProps(o.watch ? [].concat(o.watch) : []);
+            o.watch = o.watch ? [].concat(o.watch) : [];
             o.__isComputed = true;
 
             return o;

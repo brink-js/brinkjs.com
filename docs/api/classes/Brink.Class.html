@@ -21,7 +21,7 @@
             <li class="divider-vertical"></li>
             <li>
                 <p class="navbar-text">
-                    API Docs for Version: <b>0.1.0</b>
+                    API Docs for Version: <b>0.2.0</b>
                 </p>
             </li>
         </div>
@@ -119,7 +119,7 @@ and other utilities not found on <code>Brink.Object</code>:</p>
 				<li><a href="#method-getChangedProperties"><span class="im">getChangedProperties</span>()</a></li>
 				<li><a href="#method-getProperties"><span class="im">getProperties</span>(<span class="ia">keys</span>)</a></li>
 				<li><a href="#method-prop"><span class="im">prop</span>(<span class="ia">key</span><span class="ia">val</span>)</a></li>
-				<li><a href="#method-propertyDidChange"><span class="im">propertyDidChange</span>(<span class="ia">props</span>)</a></li>
+				<li><a href="#method-propertyDidChange"><span class="im">propertyDidChange</span>(<span class="ia">prop</span>)</a></li>
 				<li><a href="#method-publish"><span class="im">publish</span>(<span class="ia">name</span><span class="ia">handler</span><span class="ia">args</span>)</a></li>
 				<li><a href="#method-set"><span class="im">set</span>(<span class="ia">key</span><span class="ia">val</span>)</a></li>
 				<li><a href="#method-subscribe"><span class="im">subscribe</span>(<span class="ia">name</span><span class="ia">handler</span><span class="ia">priority</span>)</a></li>
@@ -200,7 +200,7 @@ and other utilities not found on <code>Brink.Object</code>:</p>
 	<div class="meta">
 				<p>Inherited from
 				<a href="../classes/Brink.Object.html#method_bindProperty">Brink.Object</a>:
-		<a href="../files/src_brink_core_Object.js.html#l505"><code>src&#x2F;brink&#x2F;core&#x2F;Object.js:505</code></a>
+		<a href="../files/src_brink_core_Object.js.html#l450"><code>src&#x2F;brink&#x2F;core&#x2F;Object.js:450</code></a>
 		</p>
 
 
@@ -262,7 +262,7 @@ and other utilities not found on <code>Brink.Object</code>:</p>
 	<div class="meta">
 				<p>Inherited from
 				<a href="../classes/Brink.Object.html#method_destroy">Brink.Object</a>:
-		<a href="../files/src_brink_core_Object.js.html#l680"><code>src&#x2F;brink&#x2F;core&#x2F;Object.js:680</code></a>
+		<a href="../files/src_brink_core_Object.js.html#l623"><code>src&#x2F;brink&#x2F;core&#x2F;Object.js:623</code></a>
 		</p>
 
 
@@ -292,7 +292,7 @@ references to the object so that it gets Garbage Collected.</p>
 	<div class="meta">
 				<p>Inherited from
 				<a href="../classes/Brink.Object.html#method_extend">Brink.Object</a>:
-		<a href="../files/src_brink_core_Object.js.html#l701"><code>src&#x2F;brink&#x2F;core&#x2F;Object.js:701</code></a>
+		<a href="../files/src_brink_core_Object.js.html#l644"><code>src&#x2F;brink&#x2F;core&#x2F;Object.js:644</code></a>
 		</p>
 
 
@@ -393,7 +393,7 @@ doggy.walkAndBark();
 	<div class="meta">
 				<p>Inherited from
 				<a href="../classes/Brink.Object.html#method_get">Brink.Object</a>:
-		<a href="../files/src_brink_core_Object.js.html#l519"><code>src&#x2F;brink&#x2F;core&#x2F;Object.js:519</code></a>
+		<a href="../files/src_brink_core_Object.js.html#l464"><code>src&#x2F;brink&#x2F;core&#x2F;Object.js:464</code></a>
 		</p>
 
 
@@ -449,7 +449,7 @@ unless you are supporting &lt;= IE8.</p>
 	<div class="meta">
 				<p>Inherited from
 				<a href="../classes/Brink.Object.html#method_getChangedProperties">Brink.Object</a>:
-		<a href="../files/src_brink_core_Object.js.html#l422"><code>src&#x2F;brink&#x2F;core&#x2F;Object.js:422</code></a>
+		<a href="../files/src_brink_core_Object.js.html#l342"><code>src&#x2F;brink&#x2F;core&#x2F;Object.js:342</code></a>
 		</p>
 
 
@@ -495,7 +495,7 @@ unless you are supporting &lt;= IE8.</p>
 	<div class="meta">
 				<p>Inherited from
 				<a href="../classes/Brink.Object.html#method_getProperties">Brink.Object</a>:
-		<a href="../files/src_brink_core_Object.js.html#l389"><code>src&#x2F;brink&#x2F;core&#x2F;Object.js:389</code></a>
+		<a href="../files/src_brink_core_Object.js.html#l309"><code>src&#x2F;brink&#x2F;core&#x2F;Object.js:309</code></a>
 		</p>
 
 
@@ -559,7 +559,7 @@ unless you are supporting &lt;= IE8.</p>
 	<div class="meta">
 				<p>Inherited from
 				<a href="../classes/Brink.Object.html#method_prop">Brink.Object</a>:
-		<a href="../files/src_brink_core_Object.js.html#l432"><code>src&#x2F;brink&#x2F;core&#x2F;Object.js:432</code></a>
+		<a href="../files/src_brink_core_Object.js.html#l352"><code>src&#x2F;brink&#x2F;core&#x2F;Object.js:352</code></a>
 		</p>
 
 
@@ -611,7 +611,7 @@ unless you are supporting &lt;= IE8.</p>
 		<div class="args">
 			<span class="paren">(</span><ul class="args-list inline commas">
 				<li class="arg">
-						<code>props</code>
+						<code>prop</code>
 				</li>
 			</ul><span class="paren">)</span>
 		</div>
@@ -625,7 +625,7 @@ unless you are supporting &lt;= IE8.</p>
 	<div class="meta">
 				<p>Inherited from
 				<a href="../classes/Brink.Object.html#method_propertyDidChange">Brink.Object</a>:
-		<a href="../files/src_brink_core_Object.js.html#l375"><code>src&#x2F;brink&#x2F;core&#x2F;Object.js:375</code></a>
+		<a href="../files/src_brink_core_Object.js.html#l293"><code>src&#x2F;brink&#x2F;core&#x2F;Object.js:293</code></a>
 		</p>
 
 
@@ -634,6 +634,8 @@ unless you are supporting &lt;= IE8.</p>
 
 	<div class="description"><p>Invalidate one or more properties. This will trigger any bound and computed properties
 depending on these properties to also get updated.</p>
+<p>There is almost no need to ever call this manually, as Brink will call it for you
+when setting a property.</p>
 <p>This will also trigger any watchers of this property in the next Run Loop.</p>
 </div>
 
@@ -642,11 +644,11 @@ depending on these properties to also get updated.</p>
 
 			<ul class="params-list">
 				<li class="param">
-						<code class="param-name">props</code>
-						<span class="type">Array  |  String</span>
+						<code class="param-name">prop</code>
+						<span class="type">String</span>
 
 
-					<div class="param-description"><p>A single property or an array of properties.</p>
+					<div class="param-description"><p>The property that changed.</p>
 </div>
 
 				</li>
@@ -757,7 +759,7 @@ depending on these properties to also get updated.</p>
 	<div class="meta">
 				<p>Inherited from
 				<a href="../classes/Brink.Object.html#method_set">Brink.Object</a>:
-		<a href="../files/src_brink_core_Object.js.html#l533"><code>src&#x2F;brink&#x2F;core&#x2F;Object.js:533</code></a>
+		<a href="../files/src_brink_core_Object.js.html#l478"><code>src&#x2F;brink&#x2F;core&#x2F;Object.js:478</code></a>
 		</p>
 
 
@@ -981,7 +983,7 @@ you would want to call this directly.</p>
 	<div class="meta">
 				<p>Inherited from
 				<a href="../classes/Brink.Object.html#method_unwatch">Brink.Object</a>:
-		<a href="../files/src_brink_core_Object.js.html#l627"><code>src&#x2F;brink&#x2F;core&#x2F;Object.js:627</code></a>
+		<a href="../files/src_brink_core_Object.js.html#l572"><code>src&#x2F;brink&#x2F;core&#x2F;Object.js:572</code></a>
 		</p>
 
 
@@ -1024,7 +1026,7 @@ you would want to call this directly.</p>
 	<div class="meta">
 				<p>Inherited from
 				<a href="../classes/Brink.Object.html#method_unwatchAll">Brink.Object</a>:
-		<a href="../files/src_brink_core_Object.js.html#l645"><code>src&#x2F;brink&#x2F;core&#x2F;Object.js:645</code></a>
+		<a href="../files/src_brink_core_Object.js.html#l590"><code>src&#x2F;brink&#x2F;core&#x2F;Object.js:590</code></a>
 		</p>
 
 
@@ -1067,7 +1069,7 @@ stop working.</p>
 	<div class="meta">
 				<p>Inherited from
 				<a href="../classes/Brink.Object.html#method_watch">Brink.Object</a>:
-		<a href="../files/src_brink_core_Object.js.html#l551"><code>src&#x2F;brink&#x2F;core&#x2F;Object.js:551</code></a>
+		<a href="../files/src_brink_core_Object.js.html#l496"><code>src&#x2F;brink&#x2F;core&#x2F;Object.js:496</code></a>
 		</p>
 
 
