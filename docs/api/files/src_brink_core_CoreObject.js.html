@@ -21,7 +21,7 @@
             <li class="divider-vertical"></li>
             <li>
                 <p class="navbar-text">
-                    API Docs for Version: <b>0.2.0</b>
+                    API Docs for Version: <b>0.2.3</b>
                 </p>
             </li>
         </div>
@@ -82,10 +82,11 @@
 $b(
 
     [
+        &#x27;../utils/merge&#x27;,
         &#x27;../utils/extend&#x27;
     ],
 
-    function (extend) {
+    function (merge, extend) {
 
         &#x27;use strict&#x27;;
 
@@ -144,6 +145,8 @@ $b(
 
             BrinkObject.prototype.constructor = BrinkObject;
 
+            BrinkObject.__meta = merge({isObject : true}, BrinkObject.__meta);
+
             return BrinkObject;
         };
 
@@ -180,6 +183,10 @@ $b(
             }
 
             return instance;
+        };
+
+        CoreObject.toString = function () {
+            return this.__meta.name;
         };
 
         return CoreObject;

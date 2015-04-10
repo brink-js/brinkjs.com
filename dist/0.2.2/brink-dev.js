@@ -1795,6 +1795,53 @@
     
     ).attach('$b');
 
+    $b('brink/dev/error', 
+    
+        function () {
+    
+            'use strict';
+    
+            return function (msg) {
+                throw new Error(msg);
+            };
+        }
+    
+    ).attach('$b');
+
+    $b('brink/dev/assert', 
+    
+        [
+            './error'
+        ],
+    
+        function (error) {
+    
+            'use strict';
+    
+            return function (msg, test) {
+    
+                if (!test) {
+                    error(msg);
+                }
+            };
+        }
+    
+    ).attach('$b');
+    
+
+    $b('brink/dev/warn', 
+    
+        function () {
+    
+            'use strict';
+    
+            return function (msg) {
+                console.warn(msg);
+            };
+        }
+    
+    ).attach('$b');
+
     $b('brink/utils/isFunction', 
     
         /***********************************************************************
@@ -2780,7 +2827,7 @@
      * limitations under the License.
      *
      */
-    $b('brink/utils/Q', function () {
+    $b('brink/utils/promise', function () {
     
         "use strict";
     
@@ -4708,7 +4755,7 @@
     
         [
             './params',
-            './Q'
+            './promise'
         ],
     
         function (params, Q) {
@@ -5705,7 +5752,7 @@
                             p = null;
                             while (a.length) {
                                 p = (p ? p.concat('.') : '').concat(a.splice(0, 1)[0]);
-                                tmp.push(a.length ? p.concat('.') : p);
+                                tmp.push(p);
                             }
                         }
     
@@ -5790,10 +5837,8 @@
                 @param val The value to set.
                 @return The value returned from the property's setter.
                 ***********************************************************************/
-                set : function () {
-                    var args = Array.prototype.slice.call(arguments);
-                    args.unshift(this);
-                    return set.apply(null, args);
+                set : function (key, val, quiet, skipCompare) {
+                    return set(this, key, val, quiet, skipCompare);
                 },
     
                 /***********************************************************************
@@ -6045,10 +6090,10 @@
     $b('brink/core/NotificationManager', 
     
         [
-            '../utils/Q'
+            '../utils/isFunction'
         ],
     
-        function (Q) {
+        function (isFunction) {
     
             'use strict';
     
@@ -6061,22 +6106,38 @@
             _pendingNotifications = [];
             _interests = {};
     
-            Notification = function (name, args) {
+            Notification = function (name, args, callback) {
                 this.name = name;
                 this.args = args;
+                this.data = args && args.length === 1 ? args[0] : null;
+                this.callback = callback;
                 return this;
             };
     
+            Notification.prototype.data = {};
             Notification.prototype.name = '';
             Notification.prototype.dispatcher = null;
             Notification.prototype.status = 0;
             Notification.prototype.pointer = 0;
+            Notification.prototype.callback = null;
+    
+            Notification.prototype.hold = function () {
+                this.status = 2;
+            };
+    
+            Notification.prototype.release = function () {
+                this.status = 1;
+                NotificationManager.releaseNotification(this);
+            };
     
             Notification.prototype.cancel = function () {
+                this.data = {};
                 this.name = '';
                 this.status = 0;
                 this.pointer = 0;
                 this.dispatcher = null;
+                this.callback = null;
+    
                 NotificationManager.cancelNotification(this);
             };
     
@@ -6087,51 +6148,49 @@
                 NotificationManager.publishNotification(this);
             };
     
-            function _publishNotification (notification) {
+            Notification.prototype.respond = function () {
+                if (this.callback) {
+                    this.callback.apply(this.dispatcher, arguments);
+                    this.cancel();
+                }
+            };
+    
+            function _publishNotification(notification) {
                 _pendingNotifications.push(notification);
-                return _notifyObjects(notification);
+                _notifyObjects(notification);
             }
     
-            function _notifyObjects (n) {
+            function _notifyObjects(notification) {
     
-                var fn,
-                    name,
-                    subs;
+                var name,
+                    subs,
+                    len;
     
-                function next () {
-    
-                    if (n.status === 1 && n.pointer < subs.length) {
-    
-                        fn = subs[n.pointer];
-                        n.pointer ++;
-    
-                        return (
-                            Q(fn.apply(null, [].concat(n, n.args)))
-                            .then(function (response) {
-                                n.response = response;
-                                return next();
-                            })
-                            .catch(function (err) {
-                                return Q.reject(err);
-                            })
-                        );
-                    }
-    
-                    else {
-                        subs = null;
-                        if (n.status === 1) {
-                            n.cancel();
-                        }
-    
-                        return Q(n.response);
-                    }
-                }
-    
-                name = n.name;
+                name = notification.name;
     
                 if (_interests[name]) {
+    
                     subs = _interests[name].slice(0);
-                    return next();
+                    len = subs.length;
+    
+                    while (notification.pointer < len) {
+                        if (notification.status === 1) {
+                            subs[notification.pointer].apply(null, [].concat(notification, notification.args));
+                            notification.pointer ++;
+                        } else {
+                            return;
+                        }
+                    }
+    
+                    subs = null;
+    
+                    /**
+                    * Notified all subscribers, notification is no longer needed,
+                    * unless it has a callback to be called later via notification.respond()
+                    */
+                    if (notification.status === 1 && !notification.callback) {
+                        notification.cancel();
+                    }
                 }
             }
     
@@ -6161,16 +6220,25 @@
                 var notification,
                     args = Array.prototype.slice.call(arguments),
                     name = args[0],
-                    dispatcher = args[args.length - 1];
+                    dispatcher = args[args.length - 1],
+                    callback = args[args.length - 2];
     
-                args = args.slice(1, args.length - 1);
+                callback = isFunction(callback) ? callback : null;
     
-                notification = new Notification(name, args);
+                args = args.slice(1, (callback ? args.length - 2 : args.length - 1));
+    
+                notification = new Notification(name, args, callback);
                 notification.status = 1;
                 notification.pointer = 0;
                 notification.dispatcher = dispatcher;
+                _publishNotification(notification);
+            };
     
-                return _publishNotification(notification);
+            NotificationManager.releaseNotification = function (notification) {
+                notification.status = 1;
+                if (_pendingNotifications.indexOf(notification) > -1) {
+                    _notifyObjects(notification);
+                }
             };
     
             NotificationManager.cancelNotification = function (notification) {
@@ -6317,7 +6385,7 @@
                 ************************************************************************/
                 publish : function (/*name, arg1, arg2, arg3..., callback*/) {
                     var args = Array.prototype.slice.call(arguments);
-                    return NotificationManager.publish.apply(NotificationManager, [].concat(args, this));
+                    NotificationManager.publish.apply(NotificationManager, [].concat(args, this));
                 },
     
                 destroy : superfy(function () {
@@ -6870,7 +6938,7 @@
                         quiet,
                         skipCompare
                     );
-                }
+                },
             });
         }
     
@@ -7131,7 +7199,7 @@
     
                     for (i = 0, l = prefixReset = props.length; i < l; i ++) {
     
-                        if (prefix && i < prefixReset) {
+                        if (i < prefixReset) {
                             p = prefix.concat(props[i]);
                             props[i] = p;
                         }
@@ -7147,10 +7215,6 @@
     
                             if (bindings[p]) {
                                 memoized = bindings[p].concat();
-                            }
-    
-                            if (bindings[p + '.']) {
-                                Array.prototype.push.apply(memoized, bindings[p + '.']);
                             }
     
                             tmp = p.split('.');
@@ -7376,10 +7440,6 @@
                         chInstances;
     
                     meta = obj.__meta;
-    
-                    if (!meta.isInitialized) {
-                        return;
-                    }
     
                     chInstances = this.changedInstances;
                     chProps = this.changedProps;
@@ -8273,6 +8333,7 @@
                         }
                     }
     
+    
                     if (styleFragment) {
                         dom.appendChild(styleFragment);
                     }
@@ -8917,6 +8978,12 @@
     
             var Adapter = Class({
     
+                fetch : $b.F,
+                fetchAll : $b.F,
+                createRecord : $b.F,
+                updateRecord : $b.F,
+                deleteRecord : $b.F,
+    
                 __init : function () {
     
                     var meta;
@@ -8944,25 +9011,6 @@
                     }
     
                     return this._super.apply(this, arguments);
-                },
-    
-                fetch : $b.F,
-                fetchAll : $b.F,
-                createRecord : $b.F,
-                updateRecord : $b.F,
-                deleteRecord : $b.F,
-    
-                saveRecord : function (record) {
-    
-                    if (record.get('isNew')) {
-                        return this.createRecord(record);
-                    }
-    
-                    return this.updateRecord(record);
-                },
-    
-                registerModel : function () {
-                    // Hook for if you need to do any fancy pants stuff...
                 }
     
             });
@@ -9162,6 +9210,14 @@
     
             return (function (mKey, options) {
     
+                var ModelClass;
+    
+                ModelClass = $b.__models[mKey];
+    
+                if (!ModelClass) {
+                    throw new Error('No model was found with a modelKey of "' + mKey + '"');
+                }
+    
                 options = options || {};
     
                 var belongsTo = computed({
@@ -9180,7 +9236,7 @@
                             pristine;
     
                         meta = this.__meta;
-                        store = this.store;
+                        store = this.__store;
                         dirty = get(this, 'dirtyAttributes');
                         data = meta.data;
                         pristine = meta.pristineData;
@@ -9224,7 +9280,7 @@
                         if (val) {
                             $b.assert(
                                 'Must be a model of type "' + mKey + '".',
-                                val instanceof $b.__models[mKey]
+                                val instanceof ModelClass
                             );
                         }
     
@@ -9249,7 +9305,7 @@
     
                         val = get(this, key);
     
-                        if (val && val instanceof $b.__models[mKey]) {
+                        if (val && val instanceof ModelClass) {
     
                             if (options.embedded) {
                                 return val.serialize();
@@ -9271,7 +9327,7 @@
                         key = meta.key;
     
                         if (options.embedded) {
-                            record = get(this, key) || $b.__models[mKey].create();
+                            record = get(this, key) || ModelClass.create();
     
                             if (val && typeof val === 'object') {
                                 val = record.deserialize(val, override);
@@ -9420,7 +9476,7 @@
                     if (destroyRecords) {
                         i = this.content.length;
                         while (i--) {
-                            this.content[i].destroy(true);
+                            this.content[i].destroy();
                         }
                     }
                     BrinkArray.prototype.destroy.call(this);
@@ -9447,6 +9503,14 @@
     
             return (function (mKey, options) {
     
+                var ModelClass;
+    
+                ModelClass = $b.__models[mKey];
+    
+                if (!ModelClass) {
+                    throw new Error('No model was found with a modelKey of "' + mKey + '"');
+                }
+    
                 options = options || {};
     
                 if (options.map) {
@@ -9469,7 +9533,7 @@
                             pristine;
     
                         meta = this.__meta;
-                        store = this.store;
+                        store = this.__store;
                         dirty = get(this, 'dirtyAttributes');
                         data = meta.data;
                         pristine = meta.pristineData;
@@ -9579,7 +9643,7 @@
                         meta = hasMany.meta();
                         key = meta.key;
                         map = options.map || {};
-                        store = this.store;
+                        store = this.__store;
     
                         val = val || [];
     
@@ -9618,7 +9682,7 @@
     
                                 if (options.embedded && typeof val[i] === 'object') {
     
-                                    record = $b.__models[mKey].create();
+                                    record = ModelClass.create();
     
                                     if (store) {
                                         store.add(mKey, record);
@@ -9630,7 +9694,7 @@
                                 else {
     
                                     if (!store) {
-                                        record = $b.__models[mKey].create({pk : val[i]});
+                                        record = ModelClass.create({pk : val[i]});
                                     }
     
                                     else {
@@ -9679,110 +9743,24 @@
     
     ).attach('$b');
 
-    $b('brink/data/ModelController', 
-    
-        [
-            '../core/Class',
-            '../utils/get'
-        ],
-    
-        function (Class, get) {
-    
-            'use strict';
-    
-            var ModelController = Class({
-    
-                store : $b.bindTo('model.store'),
-    
-                model : $b.computed({
-    
-                    get : function () {
-                        return this._model;
-                    },
-    
-                    set : function (val) {
-    
-                        this._model = val;
-    
-                        if (val.__meta.controller) {
-                            val.__meta.controller.destroy(false);
-                        }
-    
-                        val.__meta.controller = this;
-                    }
-                }),
-    
-                serialize : function () {
-                    return this.model.serialize.apply(null, arguments);
-                },
-    
-                deserialize : function () {
-                    return this.model.deserialize.apply(null, arguments);
-                },
-    
-                save : function () {
-                    return this.model.save.apply(null, arguments);
-                },
-    
-                fetch : function () {
-                    return this.model.fetch.apply(null, arguments);
-                },
-    
-                delete : function () {
-                    return this.model.delete.apply(null, arguments);
-                },
-    
-                clone : function () {
-                    return this.model.clone.apply(null, arguments);
-                },
-    
-                revert : function () {
-                    return this.model.revert.apply(null, arguments);
-                },
-    
-                destroy : function (destroyModel) {
-    
-                    var model;
-    
-                    model = get(this, 'model');
-    
-                    if (destroyModel && model) {
-                        model.destroy();
-                    }
-    
-                    return this._super.call(this);
-                }
-            });
-    
-            return ModelController;
-        }
-    
-    ).attach('$b');
-    
-
     $b('brink/data/Model', 
     
         [
-            './ModelController',
             '../core/Class',
             '../core/Array',
             '../utils/get',
             '../utils/set',
-            '../utils/bindTo',
             '../utils/computed'
         ],
     
-        function (ModelController, Class, BrinkArray, get, set, bindTo, computed) {
+        function (Class, BrinkArray, get, set, computed) {
     
             'use strict';
     
             var Model = Class({
     
-                store : null,
-                adapter : null,
                 modelKey : null,
                 collectionKey : null,
-                controllerClass : null,
     
                 primaryKey : 'id',
     
@@ -9802,7 +9780,7 @@
                 }, 'isDirty'),
     
                 isNew : computed(function () {
-                    return !get(this, 'pk');
+                    return !!get(this, 'pk');
                 }, 'pk'),
     
                 pk : computed({
@@ -9830,8 +9808,6 @@
     
                     meta = this.__meta;
                     cMeta = this.constructor.__meta;
-    
-                    meta.isInitialized = false;
     
                     if (cMeta.attributes) {
                         meta.attributes = cMeta.attributes;
@@ -9864,30 +9840,14 @@
     
                     meta.data = {};
     
+                    for (p in o) {
+                        set(this, p, o[p]);
+                    }
+    
                     meta.pristineData = {};
                     meta.pristineContent = {};
     
-                    if (typeof o === 'object') {
-                        this.deserialize(o);
-                    }
-    
                     set(this, 'dirtyAttributes', BrinkArray.create());
-    
-                    meta.isInitialized = true;
-                },
-    
-                getController : function () {
-    
-                    var controller = this.__meta.controller;
-    
-                    if (!controller) {
-                        if (!this.constructor.controllerClass) {
-                            return null;
-                        }
-                        controller = this.constructor.controllerClass.create({model : this});
-                    }
-    
-                    return controller;
                 },
     
                 serialize : function () {
@@ -9953,11 +9913,7 @@
     
                     meta = this.__meta;
     
-                    if (!json) {
-                        return this;
-                    }
-    
-                    dirty = get(this, 'dirtyAttributes') || [];
+                    dirty = get(this, 'dirtyAttributes');
                     attributes = meta.attributes;
                     relationships = meta.relationships;
     
@@ -9982,7 +9938,7 @@
                         }
                     }
     
-                    if (this.primaryKey && json[this.primaryKey]) {
+                    if (this.primaryKey) {
                         set(this, 'pk', json[this.primaryKey]);
                     }
     
@@ -10002,6 +9958,7 @@
                     set(this, 'isSaving', true);
     
                     return this.adapter.saveRecord(this).then(function (json) {
+    
                         self.deserialize(json);
                         set(self, 'isSaving', false);
                         set(self, 'isLoaded', true);
@@ -10032,7 +9989,7 @@
                     });
                 },
     
-                delete : function () {
+                del : function () {
     
                     var self,
                         isNew;
@@ -10107,11 +10064,8 @@
     
             Model.extend = function () {
     
-                var p,
-                    props,
-                    meta,
+                var meta,
                     proto,
-                    toProxy,
                     SubClass;
     
                 SubClass = Class.extend.apply(this, arguments);
@@ -10119,10 +10073,6 @@
     
                 if (proto.url) {
                     SubClass.url = proto.url;
-                }
-    
-                if (proto.primaryKey) {
-                    SubClass.primaryKey = proto.primaryKey;
                 }
     
                 if (proto.modelKey) {
@@ -10136,26 +10086,6 @@
                     SubClass.collectionKey = proto.collectionKey;
     
                     $b.registerModel(SubClass);
-                }
-    
-                if (proto.adapter) {
-                    SubClass.adapter = proto.adapter;
-                    proto.adapter.registerModel(SubClass);
-                }
-    
-                if (proto.controllerClass) {
-    
-                    toProxy = {};
-    
-                    props = proto.__meta.properties;
-    
-                    for (p in props) {
-                        toProxy[p] = bindTo('model.' + p);
-                    }
-    
-                    SubClass.controllerClass = proto.controllerClass.extend(toProxy);
-    
-                    delete proto.controllerClass;
                 }
     
                 return SubClass;
@@ -10174,15 +10104,14 @@
     $b('brink/data/Store', 
     
         [
+            '../core/Class',
             './Model',
             './Collection',
-            './ModelController',
-            '../core/Class',
             '../utils/get',
             '../utils/set'
         ],
     
-        function (Model, Collection, ModelController, Class, get, set) {
+        function (Class, Model, Collection, get, set) {
     
             'use strict';
     
@@ -10202,7 +10131,6 @@
                     var i,
                         l,
                         record,
-                        controller,
                         collection;
     
                     if (arguments.length === 1) {
@@ -10218,16 +10146,8 @@
                     collection = this.getCollection(mKey);
     
                     for (i = 0, l = records.length; i < l; i ++) {
-    
                         record = records[i];
-    
-                        controller = record.getController();
-    
-                        if (controller) {
-                            record = controller;
-                        }
-    
-                        set(record, 'store', this);
+                        record.__store = this;
                         collection.push(record);
                     }
     
@@ -10238,7 +10158,6 @@
     
                     var i,
                         l,
-                        record,
                         collection;
     
                     if (arguments.length === 1) {
@@ -10254,8 +10173,6 @@
                     collection = this.getCollection(mKey);
     
                     for (i = 0, l = records.length; i < l; i ++) {
-                        record = records[i];
-                        record = record.__meta.controller || record;
                         collection.remove(records[i]);
                     }
     
@@ -10264,32 +10181,6 @@
     
                 all : function (mKey) {
                     return this.getCollection(mKey);
-                },
-    
-                fetchAll : function (mKey) {
-    
-                    var i,
-                        item,
-                        model,
-                        record,
-                        primaryKey;
-    
-                    model = this.modelFor(mKey);
-                    primaryKey = model.primaryKey;
-    
-                    return model.adapter.fetchAll(model).then(function (json) {
-    
-                        json = Array.isArray(json) ? json : [json];
-    
-                        for (i = 0; i < json.length; i ++) {
-                            item = json[i];
-                            record = this.findOrCreate(model, item[model.primaryKey]);
-                            record.deserialize(item);
-                        }
-    
-                        return this.all(model);
-    
-                    }.bind(this));
                 },
     
                 find : function (mKey, q) {
@@ -10308,15 +10199,18 @@
     
                     return collection.find(function (item) {
     
-                        var p;
+                        var p,
+                            doesMatch;
+    
+                        doesMatch = true;
     
                         for (p in q) {
                             if (get(item, p) !== q[p]) {
-                                return false;
+                                doesMatch = false;
                             }
                         }
     
-                        return true;
+                        return doesMatch;
     
                     }, this);
                 },
@@ -10325,15 +10219,12 @@
     
                     var record;
     
-                    if (pk) {
-                        record = this.find(mKey, pk);
-                    }
+                    record = this.find(mKey, pk);
     
                     if (!record) {
                         record = this.modelFor(mKey).create();
                         set(record, 'pk', pk);
                         this.add(mKey, record);
-                        record = record.__meta.controller || record;
                     }
     
                     return record;

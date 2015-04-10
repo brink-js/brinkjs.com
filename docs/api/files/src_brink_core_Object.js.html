@@ -21,7 +21,7 @@
             <li class="divider-vertical"></li>
             <li>
                 <p class="navbar-text">
-                    API Docs for Version: <b>0.2.0</b>
+                    API Docs for Version: <b>0.2.3</b>
                 </p>
             </li>
         </div>
@@ -218,6 +218,8 @@ $b(
                     props : []
                 };
 
+                meta.memoizedBindings = {};
+
                 return meta;
             },
 
@@ -263,7 +265,7 @@ $b(
 
                 d = clone(d);
 
-               // Modern browsers, IE9 +
+                // Modern browsers, IE9 +
                 if (Object.defineProperty) {
                     Object.defineProperty(this, p, d);
                 }
@@ -456,7 +458,6 @@ $b(
 
                 meta.bindings = meta.bindings || {};
                 meta.externalBindings = meta.externalBindings || {};
-                meta.memoizedBindings = meta.memoizedBindings || {};
 
                 if (typeof meta.properties[key] !== &#x27;undefined&#x27;) {
                     if (typeof val === &#x27;undefined&#x27;) {
@@ -469,8 +470,13 @@ $b(
                     val = {
                         get : true,
                         set : true,
-                        value : val
+                        value : val,
+                        watch : null
                     };
+                }
+
+                else {
+                    val.__meta.key = key;
                 }
 
                 val = meta.properties[key] = defineProperty(obj, key, val);
@@ -480,12 +486,14 @@ $b(
 
                 if (watched &amp;&amp; (i = watched.length)) {
                     tmp = [];
+
                     while (i--) {
+
                         a = watched[i].split(&#x27;.&#x27;);
                         p = null;
                         while (a.length) {
                             p = (p ? p.concat(&#x27;.&#x27;) : &#x27;&#x27;).concat(a.splice(0, 1)[0]);
-                            tmp.push(p);
+                            tmp.push(a.length ? p.concat(&#x27;.&#x27;) : p);
                         }
                     }
 
@@ -570,8 +578,10 @@ $b(
             @param val The value to set.
             @return The value returned from the property&#x27;s setter.
             ***********************************************************************/
-            set : function (key, val, quiet, skipCompare) {
-                return set(this, key, val, quiet, skipCompare);
+            set : function () {
+                var args = Array.prototype.slice.call(arguments);
+                args.unshift(this);
+                return set.apply(null, args);
             },
 
             /***********************************************************************
@@ -701,6 +711,10 @@ $b(
 
             },
 
+            toString : function () {
+                return &#x27;[instance &#x27; + this.constructor.__meta.name + &#x27;]&#x27;;
+            },
+
             /***********************************************************************
             Destroys an object, removes all bindings and watchers and clears all metadata.
 
@@ -806,48 +820,10 @@ $b(
 
             proto = SubObj.prototype;
             proto.__parsePrototype.call(proto);
+            proto.constructor = SubObj;
 
             return SubObj;
         };
-
-        Obj.define = function () {
-            $b.define(this.prototype.__dependencies, bindFunction(this.resolveDependencies, this));
-            return this;
-        };
-
-        Obj.resolveDependencies = function () {
-
-            var proto,
-                p;
-
-            proto = this.prototype;
-
-            for (p in proto.__dependencies) {
-                proto[p] = proto.__dependencies[p].resolve();
-            }
-
-            this.__meta.dependenciesResolved = true;
-
-            return this;
-        };
-
-        Obj.load = function (cb) {
-
-            cb = typeof cb === &#x27;function&#x27; ? cb : function () {};
-
-            if (this.__meta.dependenciesResolved) {
-                cb(this);
-            }
-
-            $b.require(this.prototype.__dependencies, bindFunction(function () {
-                this.resolveDependencies.call(this);
-                cb(this);
-            }, this));
-
-            return this;
-        };
-
-        Obj.__meta = merge(Obj.__meta || {}, {isObject: true});
 
         return Obj;
     }

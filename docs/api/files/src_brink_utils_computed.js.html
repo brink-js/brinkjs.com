@@ -21,7 +21,7 @@
             <li class="divider-vertical"></li>
             <li>
                 <p class="navbar-text">
-                    API Docs for Version: <b>0.2.0</b>
+                    API Docs for Version: <b>0.2.3</b>
                 </p>
             </li>
         </div>
@@ -172,8 +172,23 @@ $b(
                 o.value = o.defaultValue;
             }
 
-            o.watch = o.watch ? [].concat(o.watch) : [];
+            o.watch = o.hasOwnProperty(&#x27;watch&#x27;) ? [].concat(o.watch) : [];
+            o.__meta = {};
             o.__isComputed = true;
+
+            o.meta = function (m) {
+
+                var p;
+
+                if (typeof m !== &#x27;undefined&#x27;) {
+                    for (p in m) {
+                        o.__meta[p] = m[p];
+                    }
+                }
+
+                return o.__meta;
+
+            }.bind(o);
 
             return o;
         };

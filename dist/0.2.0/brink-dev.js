@@ -1863,6 +1863,32 @@
     
     ).attach('$b');
 
+    $b('brink/utils/unbound', 
+    
+        [],
+    
+        /***********************************************************************
+        @class Brink
+        ************************************************************************/
+        function () {
+    
+            'use strict';
+            /***********************************************************************
+            @method unbound
+            @param {Any} value
+            ************************************************************************/
+            return function (val) {
+    
+                return {
+                    value : val,
+                    __isUnbound : true
+                };
+            };
+        }
+    
+    ).attach('$b');
+    
+
     $b('brink/utils/expandProps', 
     
         /***********************************************************************
@@ -2260,12 +2286,15 @@
                                 }
                             }
     
+                            if (val && val.__isUnbound) {
+                                val = val.value;
+                            }
+    
                             if (obj.__meta.setters[key]) {
                                 obj.__meta.setters[key].call(obj, val, key);
                             }
     
                             else {
-    
                                 if (obj.__meta.pojoStyle) {
                                     obj[key] = val;
                                 }
@@ -2620,6 +2649,8 @@
                         props : []
                     };
     
+                    meta.memoizedBindings = {};
+    
                     return meta;
                 },
     
@@ -2858,7 +2889,6 @@
     
                     meta.bindings = meta.bindings || {};
                     meta.externalBindings = meta.externalBindings || {};
-                    meta.memoizedBindings = meta.memoizedBindings || {};
     
                     if (typeof meta.properties[key] !== 'undefined') {
                         if (typeof val === 'undefined') {
@@ -4451,8 +4481,6 @@
                             continue;
                         }
     
-                        looped.push(instance);
-    
                         meta = instance.__meta;
                         references = meta.references;
                         referenceKeys = meta.referenceKeys;
@@ -4469,7 +4497,7 @@
     
                                 reference = references[i];
     
-                                if (~looped.indexOf(reference)) {
+                                if (looped.indexOf(reference) > -1) {
                                     continue;
                                 }
                                 looped.push(reference);
@@ -4760,9 +4788,10 @@
     
                 tokens : null,
                 parent : null,
-                context : $b.bindTo('parent.context'),
+                context : null,
+    
                 templateString : '',
-                processedTemplateString : '',
+                processedTemplate : '',
                 cachedValue : null,
     
                 watchedProperties : computed(function () {
@@ -4802,7 +4831,7 @@
                     });
     
                     this.set('tokens', tokens);
-                    this.set('processedTemplateString', trim(str) || '');
+                    this.set('processedTemplate', trim(str) || '');
                 },
     
                 init : function () {
@@ -4821,7 +4850,6 @@
     
                     var props;
                     props = this.get('watchedProperties');
-    
                     this.unwatch(this.contextUpdated);
     
                     if (props && props.length) {
@@ -4844,7 +4872,7 @@
                 updateDOM : function () {
     
                     var val = this.replaceTokens(
-                        this.get('processedTemplateString'),
+                        this.get('processedTemplate'),
                         this.get('tokens')
                     );
     
@@ -4854,12 +4882,12 @@
                     }
                 },
     
-                render : function () {
-                    this.updateDOM();
+                render : function (context) {
+                    this.set('context', context);
                 },
     
                 rerender : function () {
-                    this.render();
+                    this.updateDOM();
                 },
     
                 contextUpdated : function () {
@@ -4933,10 +4961,11 @@
             './Text',
             './DOMObject',
             '../utils/get',
-            '../utils/trim'
+            '../utils/trim',
+            '../utils/unbound'
         ],
     
-        function (BrinkAttr, BrinkText, DOMObject, get, trim) {
+        function (BrinkAttr, BrinkText, DOMObject, get, trim, unbound) {
     
             'use strict';
     
@@ -5031,7 +5060,7 @@
                                 children.push(
                                     BrinkText.create({
                                         dom : child,
-                                        parent : this
+                                        parent : unbound(this)
                                     })
                                 );
                             }
@@ -5052,7 +5081,7 @@
                                 children.push(
                                     ElementClass.create({
                                         dom : child,
-                                        parent : this
+                                        parent : unbound(this)
                                     })
                                 );
                             }
@@ -5071,7 +5100,7 @@
     
                                 attributes.push(BrinkAttr.create({
                                     dom : attr,
-                                    parent : this
+                                    parent : unbound(this)
                                 }));
                             }
                         }
@@ -5084,8 +5113,24 @@
                     return;
                 },
     
-                render : function () {
+                render : function (context) {
     
+                    var children,
+                        attributes;
+    
+                    children = this.get('children') || [];
+                    attributes = this.get('attributes') || [];
+    
+                    children.forEach(function (child) {
+                        child.render(context);
+                    });
+    
+                    attributes.forEach(function (attr) {
+                        attr.render(context);
+                    });
+                },
+    
+                rerender : function () {
                     var children,
                         attributes;
     
@@ -5099,10 +5144,6 @@
                     attributes.forEach(function (attr) {
                         attr.rerender();
                     });
-                },
-    
-                rerender : function () {
-                    this.render();
                 },
     
                 destroy : function () {
@@ -5158,10 +5199,11 @@
             './Element',
             '../core/Class',
             '../utils/get',
-            '../browser/ready'
+            '../browser/ready',
+            '../utils/unbound'
         ],
     
-        function (BrinkElement, Class, get, ready) {
+        function (BrinkElement, Class, get, ready, unbound) {
     
             'use strict';
     
@@ -5207,6 +5249,7 @@
                 template : null,
     
                 dom : $b.bindTo('domObj.dom'),
+                dom2 : $b.bindTo('domObj.dom'),
     
                 init : function (tmpl, isClone) {
     
@@ -5251,7 +5294,7 @@
     
                     this.set('domObj', BrinkElement.create({
                         dom : fragment,
-                        parent : this
+                        parent : unbound(this)
                     }));
     
                     return this.clone();
@@ -5263,7 +5306,7 @@
     
                     tmpl.set('domObj', BrinkElement.create({
                         dom : this.get('dom').cloneNode(true),
-                        parent : tmpl
+                        parent : unbound(tmpl)
                     }));
     
                     return tmpl;
@@ -5275,7 +5318,7 @@
     
                 render : function (context) {
                     this.set('context', context);
-                    this.get('domObj').render(true);
+                    this.get('domObj').render(context);
                     return this.get('dom');
                 },
     
@@ -5551,7 +5594,6 @@
                             fragment.appendChild(child.get('dom'));
                             if (child.get('isTag')) {
                                 child.set('isLocked', false);
-                                child.contextUpdated();
                             }
                         });
     

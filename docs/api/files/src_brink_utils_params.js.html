@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>src/brink/utils/clone.js - brink.js</title>
+    <title>src/brink/utils/params.js - brink.js</title>
     <link rel="stylesheet" href="">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -74,41 +74,46 @@
                 <div id="docs-main">
                     <div class="content">
 <div class="page-header">
-    <h1>src/brink/utils/clone.js <small>File</small></h1>
+    <h1>src/brink/utils/params.js <small>File</small></h1>
 </div>
 
 <div class="file">
     <pre class="prettyprint linenums">
 $b(
 
-    [
-        &#x27;./merge&#x27;,
-        &#x27;./isObject&#x27;
-    ],
-
     /***********************************************************************
     @class Brink
     ************************************************************************/
-    function (merge, isObject) {
+    function () {
 
         &#x27;use strict&#x27;;
 
+        function bodyEncode (s) {
+            return encodeURIComponent(s).replace(/[!&#x27;()*]/g, function (c) {
+                return &#x27;%&#x27; + c.charCodeAt(0).toString(16);
+            });
+        }
+
         /***********************************************************************
-        Creates a copy of a plain Object or Array. (Do not use on Brink.Object/Array instances).
+        Serializes an object into URL params (or request body)
 
-        @method clone
-        @param {Object|Array} obj The object or array to clone.
-        @param {Boolean} [deep=false] Whether or not to deep copy (&#x60;true&#x60;) or shallow copy (&#x60;false&#x60;)
+        @method params
+        @param {Object} obj The &#x60;Object&#x60; to serialize.
+        @return {String} The serialized Object.
         ************************************************************************/
-        return function (o, deep, a) {
+        return function (o, isBody) {
 
-            function arrayOrObject (o) {
-                return Array.isArray(o) ? [] : isObject(o) ? {} : null;
+            var p,
+                result,
+                encode = isBody ? bodyEncode : encodeURIComponent;
+
+            result = &#x27;&#x27;;
+
+            for (p in o) {
+                result += (result ? &#x27;&amp;&#x27; : &#x27;&#x27;) + encode(p) + &#x27;=&#x27; + encode(o[p]);
             }
 
-            a = arrayOrObject(o);
-
-            return a ? merge(a, o, deep) : null;
+            return result;
         };
     }
 

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>src/brink/utils/clone.js - brink.js</title>
+    <title>src/brink/utils/registerModel.js - brink.js</title>
     <link rel="stylesheet" href="">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -74,45 +74,51 @@
                 <div id="docs-main">
                     <div class="content">
 <div class="page-header">
-    <h1>src/brink/utils/clone.js <small>File</small></h1>
+    <h1>src/brink/utils/registerModel.js <small>File</small></h1>
 </div>
 
 <div class="file">
     <pre class="prettyprint linenums">
 $b(
 
-    [
-        &#x27;./merge&#x27;,
-        &#x27;./isObject&#x27;
-    ],
+    [],
 
     /***********************************************************************
     @class Brink
     ************************************************************************/
-    function (merge, isObject) {
+    function () {
 
         &#x27;use strict&#x27;;
 
+        $b.__models = {};
+
         /***********************************************************************
-        Creates a copy of a plain Object or Array. (Do not use on Brink.Object/Array instances).
-
-        @method clone
-        @param {Object|Array} obj The object or array to clone.
-        @param {Boolean} [deep=false] Whether or not to deep copy (&#x60;true&#x60;) or shallow copy (&#x60;false&#x60;)
+        @method registerModel
+        @param {Brink.Model} Model
         ************************************************************************/
-        return function (o, deep, a) {
+        return function (model) {
 
-            function arrayOrObject (o) {
-                return Array.isArray(o) ? [] : isObject(o) ? {} : null;
+            var mKey,
+                cKey;
+
+            mKey = model.modelKey;
+            cKey = model.collectionKey;
+
+            if ($b.__models[mKey]) {
+                throw new Error(&#x27;&#x60;modelKey&#x60; already registered : &quot;&#x27; + mKey +  &#x27;&quot;.&#x27;);
             }
 
-            a = arrayOrObject(o);
+            else if ($b.__models[cKey]) {
+                throw new Error(&#x27;&#x60;collectionKey&#x60; already registered : &quot;&#x27; + cKey +  &#x27;&quot;.&#x27;);
+            }
 
-            return a ? merge(a, o, deep) : null;
+            $b.__models[mKey] = model;
+            $b.__models[cKey] = model;
         };
     }
 
 ).attach(&#x27;$b&#x27;);
+
     </pre>
 </div>
                     </div>

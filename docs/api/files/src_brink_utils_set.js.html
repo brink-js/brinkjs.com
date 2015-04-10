@@ -21,7 +21,7 @@
             <li class="divider-vertical"></li>
             <li>
                 <p class="navbar-text">
-                    API Docs for Version: <b>0.2.0</b>
+                    API Docs for Version: <b>0.2.3</b>
                 </p>
             </li>
         </div>
@@ -145,49 +145,53 @@ $b(
 
                 isDiff = old !== val;
 
-                if (skipCompare || isDiff) {
+                if (!skipCompare &amp;&amp; !isDiff) {
+                    return false;
+                }
 
-                    if (obj instanceof $b.Object) {
+                if (obj instanceof $b.Object) {
 
-                        if (isDiff) {
-                            if (old instanceof $b.Object) {
-                                old.__removeReference(obj);
-                            }
-
-                            if (val instanceof $b.Object) {
-                                val.__addReference(
-                                    obj,
-                                    (
-                                        key === &#x27;proxy&#x27; &amp;&amp;
-                                        val instanceof $b.ObjectProxy ?
-                                        &#x27;&#x27; :
-                                        key
-                                    )
-                                );
-                            }
+                    if (isDiff) {
+                        if (old instanceof $b.Object) {
+                            old.__removeReference(obj);
                         }
 
-                        if (obj.__meta.setters[key]) {
-                            obj.__meta.setters[key].call(obj, val, key);
+                        if (val instanceof $b.Object) {
+                            val.__addReference(
+                                obj,
+                                (
+                                    key === &#x27;proxy&#x27; &amp;&amp;
+                                    val instanceof $b.ObjectProxy ?
+                                    &#x27;&#x27; :
+                                    key
+                                )
+                            );
                         }
+                    }
 
-                        else {
+                    if (val &amp;&amp; val.__isUnbound) {
+                        val = val.value;
+                    }
 
-                            if (obj.__meta.pojoStyle) {
-                                obj[key] = val;
-                            }
-
-                            obj.__meta.values[key] = val;
-                        }
-
-                        if (!quiet) {
-                            obj.propertyDidChange(key);
-                        }
+                    if (obj.__meta.setters[key]) {
+                        obj.__meta.setters[key].call(obj, val, key);
                     }
 
                     else {
-                        obj[key] = val;
+                        if (obj.__meta.pojoStyle) {
+                            obj[key] = val;
+                        }
+
+                        obj.__meta.values[key] = val;
                     }
+
+                    if (!quiet) {
+                        obj.propertyDidChange(key);
+                    }
+                }
+
+                else {
+                    obj[key] = val;
                 }
 
                 return obj;

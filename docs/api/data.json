@@ -4,7 +4,7 @@
         "description": "MVC.next",
         "url": "http://brinkjs.com",
         "logo": "../../img/brink-logo.png",
-        "version": "0.2.0"
+        "version": "0.2.3"
     },
     "files": {
         "src/brink/core/Class.js": {
@@ -25,19 +25,19 @@
             "fors": {},
             "namespaces": {}
         },
-        "src/brink/core/NotificationManager.js": {
-            "name": "src/brink/core/NotificationManager.js",
-            "modules": {},
-            "classes": {},
-            "fors": {},
-            "namespaces": {}
-        },
         "src/brink/core/Object.js": {
             "name": "src/brink/core/Object.js",
             "modules": {},
             "classes": {
                 "Brink.Object": 1
             },
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/brink/utils/Q.js": {
+            "name": "src/brink/utils/Q.js",
+            "modules": {},
+            "classes": {},
             "fors": {},
             "namespaces": {}
         },
@@ -125,13 +125,6 @@
             "fors": {},
             "namespaces": {}
         },
-        "src/brink/utils/inject.js": {
-            "name": "src/brink/utils/inject.js",
-            "modules": {},
-            "classes": {},
-            "fors": {},
-            "namespaces": {}
-        },
         "src/brink/utils/intersect.js": {
             "name": "src/brink/utils/intersect.js",
             "modules": {},
@@ -174,6 +167,20 @@
             "fors": {},
             "namespaces": {}
         },
+        "src/brink/utils/params.js": {
+            "name": "src/brink/utils/params.js",
+            "modules": {},
+            "classes": {},
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/brink/utils/registerModel.js": {
+            "name": "src/brink/utils/registerModel.js",
+            "modules": {},
+            "classes": {},
+            "fors": {},
+            "namespaces": {}
+        },
         "src/brink/utils/set.js": {
             "name": "src/brink/utils/set.js",
             "modules": {},
@@ -183,6 +190,20 @@
         },
         "src/brink/utils/trim.js": {
             "name": "src/brink/utils/trim.js",
+            "modules": {},
+            "classes": {},
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/brink/utils/unbound.js": {
+            "name": "src/brink/utils/unbound.js",
+            "modules": {},
+            "classes": {},
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/brink/utils/unregisterModel.js": {
+            "name": "src/brink/utils/unregisterModel.js",
             "modules": {},
             "classes": {
                 "Brink": 1
@@ -216,7 +237,7 @@
             "plugin_for": [],
             "extension_for": [],
             "file": "src/brink/core/CoreObject.js",
-            "line": 13,
+            "line": 14,
             "description": "`Brink.CoreObject` is not meant to be used directly.\n        Instead, use {{#crossLink \"Brink.Object\"}}{{/crossLink}} or {{#crossLink \"Brink.Class\"}}{{/crossLink}}.",
             "is_constructor": 1
         },
@@ -242,8 +263,8 @@
             "extensions": [],
             "plugin_for": [],
             "extension_for": [],
-            "file": "src/brink/utils/trim.js",
-            "line": 3
+            "file": "src/brink/utils/unregisterModel.js",
+            "line": 5
         }
     },
     "classitems": [
@@ -324,14 +345,8 @@
             "class": "Brink.Class"
         },
         {
-            "file": "src/brink/core/NotificationManager.js",
-            "line": 98,
-            "description": "Notified all subscribers, notification is no longer needed,\nunless it has a callback to be called later via notification.respond()",
-            "class": "Brink.Object"
-        },
-        {
             "file": "src/brink/core/Object.js",
-            "line": 293,
+            "line": 295,
             "description": "Invalidate one or more properties. This will trigger any bound and computed properties\ndepending on these properties to also get updated.\n\nThere is almost no need to ever call this manually, as Brink will call it for you\nwhen setting a property.\n\nThis will also trigger any watchers of this property in the next Run Loop.",
             "itemtype": "method",
             "name": "propertyDidChange",
@@ -346,7 +361,7 @@
         },
         {
             "file": "src/brink/core/Object.js",
-            "line": 309,
+            "line": 311,
             "description": "Gets a subset of properties on this object.",
             "itemtype": "method",
             "name": "getProperties",
@@ -365,7 +380,7 @@
         },
         {
             "file": "src/brink/core/Object.js",
-            "line": 342,
+            "line": 344,
             "description": "Gets all properties that have changed since the last Run Loop.",
             "itemtype": "method",
             "name": "getChangedProperties",
@@ -377,7 +392,7 @@
         },
         {
             "file": "src/brink/core/Object.js",
-            "line": 352,
+            "line": 354,
             "description": "Get or create a property descriptor.",
             "itemtype": "method",
             "name": "prop",
@@ -401,7 +416,7 @@
         },
         {
             "file": "src/brink/core/Object.js",
-            "line": 450,
+            "line": 458,
             "description": "Bind a property to a property on another object.\n\nThis can also be achieved with : `a.prop('name').bindTo(b, 'name');`",
             "itemtype": "method",
             "name": "bindProperty",
@@ -426,7 +441,7 @@
         },
         {
             "file": "src/brink/core/Object.js",
-            "line": 464,
+            "line": 472,
             "description": "Get the value of a property.\n\nThis is identical to doing `obj.key` or `obj[key]`,\nunless you are supporting <= IE8.",
             "itemtype": "method",
             "name": "get",
@@ -444,7 +459,7 @@
         },
         {
             "file": "src/brink/core/Object.js",
-            "line": 478,
+            "line": 486,
             "description": "Set the value of a property.\n\nThis is identical to doing `obj.key = val` or `obj[key] = val`,\nunless you are supporting <= IE8.\n\nYou can also use this to set nested properties.\nI.e. `obj.set('some.nested.key', val)`",
             "itemtype": "method",
             "name": "set",
@@ -466,7 +481,7 @@
         },
         {
             "file": "src/brink/core/Object.js",
-            "line": 496,
+            "line": 506,
             "description": "Watch a property or properties for changes.\n\n```javascript\n\nvar obj = $b.Object.create({\n\n    color : 'green',\n    firstName : 'Joe',\n    lastName : 'Schmoe',\n\n    init : function () {\n        this.watch('color', this.colorChanged.bind(this));\n        this.watch(['firstName', 'lastName'], this.nameChanged.bind(this));\n    },\n\n    colorChanged : function () {\n        console.log(this.color);\n    },\n\n    nameChanged : function () {\n        console.log(this.firstName + ' ' + this.lastName);\n    }\n});\n\nobj.color = 'red';\nobj.firstName = 'John';\nobj.lastName = 'Doe';\n\n```\n\nWatcher functions are only invoked once per Run Loop, this means that the `nameChanged`\nmethod above will only be called once, even though we changed two properties that\n`nameChanged` watches.\n\nYou can skip the `props` argument to watch all properties on the Object.",
             "itemtype": "method",
             "name": "watch",
@@ -486,7 +501,7 @@
         },
         {
             "file": "src/brink/core/Object.js",
-            "line": 572,
+            "line": 582,
             "description": "Remove a watcher.",
             "itemtype": "method",
             "name": "unwatch",
@@ -501,7 +516,7 @@
         },
         {
             "file": "src/brink/core/Object.js",
-            "line": 590,
+            "line": 600,
             "description": "Remove all watchers watching properties this object.\n\nUSE WITH CAUTION.\n\nThis gets called automatically during `destroy()`, it's not very common\nyou would want to call this directly.\n\nAny and all other objects that have bound properties,\nwatchers or computed properties dependent on this Object instance will\nstop working.",
             "itemtype": "method",
             "name": "unwatchAll",
@@ -509,7 +524,7 @@
         },
         {
             "file": "src/brink/core/Object.js",
-            "line": 623,
+            "line": 637,
             "description": "Destroys an object, removes all bindings and watchers and clears all metadata.\n\nIn addition to calling `destroy()` be sure to remove all\nreferences to the object so that it gets Garbage Collected.",
             "itemtype": "method",
             "name": "destroy",
@@ -517,11 +532,824 @@
         },
         {
             "file": "src/brink/core/Object.js",
-            "line": 644,
+            "line": 658,
             "description": "Extends an object's prototype and creates a new subclass.\n\nThe new subclass will inherit all properties and methods of the Object being\nextended.\n\n```javascript\n\nvar Animal = $b.Object.extend({\n\n    numLegs : 4,\n\n    walk : function () {\n        for (var i = 1; i <= this.numLegs; i ++) {\n            console.log('moving leg #' + i);\n        }\n    }\n});\n\nvar Dog = Animal.extend({\n\n    bark : function () {\n        console.log('woof!!');\n    },\n\n    walkAndBark : function () {\n        this.bark();\n        this.walk();\n    }\n});\n\nvar doggy = Dog.create();\ndoggy.walkAndBark();\n\n```\n\nIf you want `super()` method support, use {{#crossLink \"Brink.Class\"}}{{/crossLink}}\n\n```javascript\n\nvar Animal = $b.Class.extend({\n\n    numLegs : 4,\n\n    walk : function () {\n        for (var i = 1; i <= this.numLegs; i ++) {\n            console.log('moving leg #' + i);\n        }\n    }\n});\n\nvar Dog = Animal.extend({\n\n    bark : function () {\n        console.log('woof!!');\n    },\n\n    walk : function () {\n        this._super();\n        console.log('all ' + this.numLegs + ' legs moved successfully.');\n    },\n\n    walkAndBark : function () {\n        this.bark();\n        this.walk();\n    }\n});\n\nvar doggy = Dog.create();\ndoggy.walkAndBark();\n\n```",
             "itemtype": "method",
             "name": "extend",
             "class": "Brink.Object"
+        },
+        {
+            "file": "src/brink/utils/Q.js",
+            "line": 410,
+            "description": "Constructs a promise for an immediate reference, passes promises through, or\ncoerces promises from different systems.",
+            "params": [
+                {
+                    "name": "value",
+                    "description": "immediate reference or promise"
+                }
+            ],
+            "class": "Brink"
+        },
+        {
+            "file": "src/brink/utils/Q.js",
+            "line": 432,
+            "description": "Performs a task in a future turn of the event loop.",
+            "params": [
+                {
+                    "name": "task",
+                    "description": "",
+                    "type": "Function"
+                }
+            ],
+            "class": "Brink"
+        },
+        {
+            "file": "src/brink/utils/Q.js",
+            "line": 438,
+            "description": "Controls whether or not long stack traces will be on",
+            "class": "Brink"
+        },
+        {
+            "file": "src/brink/utils/Q.js",
+            "line": 448,
+            "description": "Constructs a {promise, resolve, reject} object.\n\n`resolve` is a callback to invoke with a more resolved value for the\npromise. To fulfill the promise, invoke `resolve` with any value that is\nnot a thenable. To reject the promise, invoke `resolve` with a rejected\nthenable, or invoke `reject` with the reason directly. To resolve the\npromise to another thenable, thus putting it in the same state, invoke\n`resolve` with that other thenable.",
+            "class": "Brink"
+        },
+        {
+            "file": "src/brink/utils/Q.js",
+            "line": 574,
+            "description": "Creates a Node-style callback that will resolve or reject the deferred\npromise.",
+            "return": {
+                "description": "a nodeback"
+            },
+            "class": "Brink"
+        },
+        {
+            "file": "src/brink/utils/Q.js",
+            "line": 592,
+            "params": [
+                {
+                    "name": "resolver",
+                    "description": "a function that returns nothing and accepts\nthe resolve, reject, and notify functions for a deferred.",
+                    "type": "Function"
+                }
+            ],
+            "return": {
+                "description": "a promise that may be resolved with the given resolve and reject\nfunctions, or rejected by a thrown exception in resolver"
+            },
+            "class": "Brink"
+        },
+        {
+            "file": "src/brink/utils/Q.js",
+            "line": 633,
+            "description": "If two promises eventually fulfill to the same value, promises that value,\nbut otherwise rejects.",
+            "params": [
+                {
+                    "name": "x",
+                    "description": "",
+                    "type": "Any*"
+                },
+                {
+                    "name": "y",
+                    "description": "",
+                    "type": "Any*"
+                }
+            ],
+            "return": {
+                "description": "a promise for x and y if they are the same, but a rejection\notherwise.",
+                "type": "Any*"
+            },
+            "class": "Brink"
+        },
+        {
+            "file": "src/brink/utils/Q.js",
+            "line": 657,
+            "description": "Returns a promise for the first of an array of promises to become settled.",
+            "params": [
+                {
+                    "name": "answers",
+                    "description": "promises to race",
+                    "type": "Array[Any*]"
+                }
+            ],
+            "return": {
+                "description": "the first promise to be settled",
+                "type": "Any*"
+            },
+            "class": "Brink"
+        },
+        {
+            "file": "src/brink/utils/Q.js",
+            "line": 680,
+            "description": "Constructs a Promise with a promise descriptor object and optional fallback\nfunction.  The descriptor contains methods like when(rejected), get(name),\nset(name, value), post(name, args), and delete(name), which all\nreturn either a value, a promise for a value, or a rejection.  The fallback\naccepts the operation name, a resolver, and any further arguments that would\nhave been forwarded to the appropriate method above had a method been\nprovided with the proper name.  The API makes no guarantees about the nature\nof the returned object, apart from that it is usable whereever promises are\nbought and sold.",
+            "class": "Brink"
+        },
+        {
+            "file": "src/brink/utils/Q.js",
+            "line": 825,
+            "description": "Works almost like \"finally\", but not called for rejections.\nOriginal resolution value is passed through callback unaffected.\nCallback may return a promise that will be awaited for.",
+            "params": [
+                {
+                    "name": "callback",
+                    "description": "",
+                    "type": "Function"
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "Q.Promise"
+            },
+            "example": [
+                "\ndoSomething()\n  .then(...)\n  .tap(console.log)\n  .then(...);"
+            ],
+            "class": "Brink"
+        },
+        {
+            "file": "src/brink/utils/Q.js",
+            "line": 845,
+            "description": "Registers an observer on a promise.\n\nGuarantees:\n\n1. that fulfilled and rejected will be called only once.\n2. that either the fulfilled callback or the rejected callback will be\n   called, but not both.\n3. that fulfilled and rejected will not be called in this turn.",
+            "params": [
+                {
+                    "name": "value",
+                    "description": "promise or immediate reference to observe"
+                },
+                {
+                    "name": "fulfilled",
+                    "description": "function to be called with the fulfilled value"
+                },
+                {
+                    "name": "rejected",
+                    "description": "function to be called with the rejection exception"
+                },
+                {
+                    "name": "progressed",
+                    "description": "function to be called on any progress notifications"
+                }
+            ],
+            "return": {
+                "description": "promise for the return value from the invoked callback"
+            },
+            "class": "Brink"
+        },
+        {
+            "file": "src/brink/utils/Q.js",
+            "line": 882,
+            "description": "If an object is not a promise, it is as \"near\" as possible.\nIf a promise is rejected, it is as \"near\" as possible too.\nIf it’s a fulfilled promise, the fulfillment value is nearer.\nIf it’s a deferred promise and the deferred has been resolved, the\nresolution is \"nearer\".",
+            "params": [
+                {
+                    "name": "object",
+                    "description": ""
+                }
+            ],
+            "return": {
+                "description": "most resolved (nearest) form of the object"
+            },
+            "class": "Brink"
+        },
+        {
+            "file": "src/brink/utils/Q.js",
+            "line": 904,
+            "return": {
+                "description": "whether the given object is a promise.\nOtherwise it is a fulfilled value."
+            },
+            "class": "Brink"
+        },
+        {
+            "file": "src/brink/utils/Q.js",
+            "line": 918,
+            "return": {
+                "description": "whether the given object is a pending promise, meaning not\nfulfilled or rejected."
+            },
+            "class": "Brink"
+        },
+        {
+            "file": "src/brink/utils/Q.js",
+            "line": 931,
+            "return": {
+                "description": "whether the given object is a value or fulfilled\npromise."
+            },
+            "class": "Brink"
+        },
+        {
+            "file": "src/brink/utils/Q.js",
+            "line": 944,
+            "return": {
+                "description": "whether the given object is a rejected promise."
+            },
+            "class": "Brink"
+        },
+        {
+            "file": "src/brink/utils/Q.js",
+            "line": 1016,
+            "description": "Constructs a rejected promise.",
+            "params": [
+                {
+                    "name": "reason",
+                    "description": "value describing the failure"
+                }
+            ],
+            "class": "Brink"
+        },
+        {
+            "file": "src/brink/utils/Q.js",
+            "line": 1042,
+            "description": "Constructs a fulfilled promise for an immediate reference.",
+            "params": [
+                {
+                    "name": "value",
+                    "description": "immediate reference"
+                }
+            ],
+            "class": "Brink"
+        },
+        {
+            "file": "src/brink/utils/Q.js",
+            "line": 1081,
+            "description": "Converts thenables to Q promises.",
+            "params": [
+                {
+                    "name": "promise",
+                    "description": "thenable promise"
+                }
+            ],
+            "return": {
+                "description": "a Q promise"
+            },
+            "class": "Brink"
+        },
+        {
+            "file": "src/brink/utils/Q.js",
+            "line": 1098,
+            "description": "Annotates an object such that it will never be\ntransferred away from this process over any promise\ncommunication channel.",
+            "params": [
+                {
+                    "name": "object",
+                    "description": ""
+                }
+            ],
+            "return": {
+                "description": "promise a wrapping of that object that\nadditionally responds to the \"isDef\" message\nwithout a rejection."
+            },
+            "class": "Brink"
+        },
+        {
+            "file": "src/brink/utils/Q.js",
+            "line": 1118,
+            "description": "Spreads the values of a promised array of arguments into the\nfulfillment callback.",
+            "params": [
+                {
+                    "name": "fulfilled",
+                    "description": "callback that receives variadic arguments from the\npromised array"
+                },
+                {
+                    "name": "rejected",
+                    "description": "callback that receives the exception if the promise\nis rejected."
+                }
+            ],
+            "return": {
+                "description": "a promise for the return value or thrown exception of\neither callback."
+            },
+            "class": "Brink"
+        },
+        {
+            "file": "src/brink/utils/Q.js",
+            "line": 1139,
+            "description": "The async function is a decorator for generator functions, turning\nthem into asynchronous generators.  Although generators are only part\nof the newest ECMAScript 6 drafts, this code does not cause syntax\nerrors in older engines.  This code should continue to work and will\nin fact improve over time as the language improves.\n\nES6 generators are currently part of V8 version 3.19 with the\n--harmony-generators runtime flag enabled.  SpiderMonkey has had them\nfor longer, but under an older Python-inspired form.  This function\nworks on both kinds of generators.\n\nDecorates a generator function such that:\n - it may yield promises\n - execution will continue when that promise is fulfilled\n - the value of the yield expression will be the fulfilled value\n - it returns a promise for the return value (when the generator\n   stops iterating)\n - the decorated function returns a promise for the return value\n   of the generator or the first rejected promise among those\n   yielded.\n - if an error is thrown in the generator, it propagates through\n   every following yield until it is caught, or until it escapes\n   the generator function altogether, and is translated into a\n   rejection for the promise returned by the decorated generator.",
+            "class": "Brink"
+        },
+        {
+            "file": "src/brink/utils/Q.js",
+            "line": 1215,
+            "description": "The spawn function is a small wrapper around async that immediately\ncalls the generator and also ends the promise chain, so that any\nunhandled errors are thrown instead of forwarded to the error\nhandler. This is useful because it's extremely common to run\ngenerators at the top-level to work with libraries.",
+            "class": "Brink"
+        },
+        {
+            "file": "src/brink/utils/Q.js",
+            "line": 1228,
+            "description": "Throws a ReturnValue exception to stop an asynchronous generator.\n\nThis interface is a stop-gap measure to support generator return\nvalues in older Firefox/SpiderMonkey.  In browsers that support ES6\ngenerators like Chromium 29, just use \"return\" in your generator\nfunctions.",
+            "params": [
+                {
+                    "name": "value",
+                    "description": "the return value for the surrounding generator"
+                }
+            ],
+            "throws": {
+                "description": "ReturnValue exception with the value."
+            },
+            "example": [
+                "\n// ES6 style\nQ.async(function* () {\n     var foo = yield getFooPromise();\n     var bar = yield getBarPromise();\n     return foo + bar;\n})\n// Older SpiderMonkey style\nQ.async(function () {\n     var foo = yield getFooPromise();\n     var bar = yield getBarPromise();\n     Q.return(foo + bar);\n})"
+            ],
+            "class": "Brink"
+        },
+        {
+            "file": "src/brink/utils/Q.js",
+            "line": 1257,
+            "description": "The promised function decorator ensures that any promise arguments\nare settled and passed as values (`this` is also settled and passed\nas a value).  It will also ensure that the result of a function is\nalways a promise.",
+            "example": [
+                "\nvar add = Q.promised(function (a, b) {\n    return a + b;\n});\nadd(Q(a), Q(B));"
+            ],
+            "params": [
+                {
+                    "name": "callback",
+                    "description": "The function to decorate",
+                    "type": "Function"
+                }
+            ],
+            "return": {
+                "description": "a function that has been decorated.",
+                "type": "Function"
+            },
+            "class": "Brink"
+        },
+        {
+            "file": "src/brink/utils/Q.js",
+            "line": 1281,
+            "description": "sends a message to a value in a future turn",
+            "params": [
+                {
+                    "name": "object",
+                    "description": "the recipient",
+                    "multiple": true
+                },
+                {
+                    "name": "op",
+                    "description": "the name of the message operation, e.g., \"when\","
+                },
+                {
+                    "name": "args",
+                    "description": "further arguments to be forwarded to the operation"
+                }
+            ],
+            "return": {
+                "description": "result  a promise for the result of the operation",
+                "type": "Promise"
+            },
+            "class": "Brink"
+        },
+        {
+            "file": "src/brink/utils/Q.js",
+            "line": 1302,
+            "description": "Gets the value of a property in a future turn.",
+            "params": [
+                {
+                    "name": "object",
+                    "description": "promise or immediate reference for target object"
+                },
+                {
+                    "name": "name",
+                    "description": "name of property to get"
+                }
+            ],
+            "return": {
+                "description": "promise for the property value"
+            },
+            "class": "Brink"
+        },
+        {
+            "file": "src/brink/utils/Q.js",
+            "line": 1316,
+            "description": "Sets the value of a property in a future turn.",
+            "params": [
+                {
+                    "name": "object",
+                    "description": "promise or immediate reference for object object"
+                },
+                {
+                    "name": "name",
+                    "description": "name of property to set"
+                },
+                {
+                    "name": "value",
+                    "description": "new value of property"
+                }
+            ],
+            "return": {
+                "description": "promise for the return value"
+            },
+            "class": "Brink"
+        },
+        {
+            "file": "src/brink/utils/Q.js",
+            "line": 1331,
+            "description": "Deletes a property in a future turn.",
+            "params": [
+                {
+                    "name": "object",
+                    "description": "promise or immediate reference for target object"
+                },
+                {
+                    "name": "name",
+                    "description": "name of property to delete"
+                }
+            ],
+            "return": {
+                "description": "promise for the return value"
+            },
+            "class": "Brink"
+        },
+        {
+            "file": "src/brink/utils/Q.js",
+            "line": 1347,
+            "description": "Invokes a method in a future turn.",
+            "params": [
+                {
+                    "name": "object",
+                    "description": "promise or immediate reference for target object"
+                },
+                {
+                    "name": "name",
+                    "description": "name of method to invoke"
+                },
+                {
+                    "name": "value",
+                    "description": "a value to post, typically an array of\n                 invocation arguments for promises that\n                 are ultimately backed with `resolve` values,\n                 as opposed to those backed with URLs\n                 wherein the posted value can be any\n                 JSON serializable object."
+                }
+            ],
+            "return": {
+                "description": "promise for the return value"
+            },
+            "class": "Brink"
+        },
+        {
+            "file": "src/brink/utils/Q.js",
+            "line": 1370,
+            "description": "Invokes a method in a future turn.",
+            "params": [
+                {
+                    "name": "object",
+                    "description": "promise or immediate reference for target object"
+                },
+                {
+                    "name": "name",
+                    "description": "name of method to invoke"
+                },
+                {
+                    "name": "args",
+                    "description": "array of invocation arguments",
+                    "multiple": true
+                }
+            ],
+            "return": {
+                "description": "promise for the return value"
+            },
+            "class": "Brink"
+        },
+        {
+            "file": "src/brink/utils/Q.js",
+            "line": 1389,
+            "description": "Applies the promised function in a future turn.",
+            "params": [
+                {
+                    "name": "object",
+                    "description": "promise or immediate reference for target function"
+                },
+                {
+                    "name": "args",
+                    "description": "array of application arguments"
+                }
+            ],
+            "class": "Brink"
+        },
+        {
+            "file": "src/brink/utils/Q.js",
+            "line": 1402,
+            "description": "Calls the promised function in a future turn.",
+            "params": [
+                {
+                    "name": "object",
+                    "description": "promise or immediate reference for target function"
+                },
+                {
+                    "name": "args",
+                    "description": "array of application arguments",
+                    "multiple": true
+                }
+            ],
+            "class": "Brink"
+        },
+        {
+            "file": "src/brink/utils/Q.js",
+            "line": 1416,
+            "description": "Binds the promised function, transforming return values into a fulfilled\npromise and thrown errors into a rejected one.",
+            "params": [
+                {
+                    "name": "object",
+                    "description": "promise or immediate reference for target function"
+                },
+                {
+                    "name": "args",
+                    "description": "array of application arguments",
+                    "multiple": true
+                }
+            ],
+            "class": "Brink"
+        },
+        {
+            "file": "src/brink/utils/Q.js",
+            "line": 1443,
+            "description": "Requests the names of the owned properties of a promised\nobject in a future turn.",
+            "params": [
+                {
+                    "name": "object",
+                    "description": "promise or immediate reference for target object"
+                }
+            ],
+            "return": {
+                "description": "promise for the keys of the eventually settled object"
+            },
+            "class": "Brink"
+        },
+        {
+            "file": "src/brink/utils/Q.js",
+            "line": 1457,
+            "description": "Turns an array of promises into a promise for an array.  If any of\nthe promises gets rejected, the whole array is rejected immediately.",
+            "params": [
+                {
+                    "name": "an",
+                    "description": "array (or promise for an array) of values (or\npromises for values)",
+                    "type": "Array*"
+                }
+            ],
+            "return": {
+                "description": "a promise for an array of the corresponding values"
+            },
+            "class": "Brink"
+        },
+        {
+            "file": "src/brink/utils/Q.js",
+            "line": 1506,
+            "description": "Returns the first resolved promise of an array. Prior rejected promises are\nignored.  Rejects only if all promises are rejected.",
+            "params": [
+                {
+                    "name": "an",
+                    "description": "array containing values or promises for values",
+                    "type": "Array*"
+                }
+            ],
+            "return": {
+                "description": "a promise fulfilled with the value of the first resolved promise,\nor a rejected promise if all promises are rejected."
+            },
+            "class": "Brink"
+        },
+        {
+            "file": "src/brink/utils/Q.js",
+            "line": 1555,
+            "description": "Waits for all promises to be settled, either fulfilled or\nrejected.  This is distinct from `all` since that would stop\nwaiting at the first rejection.  The promise returned by\n`allResolved` will never be rejected.",
+            "params": [
+                {
+                    "name": "promises",
+                    "description": "a promise for an array (or an array) of promises\n(or values)"
+                }
+            ],
+            "return": {
+                "description": "a promise for an array of promises"
+            },
+            "class": "Brink"
+        },
+        {
+            "file": "src/brink/utils/Q.js",
+            "line": 1580,
+            "see": [
+                "Promise#allSettled"
+            ],
+            "class": "Brink"
+        },
+        {
+            "file": "src/brink/utils/Q.js",
+            "line": 1588,
+            "description": "Turns an array of promises into a promise for an array of their states (as\nreturned by `inspect`) when they have all settled.",
+            "params": [
+                {
+                    "name": "values",
+                    "description": "an array (or promise for an array) of values (or\npromises for values)",
+                    "type": "Array[Any*]"
+                }
+            ],
+            "return": {
+                "description": "an array of states for the respective values.",
+                "type": "Array[State]"
+            },
+            "class": "Brink"
+        },
+        {
+            "file": "src/brink/utils/Q.js",
+            "line": 1607,
+            "description": "Captures the failure of a promise, giving an oportunity to recover\nwith a callback.  If the given promise is fulfilled, the returned\npromise is fulfilled.",
+            "params": [
+                {
+                    "name": "promise",
+                    "description": "for something",
+                    "type": "Any*"
+                },
+                {
+                    "name": "callback",
+                    "description": "to fulfill the returned promise if the\ngiven promise is rejected",
+                    "type": "Function"
+                }
+            ],
+            "return": {
+                "description": "a promise for the return value of the callback"
+            },
+            "class": "Brink"
+        },
+        {
+            "file": "src/brink/utils/Q.js",
+            "line": 1626,
+            "description": "Attaches a listener that can respond to progress notifications from a\npromise's originating deferred. This listener receives the exact arguments\npassed to ``deferred.notify``.",
+            "params": [
+                {
+                    "name": "promise",
+                    "description": "for something",
+                    "type": "Any*"
+                },
+                {
+                    "name": "callback",
+                    "description": "to receive any progress notifications",
+                    "type": "Function"
+                }
+            ],
+            "return": {
+                "description": "the given promise, unchanged"
+            },
+            "class": "Brink"
+        },
+        {
+            "file": "src/brink/utils/Q.js",
+            "line": 1643,
+            "description": "Provides an opportunity to observe the settling of a promise,\nregardless of whether the promise is fulfilled or rejected.  Forwards\nthe resolution to the returned promise when the callback is done.\nThe callback can return a promise to defer completion.",
+            "params": [
+                {
+                    "name": "promise",
+                    "description": "",
+                    "type": "Any*"
+                },
+                {
+                    "name": "callback",
+                    "description": "to observe the resolution of the given\npromise, takes no arguments.",
+                    "type": "Function"
+                }
+            ],
+            "return": {
+                "description": "a promise for the resolution of the given promise when\n``fin`` is done."
+            },
+            "class": "Brink"
+        },
+        {
+            "file": "src/brink/utils/Q.js",
+            "line": 1674,
+            "description": "Terminates a chain of promises, forcing rejections to be\nthrown as exceptions.",
+            "params": [
+                {
+                    "name": "promise",
+                    "description": "at the end of a chain of promises",
+                    "type": "Any*"
+                }
+            ],
+            "return": {
+                "description": "nothing"
+            },
+            "class": "Brink"
+        },
+        {
+            "file": "src/brink/utils/Q.js",
+            "line": 1710,
+            "description": "Causes a promise to be rejected if it does not get fulfilled before\nsome milliseconds time out.",
+            "params": [
+                {
+                    "name": "promise",
+                    "description": "",
+                    "type": "Any*"
+                },
+                {
+                    "name": "milliseconds",
+                    "description": "timeout",
+                    "type": "Number"
+                },
+                {
+                    "name": "custom",
+                    "description": "error message or Error object (optional)",
+                    "type": "Any*"
+                }
+            ],
+            "return": {
+                "description": "a promise for the resolution of the given promise if it is\nfulfilled before the timeout, otherwise rejected."
+            },
+            "class": "Brink"
+        },
+        {
+            "file": "src/brink/utils/Q.js",
+            "line": 1744,
+            "description": "Returns a promise for the given value (or promised value), some\nmilliseconds after it resolved. Passes rejections immediately.",
+            "params": [
+                {
+                    "name": "promise",
+                    "description": "",
+                    "type": "Any*"
+                },
+                {
+                    "name": "milliseconds",
+                    "description": "",
+                    "type": "Number"
+                }
+            ],
+            "return": {
+                "description": "a promise for the resolution of the given promise after milliseconds\ntime has elapsed since the resolution of the given promise.\nIf the given promise rejects, that is passed immediately."
+            },
+            "class": "Brink"
+        },
+        {
+            "file": "src/brink/utils/Q.js",
+            "line": 1771,
+            "description": "Passes a continuation to a Node function, which is called with the given\narguments provided as an array, and returns a promise.\n\n     Q.nfapply(FS.readFile, [__filename])\n     .then(function (content) {\n     })",
+            "class": "Brink"
+        },
+        {
+            "file": "src/brink/utils/Q.js",
+            "line": 1792,
+            "description": "Passes a continuation to a Node function, which is called with the given\narguments provided individually, and returns a promise.",
+            "example": [
+                "\nQ.nfcall(FS.readFile, __filename)\n.then(function (content) {\n})\n"
+            ],
+            "class": "Brink"
+        },
+        {
+            "file": "src/brink/utils/Q.js",
+            "line": 1814,
+            "description": "Wraps a NodeJS continuation passing function and returns an equivalent\nversion that returns a promise.",
+            "example": [
+                "\nQ.nfbind(FS.readFile, __filename)(\"utf-8\")\n.then(console.log)\n.done()"
+            ],
+            "class": "Brink"
+        },
+        {
+            "file": "src/brink/utils/Q.js",
+            "line": 1861,
+            "description": "Calls a method of a Node-style object that accepts a Node-style\ncallback with a given array of arguments, plus a provided callback.",
+            "params": [
+                {
+                    "name": "object",
+                    "description": "an object that has the named method"
+                },
+                {
+                    "name": "name",
+                    "description": "name of the method of object",
+                    "type": "String"
+                },
+                {
+                    "name": "args",
+                    "description": "arguments to pass to the method; the callback\nwill be provided by Q and appended to these arguments.",
+                    "type": "Array"
+                }
+            ],
+            "return": {
+                "description": "a promise for the value or error"
+            },
+            "class": "Brink"
+        },
+        {
+            "file": "src/brink/utils/Q.js",
+            "line": 1884,
+            "description": "Calls a method of a Node-style object that accepts a Node-style\ncallback, forwarding the given variadic arguments, plus a provided\ncallback argument.",
+            "params": [
+                {
+                    "name": "object",
+                    "description": "an object that has the named method"
+                },
+                {
+                    "name": "name",
+                    "description": "name of the method of object",
+                    "type": "String"
+                },
+                {
+                    "name": "args",
+                    "description": "arguments to pass to the method; the callback will\nbe provided by Q and appended to these arguments.",
+                    "multiple": true
+                }
+            ],
+            "return": {
+                "description": "a promise for the value or error"
+            },
+            "class": "Brink"
+        },
+        {
+            "file": "src/brink/utils/Q.js",
+            "line": 1914,
+            "description": "If a function would like to support both Node continuation-passing-style and\npromise-returning-style, it can end its internal promise chain with\n`nodeify(nodeback)`, forwarding the optional nodeback argument.  If the user\nelects to use a nodeback, the result will be sent there.  If they do not\npass a nodeback, they will receive the result promise.",
+            "params": [
+                {
+                    "name": "object",
+                    "description": "a result (or a promise for a result)"
+                },
+                {
+                    "name": "nodeback",
+                    "description": "a Node.js-style callback",
+                    "type": "Function"
+                }
+            ],
+            "return": {
+                "description": "either the promise or nothing"
+            },
+            "class": "Brink"
         },
         {
             "file": "src/brink/utils/alias.js",
@@ -568,7 +1396,7 @@
         },
         {
             "file": "src/brink/utils/bindTo.js",
-            "line": 15,
+            "line": 16,
             "description": "Two-way bind a property on `A` to a property on `B`\n\n```javascript\n\nvar a = $b.Object.create({\n    test : 'test'\n});\n\nvar b = $b.Object.create({\n    test : $b.bindTo(a, 'test')\n});\n\nconsole.log(a.test, b.test); // test, test\nb.test = 'test2';\nconsole.log(a.test, b.test); // test2, test2\n\n```",
             "itemtype": "method",
             "name": "bindTo",
@@ -750,27 +1578,6 @@
             "class": "Brink"
         },
         {
-            "file": "src/brink/utils/inject.js",
-            "line": 12,
-            "description": "Inject a property into a subclass' prototype.",
-            "itemtype": "method",
-            "name": "inject",
-            "params": [
-                {
-                    "name": "A",
-                    "description": "single key (`String`) or object of key : value pairs.",
-                    "type": "String|Object"
-                },
-                {
-                    "name": "val",
-                    "description": "If setting a single property, the value of the property.",
-                    "type": "Any",
-                    "optional": true
-                }
-            ],
-            "class": "Brink"
-        },
-        {
             "file": "src/brink/utils/intersect.js",
             "line": 13,
             "description": "Compare two arrays and return an `Array` with items that exist\nin both arrays.",
@@ -902,6 +1709,39 @@
             "class": "Brink"
         },
         {
+            "file": "src/brink/utils/params.js",
+            "line": 16,
+            "description": "Serializes an object into URL params (or request body)",
+            "itemtype": "method",
+            "name": "params",
+            "params": [
+                {
+                    "name": "obj",
+                    "description": "The `Object` to serialize.",
+                    "type": "Object"
+                }
+            ],
+            "return": {
+                "description": "The serialized Object.",
+                "type": "String"
+            },
+            "class": "Brink"
+        },
+        {
+            "file": "src/brink/utils/registerModel.js",
+            "line": 14,
+            "itemtype": "method",
+            "name": "registerModel",
+            "params": [
+                {
+                    "name": "Model",
+                    "description": "",
+                    "type": "Brink.Model"
+                }
+            ],
+            "class": "Brink"
+        },
+        {
             "file": "src/brink/utils/set.js",
             "line": 15,
             "description": "Set property/properties or a nested property on an `Object`. Works on POJOs as well\nas `Brink.Object` instances.\n\n**Setting single properties:**\n\n```javascript\nvar obj = {};\n\n$b.set(obj, 'test', 'test');\n$b.set(obj, 'some.nested.key', 'test2');\n\nconsole.log(obj); // { test: 'test', some: { nested: { key: 'test2' } } }\n\n```\n\n**Setting multiple properties:**\n\n```javascript\nvar obj = {};\n\n$b.set(obj, {test : 'test', test2 : 'test2'});\n\nconsole.log(obj); // { test: 'test', test2: 'test2' }\n\n```",
@@ -949,12 +1789,352 @@
                 "type": "String"
             },
             "class": "Brink"
+        },
+        {
+            "file": "src/brink/utils/unbound.js",
+            "line": 11,
+            "itemtype": "method",
+            "name": "unbound",
+            "params": [
+                {
+                    "name": "value",
+                    "description": "",
+                    "type": "Any"
+                }
+            ],
+            "class": "Brink"
+        },
+        {
+            "file": "src/brink/utils/unregisterModel.js",
+            "line": 14,
+            "itemtype": "method",
+            "name": "unregisterModel",
+            "params": [
+                {
+                    "name": "Model",
+                    "description": "",
+                    "type": "Brink.Model"
+                }
+            ],
+            "class": "Brink"
         }
     ],
     "warnings": [
         {
-            "message": "Missing item type\nNotified all subscribers, notification is no longer needed,\nunless it has a callback to be called later via notification.respond()",
-            "line": " src/brink/core/NotificationManager.js:98"
+            "message": "replacing incorrect tag: returns with return",
+            "line": " src/brink/utils/Q.js:574"
+        },
+        {
+            "message": "replacing incorrect tag: returns with return",
+            "line": " src/brink/utils/Q.js:592"
+        },
+        {
+            "message": "replacing incorrect tag: returns with return",
+            "line": " src/brink/utils/Q.js:633"
+        },
+        {
+            "message": "replacing incorrect tag: returns with return",
+            "line": " src/brink/utils/Q.js:657"
+        },
+        {
+            "message": "replacing incorrect tag: returns with return",
+            "line": " src/brink/utils/Q.js:825"
+        },
+        {
+            "message": "replacing incorrect tag: returns with return",
+            "line": " src/brink/utils/Q.js:882"
+        },
+        {
+            "message": "replacing incorrect tag: returns with return",
+            "line": " src/brink/utils/Q.js:904"
+        },
+        {
+            "message": "replacing incorrect tag: returns with return",
+            "line": " src/brink/utils/Q.js:918"
+        },
+        {
+            "message": "replacing incorrect tag: returns with return",
+            "line": " src/brink/utils/Q.js:931"
+        },
+        {
+            "message": "replacing incorrect tag: returns with return",
+            "line": " src/brink/utils/Q.js:944"
+        },
+        {
+            "message": "replacing incorrect tag: returns with return",
+            "line": " src/brink/utils/Q.js:1081"
+        },
+        {
+            "message": "replacing incorrect tag: returns with return",
+            "line": " src/brink/utils/Q.js:1098"
+        },
+        {
+            "message": "replacing incorrect tag: returns with return",
+            "line": " src/brink/utils/Q.js:1118"
+        },
+        {
+            "message": "replacing incorrect tag: returns with return",
+            "line": " src/brink/utils/Q.js:1257"
+        },
+        {
+            "message": "replacing incorrect tag: returns with return",
+            "line": " src/brink/utils/Q.js:1281"
+        },
+        {
+            "message": "replacing incorrect tag: returns with return",
+            "line": " src/brink/utils/Q.js:1457"
+        },
+        {
+            "message": "replacing incorrect tag: returns with return",
+            "line": " src/brink/utils/Q.js:1506"
+        },
+        {
+            "message": "replacing incorrect tag: returns with return",
+            "line": " src/brink/utils/Q.js:1588"
+        },
+        {
+            "message": "replacing incorrect tag: returns with return",
+            "line": " src/brink/utils/Q.js:1607"
+        },
+        {
+            "message": "replacing incorrect tag: returns with return",
+            "line": " src/brink/utils/Q.js:1626"
+        },
+        {
+            "message": "replacing incorrect tag: returns with return",
+            "line": " src/brink/utils/Q.js:1643"
+        },
+        {
+            "message": "replacing incorrect tag: returns with return",
+            "line": " src/brink/utils/Q.js:1674"
+        },
+        {
+            "message": "replacing incorrect tag: returns with return",
+            "line": " src/brink/utils/Q.js:1710"
+        },
+        {
+            "message": "replacing incorrect tag: returns with return",
+            "line": " src/brink/utils/Q.js:1744"
+        },
+        {
+            "message": "replacing incorrect tag: returns with return",
+            "line": " src/brink/utils/Q.js:1861"
+        },
+        {
+            "message": "replacing incorrect tag: returns with return",
+            "line": " src/brink/utils/Q.js:1884"
+        },
+        {
+            "message": "replacing incorrect tag: returns with return",
+            "line": " src/brink/utils/Q.js:1914"
+        },
+        {
+            "message": "Missing item type\nConstructs a promise for an immediate reference, passes promises through, or\ncoerces promises from different systems.",
+            "line": " src/brink/utils/Q.js:410"
+        },
+        {
+            "message": "Missing item type\nPerforms a task in a future turn of the event loop.",
+            "line": " src/brink/utils/Q.js:432"
+        },
+        {
+            "message": "Missing item type\nControls whether or not long stack traces will be on",
+            "line": " src/brink/utils/Q.js:438"
+        },
+        {
+            "message": "Missing item type\nConstructs a {promise, resolve, reject} object.\n\n`resolve` is a callback to invoke with a more resolved value for the\npromise. To fulfill the promise, invoke `resolve` with any value that is\nnot a thenable. To reject the promise, invoke `resolve` with a rejected\nthenable, or invoke `reject` with the reason directly. To resolve the\npromise to another thenable, thus putting it in the same state, invoke\n`resolve` with that other thenable.",
+            "line": " src/brink/utils/Q.js:448"
+        },
+        {
+            "message": "Missing item type\nCreates a Node-style callback that will resolve or reject the deferred\npromise.",
+            "line": " src/brink/utils/Q.js:574"
+        },
+        {
+            "message": "Missing item type",
+            "line": " src/brink/utils/Q.js:592"
+        },
+        {
+            "message": "Missing item type\nIf two promises eventually fulfill to the same value, promises that value,\nbut otherwise rejects.",
+            "line": " src/brink/utils/Q.js:633"
+        },
+        {
+            "message": "Missing item type\nReturns a promise for the first of an array of promises to become settled.",
+            "line": " src/brink/utils/Q.js:657"
+        },
+        {
+            "message": "Missing item type\nConstructs a Promise with a promise descriptor object and optional fallback\nfunction.  The descriptor contains methods like when(rejected), get(name),\nset(name, value), post(name, args), and delete(name), which all\nreturn either a value, a promise for a value, or a rejection.  The fallback\naccepts the operation name, a resolver, and any further arguments that would\nhave been forwarded to the appropriate method above had a method been\nprovided with the proper name.  The API makes no guarantees about the nature\nof the returned object, apart from that it is usable whereever promises are\nbought and sold.",
+            "line": " src/brink/utils/Q.js:680"
+        },
+        {
+            "message": "Missing item type\nWorks almost like \"finally\", but not called for rejections.\nOriginal resolution value is passed through callback unaffected.\nCallback may return a promise that will be awaited for.",
+            "line": " src/brink/utils/Q.js:825"
+        },
+        {
+            "message": "Missing item type\nRegisters an observer on a promise.\n\nGuarantees:\n\n1. that fulfilled and rejected will be called only once.\n2. that either the fulfilled callback or the rejected callback will be\n   called, but not both.\n3. that fulfilled and rejected will not be called in this turn.",
+            "line": " src/brink/utils/Q.js:845"
+        },
+        {
+            "message": "Missing item type\nIf an object is not a promise, it is as \"near\" as possible.\nIf a promise is rejected, it is as \"near\" as possible too.\nIf it’s a fulfilled promise, the fulfillment value is nearer.\nIf it’s a deferred promise and the deferred has been resolved, the\nresolution is \"nearer\".",
+            "line": " src/brink/utils/Q.js:882"
+        },
+        {
+            "message": "Missing item type",
+            "line": " src/brink/utils/Q.js:904"
+        },
+        {
+            "message": "Missing item type",
+            "line": " src/brink/utils/Q.js:918"
+        },
+        {
+            "message": "Missing item type",
+            "line": " src/brink/utils/Q.js:931"
+        },
+        {
+            "message": "Missing item type",
+            "line": " src/brink/utils/Q.js:944"
+        },
+        {
+            "message": "Missing item type\nConstructs a rejected promise.",
+            "line": " src/brink/utils/Q.js:1016"
+        },
+        {
+            "message": "Missing item type\nConstructs a fulfilled promise for an immediate reference.",
+            "line": " src/brink/utils/Q.js:1042"
+        },
+        {
+            "message": "Missing item type\nConverts thenables to Q promises.",
+            "line": " src/brink/utils/Q.js:1081"
+        },
+        {
+            "message": "Missing item type\nAnnotates an object such that it will never be\ntransferred away from this process over any promise\ncommunication channel.",
+            "line": " src/brink/utils/Q.js:1098"
+        },
+        {
+            "message": "Missing item type\nSpreads the values of a promised array of arguments into the\nfulfillment callback.",
+            "line": " src/brink/utils/Q.js:1118"
+        },
+        {
+            "message": "Missing item type\nThe async function is a decorator for generator functions, turning\nthem into asynchronous generators.  Although generators are only part\nof the newest ECMAScript 6 drafts, this code does not cause syntax\nerrors in older engines.  This code should continue to work and will\nin fact improve over time as the language improves.\n\nES6 generators are currently part of V8 version 3.19 with the\n--harmony-generators runtime flag enabled.  SpiderMonkey has had them\nfor longer, but under an older Python-inspired form.  This function\nworks on both kinds of generators.\n\nDecorates a generator function such that:\n - it may yield promises\n - execution will continue when that promise is fulfilled\n - the value of the yield expression will be the fulfilled value\n - it returns a promise for the return value (when the generator\n   stops iterating)\n - the decorated function returns a promise for the return value\n   of the generator or the first rejected promise among those\n   yielded.\n - if an error is thrown in the generator, it propagates through\n   every following yield until it is caught, or until it escapes\n   the generator function altogether, and is translated into a\n   rejection for the promise returned by the decorated generator.",
+            "line": " src/brink/utils/Q.js:1139"
+        },
+        {
+            "message": "Missing item type\nThe spawn function is a small wrapper around async that immediately\ncalls the generator and also ends the promise chain, so that any\nunhandled errors are thrown instead of forwarded to the error\nhandler. This is useful because it's extremely common to run\ngenerators at the top-level to work with libraries.",
+            "line": " src/brink/utils/Q.js:1215"
+        },
+        {
+            "message": "Missing item type\nThrows a ReturnValue exception to stop an asynchronous generator.\n\nThis interface is a stop-gap measure to support generator return\nvalues in older Firefox/SpiderMonkey.  In browsers that support ES6\ngenerators like Chromium 29, just use \"return\" in your generator\nfunctions.",
+            "line": " src/brink/utils/Q.js:1228"
+        },
+        {
+            "message": "Missing item type\nThe promised function decorator ensures that any promise arguments\nare settled and passed as values (`this` is also settled and passed\nas a value).  It will also ensure that the result of a function is\nalways a promise.",
+            "line": " src/brink/utils/Q.js:1257"
+        },
+        {
+            "message": "Missing item type\nsends a message to a value in a future turn",
+            "line": " src/brink/utils/Q.js:1281"
+        },
+        {
+            "message": "Missing item type\nGets the value of a property in a future turn.",
+            "line": " src/brink/utils/Q.js:1302"
+        },
+        {
+            "message": "Missing item type\nSets the value of a property in a future turn.",
+            "line": " src/brink/utils/Q.js:1316"
+        },
+        {
+            "message": "Missing item type\nDeletes a property in a future turn.",
+            "line": " src/brink/utils/Q.js:1331"
+        },
+        {
+            "message": "Missing item type\nInvokes a method in a future turn.",
+            "line": " src/brink/utils/Q.js:1347"
+        },
+        {
+            "message": "Missing item type\nInvokes a method in a future turn.",
+            "line": " src/brink/utils/Q.js:1370"
+        },
+        {
+            "message": "Missing item type\nApplies the promised function in a future turn.",
+            "line": " src/brink/utils/Q.js:1389"
+        },
+        {
+            "message": "Missing item type\nCalls the promised function in a future turn.",
+            "line": " src/brink/utils/Q.js:1402"
+        },
+        {
+            "message": "Missing item type\nBinds the promised function, transforming return values into a fulfilled\npromise and thrown errors into a rejected one.",
+            "line": " src/brink/utils/Q.js:1416"
+        },
+        {
+            "message": "Missing item type\nRequests the names of the owned properties of a promised\nobject in a future turn.",
+            "line": " src/brink/utils/Q.js:1443"
+        },
+        {
+            "message": "Missing item type\nTurns an array of promises into a promise for an array.  If any of\nthe promises gets rejected, the whole array is rejected immediately.",
+            "line": " src/brink/utils/Q.js:1457"
+        },
+        {
+            "message": "Missing item type\nReturns the first resolved promise of an array. Prior rejected promises are\nignored.  Rejects only if all promises are rejected.",
+            "line": " src/brink/utils/Q.js:1506"
+        },
+        {
+            "message": "Missing item type\nWaits for all promises to be settled, either fulfilled or\nrejected.  This is distinct from `all` since that would stop\nwaiting at the first rejection.  The promise returned by\n`allResolved` will never be rejected.",
+            "line": " src/brink/utils/Q.js:1555"
+        },
+        {
+            "message": "Missing item type",
+            "line": " src/brink/utils/Q.js:1580"
+        },
+        {
+            "message": "Missing item type\nTurns an array of promises into a promise for an array of their states (as\nreturned by `inspect`) when they have all settled.",
+            "line": " src/brink/utils/Q.js:1588"
+        },
+        {
+            "message": "Missing item type\nCaptures the failure of a promise, giving an oportunity to recover\nwith a callback.  If the given promise is fulfilled, the returned\npromise is fulfilled.",
+            "line": " src/brink/utils/Q.js:1607"
+        },
+        {
+            "message": "Missing item type\nAttaches a listener that can respond to progress notifications from a\npromise's originating deferred. This listener receives the exact arguments\npassed to ``deferred.notify``.",
+            "line": " src/brink/utils/Q.js:1626"
+        },
+        {
+            "message": "Missing item type\nProvides an opportunity to observe the settling of a promise,\nregardless of whether the promise is fulfilled or rejected.  Forwards\nthe resolution to the returned promise when the callback is done.\nThe callback can return a promise to defer completion.",
+            "line": " src/brink/utils/Q.js:1643"
+        },
+        {
+            "message": "Missing item type\nTerminates a chain of promises, forcing rejections to be\nthrown as exceptions.",
+            "line": " src/brink/utils/Q.js:1674"
+        },
+        {
+            "message": "Missing item type\nCauses a promise to be rejected if it does not get fulfilled before\nsome milliseconds time out.",
+            "line": " src/brink/utils/Q.js:1710"
+        },
+        {
+            "message": "Missing item type\nReturns a promise for the given value (or promised value), some\nmilliseconds after it resolved. Passes rejections immediately.",
+            "line": " src/brink/utils/Q.js:1744"
+        },
+        {
+            "message": "Missing item type\nPasses a continuation to a Node function, which is called with the given\narguments provided as an array, and returns a promise.\n\n     Q.nfapply(FS.readFile, [__filename])\n     .then(function (content) {\n     })",
+            "line": " src/brink/utils/Q.js:1771"
+        },
+        {
+            "message": "Missing item type\nPasses a continuation to a Node function, which is called with the given\narguments provided individually, and returns a promise.",
+            "line": " src/brink/utils/Q.js:1792"
+        },
+        {
+            "message": "Missing item type\nWraps a NodeJS continuation passing function and returns an equivalent\nversion that returns a promise.",
+            "line": " src/brink/utils/Q.js:1814"
+        },
+        {
+            "message": "Missing item type\nCalls a method of a Node-style object that accepts a Node-style\ncallback with a given array of arguments, plus a provided callback.",
+            "line": " src/brink/utils/Q.js:1861"
+        },
+        {
+            "message": "Missing item type\nCalls a method of a Node-style object that accepts a Node-style\ncallback, forwarding the given variadic arguments, plus a provided\ncallback argument.",
+            "line": " src/brink/utils/Q.js:1884"
+        },
+        {
+            "message": "Missing item type\nIf a function would like to support both Node continuation-passing-style and\npromise-returning-style, it can end its internal promise chain with\n`nodeify(nodeback)`, forwarding the optional nodeback argument.  If the user\nelects to use a nodeback, the result will be sent there.  If they do not\npass a nodeback, they will receive the result promise.",
+            "line": " src/brink/utils/Q.js:1914"
         }
     ]
 }

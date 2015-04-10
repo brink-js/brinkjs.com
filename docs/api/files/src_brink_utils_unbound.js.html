@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>src/brink/utils/inject.js - brink.js</title>
+    <title>src/brink/utils/unbound.js - brink.js</title>
     <link rel="stylesheet" href="">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -21,7 +21,7 @@
             <li class="divider-vertical"></li>
             <li>
                 <p class="navbar-text">
-                    API Docs for Version: <b>0.2.0</b>
+                    API Docs for Version: <b>0.2.3</b>
                 </p>
             </li>
         </div>
@@ -74,7 +74,7 @@
                 <div id="docs-main">
                     <div class="content">
 <div class="page-header">
-    <h1>src/brink/utils/inject.js <small>File</small></h1>
+    <h1>src/brink/utils/unbound.js <small>File</small></h1>
 </div>
 
 <div class="file">
@@ -89,16 +89,16 @@ $b(
     function () {
 
         &#x27;use strict&#x27;;
-
         /***********************************************************************
-        Inject a property into a subclass&#x27; prototype.
-
-        @method inject
-        @param {String|Object} A single key (&#x60;String&#x60;) or object of key : value pairs.
-        @param {Any} [val] If setting a single property, the value of the property.
+        @method unbound
+        @param {Any} value
         ************************************************************************/
-        return function (Class) {
-            Class.inject.apply(Class, arguments);
+        return function (val) {
+
+            return {
+                value : val,
+                __isUnbound : true
+            };
         };
     }
 
