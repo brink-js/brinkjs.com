@@ -1,0 +1,810 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Brink.Store - brink.js</title>
+    <link rel="stylesheet" href="">
+    <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
+    <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
+    <link rel="stylesheet" href="../assets/css/custom.css">
+    <link rel="stylesheet" href="../assets/css/lucid.css">
+    <link rel="stylesheet" href="../assets/vendor/bootstrap/css/bootstrap.css">
+    <link rel="shortcut icon" type="image/png" href="../assets/favicon.png">
+</head>
+<body class="yui3-skin-sam">
+<div class="navbar navbar-fixed-top">
+    <div class="navbar-inner">
+        <h1 class="brand" style="padding: 10px 16px 10px; height: 20px; line-height: 20px; margin-left: 0;">
+	    <img alt="brink.js" src="../../../img/brink-logo.png" style="max-height: 100%;" title="brink.js">
+        </h1>
+	<div class="nav">
+            <li class="divider-vertical"></li>
+            <li>
+                <p class="navbar-text">
+                    API Docs for Version: <b>0.3.3</b>
+                </p>
+            </li>
+        </div>
+        <form class="navbar-form pull-right" style="line-height: 40px; height: 40px;">
+            <input style="margin-top: 0;" type="text" class="search-query" placeholder="Search for classes/modules..." data-obj='["classes/Brink", "classes/Brink.Adapter", "classes/Brink.Class", "classes/Brink.CoreObject", "classes/Brink.Model", "classes/Brink.Object", "classes/Brink.RESTAdapter", "classes/Brink.Schema", "classes/Brink.Store", "modules/Brink", "modules/data"]'>
+        </form>
+    </div>
+</div>
+<div class="container">
+    <div class="row">
+        <div class="span3">
+	    <div>
+	        <div id="sidebar">
+	        <div id="classes">
+	            <ul id="api-classes" class="nav nav-list">
+	                    <li><a href="../classes/Brink.html">Brink</a></li>
+	                    <li><a href="../classes/Brink.Adapter.html">Brink.Adapter</a></li>
+	                    <li><a href="../classes/Brink.Class.html">Brink.Class</a></li>
+	                    <li><a href="../classes/Brink.CoreObject.html">Brink.CoreObject</a></li>
+	                    <li><a href="../classes/Brink.Model.html">Brink.Model</a></li>
+	                    <li><a href="../classes/Brink.Object.html">Brink.Object</a></li>
+	                    <li><a href="../classes/Brink.RESTAdapter.html">Brink.RESTAdapter</a></li>
+	                    <li><a href="../classes/Brink.Schema.html">Brink.Schema</a></li>
+	                    <li><a href="../classes/Brink.Store.html">Brink.Store</a></li>
+	            </ul>
+	        </div>
+	        </div>
+	    </div>
+        </div>
+        <div class="span9">
+                <form id="options-form" class="form-inline pull-right">
+                    Show:
+                    <label for="api-show-inherited" class="checkbox">
+                        <input type="checkbox" id="api-show-inherited" checked>
+                        Inherited
+                    </label>
+            
+                    <label for="api-show-protected" class="checkbox">
+                        <input type="checkbox" id="api-show-protected">
+                        Protected
+                    </label>
+            
+                    <label for="api-show-private" class="checkbox">
+                        <input type="checkbox" id="api-show-private">
+                        Private
+                    </label>
+                    <label for="api-show-deprecated" class="checkbox">
+                        <input type="checkbox" id="api-show-deprecated">
+                        Deprecated
+                    </label>
+            
+                </form>
+            
+            <div class="apidocs">
+                <div id="docs-main">
+                    <div class="content">
+<div class="page-header">
+    <h1>Brink.Store</h1>
+</div>
+
+
+
+	<div class="well well-small">
+            Module: <a href="../modules/data.html">data</a><br>
+            Parent Module: <a href="../modules/Brink.html">Brink</a>
+    </div>
+
+
+
+<div class="yuidoc-class-description">
+<p>The store is a glorified cache, with convenience methods to work with your
+Adapters to update or query your persistence layer as needed.
+By having a Store, you will need to access your persistence layer
+much less frequently and you will be able to return records from the
+store instantly.</p>
+
+</div>
+
+<!-- table of contents -->
+
+<div id="class-toc" class="page-section">
+	<h2>Table of Contents</h2>
+    <ul>
+		<li>
+			<strong>Methods</strong>
+			<ul>
+				<li><a href="#method-add"><span class="im">add</span>(<span class="ia">model</span><span class="ia">records</span>)</a></li>
+				<li><a href="#method-all"><span class="im">all</span>(<span class="ia">model</span>)</a></li>
+				<li><a href="#method-clear"><span class="im">clear</span>(<span class="ia">Model</span>)</a></li>
+				<li><a href="#method-createRecord"><span class="im">createRecord</span>(<span class="ia">model</span><span class="ia">data</span>)</a></li>
+				<li><a href="#method-fetchAll"><span class="im">fetchAll</span>(<span class="ia">model</span>)</a></li>
+				<li><a href="#method-filter"><span class="im">filter</span>(<span class="ia">model</span><span class="ia">q</span>)</a></li>
+				<li><a href="#method-find"><span class="im">find</span>(<span class="ia">model</span><span class="ia">q</span>)</a></li>
+				<li><a href="#method-findOrCreate"><span class="im">findOrCreate</span>(<span class="ia">model</span><span class="ia">pk</span>)</a></li>
+				<li><a href="#method-modelFor"><span class="im">modelFor</span>(<span class="ia">model</span>)</a></li>
+				<li><a href="#method-remove"><span class="im">remove</span>(<span class="ia">model</span><span class="ia">The</span>)</a></li>
+			</ul>
+		</li>
+
+
+
+	</ul>
+</div>
+
+<!-- details -->
+
+
+    <div id="methods" class="page-section">
+        <h2 class="off-left">Methods</h2>
+        <div class="item-list">
+<div id="method-add" class="method item">
+	<div class="method-signature">
+	<span class="name"><code>add</code></span>
+
+		<div class="args">
+			<span class="paren">(</span><ul class="args-list inline commas">
+				<li class="arg">
+						<code>model</code>
+				</li>
+				<li class="arg">
+						<code>records</code>
+				</li>
+			</ul><span class="paren">)</span>
+		</div>
+		<span class="returns-inline">
+			<span class="type">Brink.Collection</span>
+		</span>
+	</div>
+
+
+
+
+
+
+	<div class="meta">
+				<p>
+				Defined in
+		<a href="../files/src_brink_data_Store.js.html#l52"><code>src&#x2F;brink&#x2F;data&#x2F;Store.js:52</code></a>
+		</p>
+
+
+
+	</div>
+
+	<div class="description"><p>Adds new record(s) to the store.
+This does not in any way affect the persistence layer or call any methods
+on the models' adapters.</p>
+</div>
+
+		<div class="params">
+			<h4>Parameters:</h4>
+
+			<ul class="params-list">
+				<li class="param">
+						<code class="param-name">model</code>
+						<span class="type">String  |  Model</span>
+
+
+					<div class="param-description"><p>The modelKey or Model class to add records for.</p>
+</div>
+
+				</li>
+				<li class="param">
+						<code class="param-name">records</code>
+						<span class="type">Model  |  Array</span>
+
+
+					<div class="param-description"><p>The record or records you want to add to the store.</p>
+</div>
+
+				</li>
+			</ul>
+		</div>
+
+		<div class="returns">
+			<h4>Returns:</h4>
+
+			<div class="returns-description">
+						<span class="type">Brink.Collection</span>
+			</div>
+		</div>
+
+</div>
+<div id="method-all" class="method item">
+	<div class="method-signature">
+	<span class="name"><code>all</code></span>
+
+		<div class="args">
+			<span class="paren">(</span><ul class="args-list inline commas">
+				<li class="arg">
+						<code>model</code>
+				</li>
+			</ul><span class="paren">)</span>
+		</div>
+		<span class="returns-inline">
+			<span class="type">Brink.Collection</span>
+		</span>
+	</div>
+
+
+
+
+
+
+	<div class="meta">
+				<p>
+				Defined in
+		<a href="../files/src_brink_data_Store.js.html#l133"><code>src&#x2F;brink&#x2F;data&#x2F;Store.js:133</code></a>
+		</p>
+
+
+
+	</div>
+
+	<div class="description"><p>Returns all the records of a specific type in the store.</p>
+</div>
+
+		<div class="params">
+			<h4>Parameters:</h4>
+
+			<ul class="params-list">
+				<li class="param">
+						<code class="param-name">model</code>
+						<span class="type">String  |  Model</span>
+
+
+					<div class="param-description"><p>The modelKey or Model class of the records you want to get.</p>
+</div>
+
+				</li>
+			</ul>
+		</div>
+
+		<div class="returns">
+			<h4>Returns:</h4>
+
+			<div class="returns-description">
+						<span class="type">Brink.Collection</span>
+			</div>
+		</div>
+
+</div>
+<div id="method-clear" class="method item">
+	<div class="method-signature">
+	<span class="name"><code>clear</code></span>
+
+		<div class="args">
+			<span class="paren">(</span><ul class="args-list inline commas">
+				<li class="arg">
+						<code>Model</code>
+				</li>
+			</ul><span class="paren">)</span>
+		</div>
+	</div>
+
+
+
+
+
+
+	<div class="meta">
+				<p>
+				Defined in
+		<a href="../files/src_brink_data_Store.js.html#l39"><code>src&#x2F;brink&#x2F;data&#x2F;Store.js:39</code></a>
+		</p>
+
+
+
+	</div>
+
+	<div class="description"><p>Clear the store. Removes all record instances in the store.
+This does not in any way affect the persistence layer or call any methods
+on the models' adapters.</p>
+</div>
+
+		<div class="params">
+			<h4>Parameters:</h4>
+
+			<ul class="params-list">
+				<li class="param">
+						<code class="param-name">Model</code>
+						<span class="type"><a href="../classes/Brink.Model.html" class="crosslink">Brink.Model</a></span>
+
+
+
+				</li>
+			</ul>
+		</div>
+
+
+</div>
+<div id="method-createRecord" class="method item">
+	<div class="method-signature">
+	<span class="name"><code>createRecord</code></span>
+
+		<div class="args">
+			<span class="paren">(</span><ul class="args-list inline commas">
+				<li class="arg">
+						<code>model</code>
+				</li>
+				<li class="arg">
+						<code>data</code>
+				</li>
+			</ul><span class="paren">)</span>
+		</div>
+		<span class="returns-inline">
+			<span class="type"><a href="../classes/Brink.Model.html" class="crosslink">Brink.Model</a></span>
+		</span>
+	</div>
+
+
+
+
+
+
+	<div class="meta">
+				<p>
+				Defined in
+		<a href="../files/src_brink_data_Store.js.html#l244"><code>src&#x2F;brink&#x2F;data&#x2F;Store.js:244</code></a>
+		</p>
+
+
+
+	</div>
+
+	<div class="description"><p>Creates a new record and adds it to the store.</p>
+</div>
+
+		<div class="params">
+			<h4>Parameters:</h4>
+
+			<ul class="params-list">
+				<li class="param">
+						<code class="param-name">model</code>
+						<span class="type">String  |  Model</span>
+
+
+					<div class="param-description"><p>The modelKey or Model class of the record you want to find.</p>
+</div>
+
+				</li>
+				<li class="param">
+						<code class="param-name">data</code>
+						<span class="type">Object</span>
+
+
+					<div class="param-description"><p>The data you want to populate the record with.</p>
+</div>
+
+				</li>
+			</ul>
+		</div>
+
+		<div class="returns">
+			<h4>Returns:</h4>
+
+			<div class="returns-description">
+						<span class="type"><a href="../classes/Brink.Model.html" class="crosslink">Brink.Model</a></span>
+			</div>
+		</div>
+
+</div>
+<div id="method-fetchAll" class="method item">
+	<div class="method-signature">
+	<span class="name"><code>fetchAll</code></span>
+
+		<div class="args">
+			<span class="paren">(</span><ul class="args-list inline commas">
+				<li class="arg">
+						<code>model</code>
+				</li>
+			</ul><span class="paren">)</span>
+		</div>
+		<span class="returns-inline">
+			<span class="type">Brink.Collection</span>
+		</span>
+	</div>
+
+
+
+
+
+
+	<div class="meta">
+				<p>
+				Defined in
+		<a href="../files/src_brink_data_Store.js.html#l145"><code>src&#x2F;brink&#x2F;data&#x2F;Store.js:145</code></a>
+		</p>
+
+
+
+	</div>
+
+	<div class="description"><p>Returns all the records of a specific type from the persistence layer
+and adds them to the store.</p>
+</div>
+
+		<div class="params">
+			<h4>Parameters:</h4>
+
+			<ul class="params-list">
+				<li class="param">
+						<code class="param-name">model</code>
+						<span class="type">String  |  Model</span>
+
+
+					<div class="param-description"><p>The modelKey or Model class of the records you want to get.</p>
+</div>
+
+				</li>
+			</ul>
+		</div>
+
+		<div class="returns">
+			<h4>Returns:</h4>
+
+			<div class="returns-description">
+						<span class="type">Brink.Collection</span>
+			</div>
+		</div>
+
+</div>
+<div id="method-filter" class="method item">
+	<div class="method-signature">
+	<span class="name"><code>filter</code></span>
+
+		<div class="args">
+			<span class="paren">(</span><ul class="args-list inline commas">
+				<li class="arg">
+						<code>model</code>
+				</li>
+				<li class="arg">
+						<code>q</code>
+				</li>
+			</ul><span class="paren">)</span>
+		</div>
+		<span class="returns-inline">
+			<span class="type">Brink.Array</span>
+		</span>
+	</div>
+
+
+
+
+
+
+	<div class="meta">
+				<p>
+				Defined in
+		<a href="../files/src_brink_data_Store.js.html#l263"><code>src&#x2F;brink&#x2F;data&#x2F;Store.js:263</code></a>
+		</p>
+
+
+
+	</div>
+
+	<div class="description"><p>Filters through all records in the store of a specific type and returns matches.</p>
+</div>
+
+		<div class="params">
+			<h4>Parameters:</h4>
+
+			<ul class="params-list">
+				<li class="param">
+						<code class="param-name">model</code>
+						<span class="type">String  |  Model</span>
+
+
+					<div class="param-description"><p>The modelKey or Model class of the record you want to find.</p>
+</div>
+
+				</li>
+				<li class="param">
+						<code class="param-name">q</code>
+						<span class="type">Function  |  Object</span>
+
+
+					<div class="param-description"><p>An object of parameters you want to match or a filter function.</p>
+</div>
+
+				</li>
+			</ul>
+		</div>
+
+		<div class="returns">
+			<h4>Returns:</h4>
+
+			<div class="returns-description">
+						<span class="type">Brink.Array</span>
+			</div>
+		</div>
+
+</div>
+<div id="method-find" class="method item">
+	<div class="method-signature">
+	<span class="name"><code>find</code></span>
+
+		<div class="args">
+			<span class="paren">(</span><ul class="args-list inline commas">
+				<li class="arg">
+						<code>model</code>
+				</li>
+				<li class="arg">
+						<code>q</code>
+				</li>
+			</ul><span class="paren">)</span>
+		</div>
+		<span class="returns-inline">
+			<span class="type"><a href="../classes/Brink.Model.html" class="crosslink">Brink.Model</a></span>
+		</span>
+	</div>
+
+
+
+
+
+
+	<div class="meta">
+				<p>
+				Defined in
+		<a href="../files/src_brink_data_Store.js.html#l180"><code>src&#x2F;brink&#x2F;data&#x2F;Store.js:180</code></a>
+		</p>
+
+
+
+	</div>
+
+	<div class="description"><p>Find a record in the store.</p>
+</div>
+
+		<div class="params">
+			<h4>Parameters:</h4>
+
+			<ul class="params-list">
+				<li class="param">
+						<code class="param-name">model</code>
+						<span class="type">String  |  Model</span>
+
+
+					<div class="param-description"><p>The modelKey or Model class of the record you want to find.</p>
+</div>
+
+				</li>
+				<li class="param">
+						<code class="param-name">q</code>
+						<span class="type">String  |  Number  |  Object</span>
+
+
+					<div class="param-description"><p>The primary key or an object of parameters you want to match.</p>
+</div>
+
+				</li>
+			</ul>
+		</div>
+
+		<div class="returns">
+			<h4>Returns:</h4>
+
+			<div class="returns-description">
+						<span class="type"><a href="../classes/Brink.Model.html" class="crosslink">Brink.Model</a></span>
+			</div>
+		</div>
+
+</div>
+<div id="method-findOrCreate" class="method item">
+	<div class="method-signature">
+	<span class="name"><code>findOrCreate</code></span>
+
+		<div class="args">
+			<span class="paren">(</span><ul class="args-list inline commas">
+				<li class="arg">
+						<code>model</code>
+				</li>
+				<li class="arg">
+						<code>pk</code>
+				</li>
+			</ul><span class="paren">)</span>
+		</div>
+		<span class="returns-inline">
+			<span class="type"><a href="../classes/Brink.Model.html" class="crosslink">Brink.Model</a></span>
+		</span>
+	</div>
+
+
+
+
+
+
+	<div class="meta">
+				<p>
+				Defined in
+		<a href="../files/src_brink_data_Store.js.html#l218"><code>src&#x2F;brink&#x2F;data&#x2F;Store.js:218</code></a>
+		</p>
+
+
+
+	</div>
+
+	<div class="description"><p>Find a record in the store by primary key or create one.</p>
+</div>
+
+		<div class="params">
+			<h4>Parameters:</h4>
+
+			<ul class="params-list">
+				<li class="param">
+						<code class="param-name">model</code>
+						<span class="type">String  |  Model</span>
+
+
+					<div class="param-description"><p>The modelKey or Model class of the record you want to find.</p>
+</div>
+
+				</li>
+				<li class="param">
+						<code class="param-name">pk</code>
+						<span class="type">String  |  Number</span>
+
+
+					<div class="param-description"><p>The primary key of the record.</p>
+</div>
+
+				</li>
+			</ul>
+		</div>
+
+		<div class="returns">
+			<h4>Returns:</h4>
+
+			<div class="returns-description">
+						<span class="type"><a href="../classes/Brink.Model.html" class="crosslink">Brink.Model</a></span>
+			</div>
+		</div>
+
+</div>
+<div id="method-modelFor" class="method item">
+	<div class="method-signature">
+	<span class="name"><code>modelFor</code></span>
+
+		<div class="args">
+			<span class="paren">(</span><ul class="args-list inline commas">
+				<li class="arg">
+						<code>model</code>
+				</li>
+			</ul><span class="paren">)</span>
+		</div>
+		<span class="returns-inline">
+			<span class="type"><a href="../classes/Brink.Model.html" class="crosslink">Brink.Model</a></span>
+		</span>
+	</div>
+
+
+
+
+
+
+	<div class="meta">
+				<p>
+				Defined in
+		<a href="../files/src_brink_data_Store.js.html#l338"><code>src&#x2F;brink&#x2F;data&#x2F;Store.js:338</code></a>
+		</p>
+
+
+
+	</div>
+
+	<div class="description"><p>Given a modelKey or collectionKey returns the corresponding Model Class.</p>
+</div>
+
+		<div class="params">
+			<h4>Parameters:</h4>
+
+			<ul class="params-list">
+				<li class="param">
+						<code class="param-name">model</code>
+						<span class="type">String</span>
+
+
+					<div class="param-description"><p>The modelKey or collectionKey to get the Class for.</p>
+</div>
+
+				</li>
+			</ul>
+		</div>
+
+		<div class="returns">
+			<h4>Returns:</h4>
+
+			<div class="returns-description">
+						<span class="type"><a href="../classes/Brink.Model.html" class="crosslink">Brink.Model</a></span>
+			</div>
+		</div>
+
+</div>
+<div id="method-remove" class="method item">
+	<div class="method-signature">
+	<span class="name"><code>remove</code></span>
+
+		<div class="args">
+			<span class="paren">(</span><ul class="args-list inline commas">
+				<li class="arg">
+						<code>model</code>
+				</li>
+				<li class="arg">
+						<code>The</code>
+				</li>
+			</ul><span class="paren">)</span>
+		</div>
+		<span class="returns-inline">
+			<span class="type">Brink.Collection</span>
+		</span>
+	</div>
+
+
+
+
+
+
+	<div class="meta">
+				<p>
+				Defined in
+		<a href="../files/src_brink_data_Store.js.html#l95"><code>src&#x2F;brink&#x2F;data&#x2F;Store.js:95</code></a>
+		</p>
+
+
+
+	</div>
+
+	<div class="description"><p>Removes record(s) from the store.
+This does not in any way affect the persistence layer or call any methods
+on the models' adapters.</p>
+</div>
+
+		<div class="params">
+			<h4>Parameters:</h4>
+
+			<ul class="params-list">
+				<li class="param">
+						<code class="param-name">model</code>
+						<span class="type">String  |  Model</span>
+
+
+					<div class="param-description"><p>The modelKey or Model class to remove records for.</p>
+</div>
+
+				</li>
+				<li class="param">
+						<code class="param-name">The</code>
+						<span class="type">Model  |  Array</span>
+
+
+					<div class="param-description"><p>record or records you want to remove from the store.</p>
+</div>
+
+				</li>
+			</ul>
+		</div>
+
+		<div class="returns">
+			<h4>Returns:</h4>
+
+			<div class="returns-description">
+						<span class="type">Brink.Collection</span>
+			</div>
+		</div>
+
+</div>
+        </div>
+    </div>
+
+
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="../assets/vendor/jquery/jquery-1.8.2.min.js"></script>
+<script src="../assets/vendor/bootstrap/js/bootstrap.js"></script>
+<script src="../assets/vendor/prettify/prettify-min.js"></script>
+<script src="../assets/js/yuidoc-bootstrap.js"></script>
+<script>prettyPrint();</script>
+</body>
+</html>

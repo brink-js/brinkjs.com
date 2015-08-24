@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>src/brink/utils/expandProps.js - brink.js</title>
+    <title>src/brink/data/attr.js - brink.js</title>
     <link rel="stylesheet" href="">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -79,69 +79,147 @@
                 <div id="docs-main">
                     <div class="content">
 <div class="page-header">
-    <h1>src/brink/utils/expandProps.js <small>File</small></h1>
+    <h1>src/brink/data/attr.js <small>File</small></h1>
 </div>
 
 <div class="file">
     <pre class="prettyprint linenums">
 $b(
+    [
+        &#x27;../utils/get&#x27;,
+        &#x27;../utils/set&#x27;,
+        &#x27;../utils/computed&#x27;
+    ],
 
-    /***********************************************************************
-    @class Brink
-    ************************************************************************/
-    function () {
+    function (get, set, computed) {
 
         &#x27;use strict&#x27;;
 
-        return function (a, skipRoot) {
+        /***********************************************************************
+        Define a Schema attribute.
 
-            var b,
-                i,
-                j,
-                p,
-                n,
-                s;
+        @method attr
+        @param  {Type} type The value type of the attribute.
+        @param  {Object} options Options for the attribute
+        @return {ComputedProperty}
+        ************************************************************************/
 
-            a = [].concat(a);
+        return (function make (type, options) {
 
-            s = [];
-
-            for (i = 0; i &lt; a.length; i ++) {
-
-                p = a[i];
-
-                if (!skipRoot &amp;&amp; ~p.indexOf(&#x27;.&#x27;)) {
-
-                    b = p.split(&#x27;.&#x27;);
-                    b.splice(b.length - 1, 1);
-                    n = null;
-
-                    while (b.length) {
-                        n = n ? n + &#x27;.&#x27; : &#x27;&#x27;;
-                        n += b.splice(0, 1)[0];
-                        s.push(n);
-                    }
-                }
-
-                if (~p.indexOf(&#x27;,&#x27;)) {
-                    p = p.split(&#x27;.&#x27;);
-                    n = p.splice(0, p.length - 1).join(&#x27;.&#x27;);
-                    b = p[0].split(&#x27;,&#x27;);
-                    p = [];
-
-                    for (j = 0; j &lt; b.length; j ++) {
-                        p.push([n, b[j]].join(n ? &#x27;.&#x27; : &#x27;&#x27;));
-                    }
-                }
-
-                s = s.concat(p);
+            if (typeof type === &#x27;object&#x27;) {
+                options = type;
+                type = &#x27;string&#x27;;
             }
 
-            return s;
-        };
+            type = type || &#x27;string&#x27;;
+
+            options = options || {};
+
+            var attr = computed({
+
+                get : function (key) {
+
+                    if (typeof this.__meta.data[key] === &#x27;undefined&#x27;) {
+                        return options.defaultValue;
+                    }
+
+                    return this.__meta.data[key];
+                },
+
+                set : function (val, key) {
+
+                    var meta,
+                        data,
+                        dirty,
+                        dirtyIdx,
+                        pristine;
+
+                    meta = this.__meta;
+                    dirty = get(this, &#x27;dirtyAttributes&#x27;);
+                    data = meta.data;
+                    pristine = meta.pristineData;
+
+                    if (dirty) {
+
+                        if (typeof pristine[key] === &#x27;undefined&#x27;) {
+
+                            if (typeof data[key] === &#x27;undefined&#x27;) {
+                                pristine[key] = options.defaultValue;
+                            }
+
+                            else {
+                                pristine[key] = data[key];
+                            }
+
+                            dirty.push(key);
+                        }
+
+                        else {
+
+                            dirtyIdx = dirty.indexOf(key);
+
+                            if (pristine[key] === val &amp;&amp; ~dirtyIdx) {
+                                dirty.remove(key);
+                            }
+
+                            else if (!~dirtyIdx) {
+                                dirty.push(key);
+                            }
+                        }
+                    }
+
+                    data[key] = val;
+                }
+
+            });
+
+            attr.meta({
+
+                type : type,
+                isAttribute : true,
+                options : options,
+
+                serialize : function (filter) {
+                    var meta = attr.meta(),
+                        k = meta.key,
+                        v = get(this, k);
+                    if (!filter || filter(meta, k, v)) {
+                        return v;
+                    }
+                },
+
+                deserialize : function (val) {
+                    set(this, attr.meta().key, val);
+                    return val;
+                },
+
+                revert : function () {
+
+                    var key,
+                        meta,
+                        pristine;
+
+                    meta = attr.meta();
+                    key = meta.key;
+
+                    pristine = this.__meta.pristineData;
+
+                    if (pristine[key]) {
+                        set(this, key, pristine[key]);
+                    }
+                }
+            });
+
+            attr.clone = function () {
+                return make(type, options);
+            };
+
+            return attr;
+        });
     }
 
 ).attach(&#x27;$b&#x27;);
+
     </pre>
 </div>
                     </div>

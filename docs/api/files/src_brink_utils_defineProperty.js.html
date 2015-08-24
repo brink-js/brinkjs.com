@@ -21,12 +21,12 @@
             <li class="divider-vertical"></li>
             <li>
                 <p class="navbar-text">
-                    API Docs for Version: <b>0.2.3</b>
+                    API Docs for Version: <b>0.3.3</b>
                 </p>
             </li>
         </div>
         <form class="navbar-form pull-right" style="line-height: 40px; height: 40px;">
-            <input style="margin-top: 0;" type="text" class="search-query" placeholder="Search for classes/modules..." data-obj='["classes/Brink", "classes/Brink.Class", "classes/Brink.CoreObject", "classes/Brink.Object"]'>
+            <input style="margin-top: 0;" type="text" class="search-query" placeholder="Search for classes/modules..." data-obj='["classes/Brink", "classes/Brink.Adapter", "classes/Brink.Class", "classes/Brink.CoreObject", "classes/Brink.Model", "classes/Brink.Object", "classes/Brink.RESTAdapter", "classes/Brink.Schema", "classes/Brink.Store", "modules/Brink", "modules/data"]'>
         </form>
     </div>
 </div>
@@ -38,9 +38,14 @@
 	        <div id="classes">
 	            <ul id="api-classes" class="nav nav-list">
 	                    <li><a href="../classes/Brink.html">Brink</a></li>
+	                    <li><a href="../classes/Brink.Adapter.html">Brink.Adapter</a></li>
 	                    <li><a href="../classes/Brink.Class.html">Brink.Class</a></li>
 	                    <li><a href="../classes/Brink.CoreObject.html">Brink.CoreObject</a></li>
+	                    <li><a href="../classes/Brink.Model.html">Brink.Model</a></li>
 	                    <li><a href="../classes/Brink.Object.html">Brink.Object</a></li>
+	                    <li><a href="../classes/Brink.RESTAdapter.html">Brink.RESTAdapter</a></li>
+	                    <li><a href="../classes/Brink.Schema.html">Brink.Schema</a></li>
+	                    <li><a href="../classes/Brink.Store.html">Brink.Store</a></li>
 	            </ul>
 	        </div>
 	        </div>
@@ -100,32 +105,41 @@ $b(
         ************************************************************************/
         return function (obj, prop, descriptor) {
 
-            $b.assert(&#x27;Object must be an instance of Brink.Object or Brink.Class&#x27;, isBrinkInstance(obj));
+            var d;
 
-            descriptor.configurable = true;
-            descriptor.enumerable = descriptor.enumerable !== &#x27;undefined&#x27; ? descriptor.enumerable : true;
+            d = descriptor;
 
-            if (prop.indexOf(&#x27;__&#x27;) === 0) {
-                descriptor.configurable = false;
-                descriptor.enumerable = false;
+            if (d.__meta &amp;&amp; (d.__meta.isAttribute || d.__meta.isRelationship)) {
+                d = d.clone();
             }
 
-            descriptor.get = obj.__defineGetter(prop, descriptor.get || obj.__writeOnly(prop));
-            descriptor.set = obj.__defineSetter(prop, descriptor.set || obj.__readOnly(prop));
+            $b.assert(&#x27;Object must be an instance of Brink.Object or Brink.Class&#x27;, isBrinkInstance(obj));
 
-            descriptor.defaultValue = (
+            d.configurable = true;
+            d.enumerable = descriptor.enumerable !== &#x27;undefined&#x27; ? descriptor.enumerable : true;
+
+            if (prop.indexOf(&#x27;__&#x27;) === 0) {
+                d.configurable = false;
+                d.enumerable = false;
+            }
+
+            d.get = obj.__defineGetter(prop, descriptor.get || obj.__writeOnly(prop));
+            d.set = obj.__defineSetter(prop, descriptor.set || obj.__readOnly(prop));
+
+            d.defaultValue = (
                 typeof descriptor.defaultValue !== &#x27;undefined&#x27; ?
                     descriptor.defaultValue : descriptor.value
             );
 
-            delete descriptor.value;
-            delete descriptor.writable;
+            delete d.value;
+            delete d.writable;
 
-            return descriptor;
+            return d;
         };
     }
 
 ).attach(&#x27;$b&#x27;);
+
     </pre>
 </div>
                     </div>

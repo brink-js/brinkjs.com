@@ -21,12 +21,12 @@
             <li class="divider-vertical"></li>
             <li>
                 <p class="navbar-text">
-                    API Docs for Version: <b>0.2.3</b>
+                    API Docs for Version: <b>0.3.3</b>
                 </p>
             </li>
         </div>
         <form class="navbar-form pull-right" style="line-height: 40px; height: 40px;">
-            <input style="margin-top: 0;" type="text" class="search-query" placeholder="Search for classes/modules..." data-obj='["classes/Brink", "classes/Brink.Class", "classes/Brink.CoreObject", "classes/Brink.Object"]'>
+            <input style="margin-top: 0;" type="text" class="search-query" placeholder="Search for classes/modules..." data-obj='["classes/Brink", "classes/Brink.Adapter", "classes/Brink.Class", "classes/Brink.CoreObject", "classes/Brink.Model", "classes/Brink.Object", "classes/Brink.RESTAdapter", "classes/Brink.Schema", "classes/Brink.Store", "modules/Brink", "modules/data"]'>
         </form>
     </div>
 </div>
@@ -38,9 +38,14 @@
 	        <div id="classes">
 	            <ul id="api-classes" class="nav nav-list">
 	                    <li><a href="../classes/Brink.html">Brink</a></li>
+	                    <li><a href="../classes/Brink.Adapter.html">Brink.Adapter</a></li>
 	                    <li><a href="../classes/Brink.Class.html">Brink.Class</a></li>
 	                    <li><a href="../classes/Brink.CoreObject.html">Brink.CoreObject</a></li>
+	                    <li><a href="../classes/Brink.Model.html">Brink.Model</a></li>
 	                    <li><a href="../classes/Brink.Object.html">Brink.Object</a></li>
+	                    <li><a href="../classes/Brink.RESTAdapter.html">Brink.RESTAdapter</a></li>
+	                    <li><a href="../classes/Brink.Schema.html">Brink.Schema</a></li>
+	                    <li><a href="../classes/Brink.Store.html">Brink.Store</a></li>
 	            </ul>
 	        </div>
 	        </div>
@@ -87,6 +92,7 @@ $b(
         &#x27;../utils/get&#x27;,
         &#x27;../utils/set&#x27;,
         &#x27;../utils/clone&#x27;,
+        &#x27;../utils/extend&#x27;,
         &#x27;../utils/merge&#x27;,
         &#x27;../utils/bindTo&#x27;,
         &#x27;../utils/flatten&#x27;,
@@ -105,6 +111,7 @@ $b(
         get,
         set,
         clone,
+        extend,
         merge,
         bindTo,
         flatten,
@@ -182,7 +189,7 @@ $b(
                     }
                 }
 
-                if (this.init) {
+                if (this.init &amp;&amp; this.__callInit !== false) {
                     this.init.apply(this, arguments);
                 }
 
@@ -227,7 +234,7 @@ $b(
                 this.__appendToMeta(this, this.__buildMeta(), true);
             },
 
-            __appendToMeta : function (o, meta, isThis) {
+            __appendToMeta : function (o, meta, isThis, deep) {
 
                 var p,
                     v;
@@ -245,7 +252,7 @@ $b(
                         }
                     }
 
-                    else if (o.hasOwnProperty(p)) {
+                    else if (deep || o.hasOwnProperty(p)) {
 
                         if (p !== &#x27;__meta&#x27;) {
 
@@ -254,6 +261,11 @@ $b(
                             }
 
                             else {
+
+                                if (v &amp;&amp; v.__meta &amp;&amp; v.__meta.isSchema) {
+                                    this.__appendToMeta(v, meta, isThis, true);
+                                }
+
                                 this.prop.call(this, p, v);
                             }
                         }
@@ -459,7 +471,7 @@ $b(
                 meta.bindings = meta.bindings || {};
                 meta.externalBindings = meta.externalBindings || {};
 
-                if (typeof meta.properties[key] !== &#x27;undefined&#x27;) {
+                if (!val &amp;&amp; typeof meta.properties[key] !== &#x27;undefined&#x27;) {
                     if (typeof val === &#x27;undefined&#x27;) {
                         return meta.properties[key];
                     }
@@ -475,11 +487,12 @@ $b(
                     };
                 }
 
-                else {
+                val = meta.properties[key] = defineProperty(obj, key, val);
+
+                if (val.__isComputed) {
                     val.__meta.key = key;
                 }
 
-                val = meta.properties[key] = defineProperty(obj, key, val);
                 val.key = key;
 
                 watched = val.watch;
@@ -724,6 +737,11 @@ $b(
             @method destroy
             ***********************************************************************/
             destroy : function () {
+
+                if (this.isDestroyed) {
+                    return;
+                }
+
                 this.unwatchAll();
                 this.__undefineProperties();
 
@@ -829,6 +847,7 @@ $b(
     }
 
 ).attach(&#x27;$b&#x27;);
+
     </pre>
 </div>
                     </div>

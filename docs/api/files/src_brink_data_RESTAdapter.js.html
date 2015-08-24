@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>src/brink/utils/expandProps.js - brink.js</title>
+    <title>src/brink/data/RESTAdapter.js - brink.js</title>
     <link rel="stylesheet" href="">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -79,69 +79,79 @@
                 <div id="docs-main">
                     <div class="content">
 <div class="page-header">
-    <h1>src/brink/utils/expandProps.js <small>File</small></h1>
+    <h1>src/brink/data/RESTAdapter.js <small>File</small></h1>
 </div>
 
 <div class="file">
     <pre class="prettyprint linenums">
 $b(
 
-    /***********************************************************************
-    @class Brink
-    ************************************************************************/
-    function () {
+    [
+        &#x27;./Adapter&#x27;,
+        &#x27;../utils/xhr&#x27;
+    ],
+
+    function (Adapter, xhr) {
 
         &#x27;use strict&#x27;;
 
-        return function (a, skipRoot) {
+        return Adapter({
 
-            var b,
-                i,
-                j,
-                p,
-                n,
-                s;
+            /***********************************************************************
 
-            a = [].concat(a);
+            A basic RESTAdapter implementation, this can be used as a good reference point
+            for implementing your own adapters or extended to modify the default behavior.
 
-            s = [];
+            @class Brink.RESTAdapter
+            @extends Brink.Adapter
+            @constructor
 
-            for (i = 0; i &lt; a.length; i ++) {
+            @module Brink
+            @submodule data
+            ************************************************************************/
 
-                p = a[i];
+            host : &#x27;&#x27;,
+            prefix : &#x27;&#x27;,
+            pluralizeURLs : false,
 
-                if (!skipRoot &amp;&amp; ~p.indexOf(&#x27;.&#x27;)) {
+            getURL : function (model, usePK) {
 
-                    b = p.split(&#x27;.&#x27;);
-                    b.splice(b.length - 1, 1);
-                    n = null;
+                var url;
 
-                    while (b.length) {
-                        n = n ? n + &#x27;.&#x27; : &#x27;&#x27;;
-                        n += b.splice(0, 1)[0];
-                        s.push(n);
-                    }
+                url = [this.get(&#x27;host&#x27;), this.get(&#x27;prefix&#x27;)];
+                url.push(model.url || (this.pluralizeURLs ? model.collectionKey : model.modelKey));
+
+                if (usePK) {
+                    url.push(model.get(&#x27;pk&#x27;));
                 }
 
-                if (~p.indexOf(&#x27;,&#x27;)) {
-                    p = p.split(&#x27;.&#x27;);
-                    n = p.splice(0, p.length - 1).join(&#x27;.&#x27;);
-                    b = p[0].split(&#x27;,&#x27;);
-                    p = [];
+                return url.join(&#x27;/&#x27;).replace(/([^:]\/)\/+/g, &#x27;$1&#x27;);
+            },
 
-                    for (j = 0; j &lt; b.length; j ++) {
-                        p.push([n, b[j]].join(n ? &#x27;.&#x27; : &#x27;&#x27;));
-                    }
-                }
+            fetch : function (record) {
+                return xhr(this.getURL(record, true), null, &#x27;GET&#x27;);
+            },
 
-                s = s.concat(p);
+            fetchAll : function (model) {
+                return xhr(this.getURL(model, false), null, &#x27;GET&#x27;);
+            },
+
+            createRecord : function (record) {
+                return xhr(this.getURL(record, false), record.serialize(), &#x27;POST&#x27;);
+            },
+
+            updateRecord : function (record) {
+                return xhr(this.getURL(record, true), record.serialize(), &#x27;PUT&#x27;);
+            },
+
+            deleteRecord : function (record) {
+                return xhr(this.getURL(record, true), null, &#x27;DELETE&#x27;);
             }
-
-            return s;
-        };
+        });
     }
 
 ).attach(&#x27;$b&#x27;);
+
     </pre>
 </div>
                     </div>

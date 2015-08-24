@@ -4,7 +4,7 @@
         "description": "MVC.next",
         "url": "http://brinkjs.com",
         "logo": "../../img/brink-logo.png",
-        "version": "0.2.3"
+        "version": "0.3.3"
     },
     "files": {
         "src/brink/core/Class.js": {
@@ -31,6 +31,81 @@
             "classes": {
                 "Brink.Object": 1
             },
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/brink/data/Adapter.js": {
+            "name": "src/brink/data/Adapter.js",
+            "modules": {},
+            "classes": {
+                "Brink.Adapter": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/brink/data/LocalStorageAdapter.js": {
+            "name": "src/brink/data/LocalStorageAdapter.js",
+            "modules": {},
+            "classes": {},
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/brink/data/Model.js": {
+            "name": "src/brink/data/Model.js",
+            "modules": {
+                "data": 1
+            },
+            "classes": {
+                "Brink.Model": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/brink/data/RESTAdapter.js": {
+            "name": "src/brink/data/RESTAdapter.js",
+            "modules": {},
+            "classes": {
+                "Brink.RESTAdapter": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/brink/data/Schema.js": {
+            "name": "src/brink/data/Schema.js",
+            "modules": {},
+            "classes": {
+                "Brink.Schema": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/brink/data/Store.js": {
+            "name": "src/brink/data/Store.js",
+            "modules": {},
+            "classes": {
+                "Brink.Store": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/brink/data/attr.js": {
+            "name": "src/brink/data/attr.js",
+            "modules": {},
+            "classes": {},
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/brink/data/belongsTo.js": {
+            "name": "src/brink/data/belongsTo.js",
+            "modules": {},
+            "classes": {},
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/brink/data/hasMany.js": {
+            "name": "src/brink/data/hasMany.js",
+            "modules": {},
+            "classes": {},
             "fors": {},
             "namespaces": {}
         },
@@ -212,7 +287,51 @@
             "namespaces": {}
         }
     },
-    "modules": {},
+    "modules": {
+        "Brink": {
+            "name": "Brink",
+            "submodules": {
+                "data": 1
+            },
+            "elements": {},
+            "classes": {
+                "Brink.Class": 1,
+                "Brink.CoreObject": 1,
+                "Brink.Object": 1,
+                "Brink.Adapter": 1,
+                "Brink.Model": 1,
+                "Brink.RESTAdapter": 1,
+                "Brink.Schema": 1,
+                "Brink.Store": 1,
+                "Brink": 1
+            },
+            "fors": {},
+            "namespaces": {},
+            "file": "src/brink/utils/unregisterModel.js",
+            "line": 5
+        },
+        "data": {
+            "name": "data",
+            "submodules": {},
+            "elements": {},
+            "classes": {
+                "Brink.Adapter": 1,
+                "Brink.Model": 1,
+                "Brink.RESTAdapter": 1,
+                "Brink.Schema": 1,
+                "Brink.Store": 1
+            },
+            "fors": {},
+            "is_submodule": 1,
+            "namespaces": {},
+            "module": "Brink",
+            "namespace": "",
+            "file": "src/brink/data/Store.js",
+            "line": 17,
+            "description": "Brink's Model, Store and Adapter Classes offers you flexible and easy way to work with your data layer.\nUsing Brink.attr(), Brink.belongsTo() and Brink.hasMany() you can define simple or complex model\nstructures.\n```javascript\nvar MyStore = $b.Store.create();\nvar Person = $b.Model.extend({\n    primaryKey : 'id',\n    modelKey : 'person',\n    adapter : $b.RESTAdapter.create(),\n    store : MyStore,\n    schema : $b.Schema.create({\n        firstName : $b.attr(String),\n        lastName : $b.attr(String),\n        children : $b.hasMany('person'),\n        spouse : $b.belongsTo('person')\n    })\n});\nvar dad = Person.create({\n    firstName : 'John',\n    lastName : 'Doe'\n});\nvar mom = Person.create({\n    firstName : 'Jane',\n    lastName : 'Doe'\n});\nvar child1 = Person.create({\n    firstName : 'Mary',\n    lastName  : 'Doe'\n});\nvar child2 = Person.create({\n    firstName : 'Bob',\n    lastName  : 'Doe'\n});\ndad.spouse = mom;\ndad.children.push(child1, child2);\n$b.Q.all([\n    mom.save(),\n    child1.save(),\n    child2.save()\n]).then(function () {\n    dad.save();\n});\n```\nLooking at the example above, it might be a bit confusing why we are saving the mom and children\nbefore we save the `dad` record.\nThe reason for this is that the mom and children do not yet exist, thus if we tried to `serialize()` the `dad`\nrecord they would come back with null primary key values.",
+            "is_constructor": 1
+        }
+    },
     "classes": {
         "Brink.Class": {
             "name": "Brink.Class",
@@ -222,6 +341,7 @@
             "extensions": [],
             "plugin_for": [],
             "extension_for": [],
+            "module": "Brink",
             "file": "src/brink/core/Class.js",
             "line": 47,
             "description": "`Brink.Class` provides several useful inheritance helpers\nand other utilities not found on `Brink.Object`:\n\n- `super()` method support.\n\n- Automatically bound methods.\n\n- Publish/Subscribe system.",
@@ -236,6 +356,7 @@
             "extensions": [],
             "plugin_for": [],
             "extension_for": [],
+            "module": "Brink",
             "file": "src/brink/core/CoreObject.js",
             "line": 14,
             "description": "`Brink.CoreObject` is not meant to be used directly.\n        Instead, use {{#crossLink \"Brink.Object\"}}{{/crossLink}} or {{#crossLink \"Brink.Class\"}}{{/crossLink}}.",
@@ -249,11 +370,89 @@
             "extensions": [],
             "plugin_for": [],
             "extension_for": [],
+            "module": "Brink",
             "file": "src/brink/core/Object.js",
-            "line": 44,
+            "line": 46,
             "description": "`Brink.Object` is the primary base Class. Most of your Objects will\n            extend this Class, unless you need the added functionality of Brink.Class.",
             "extends": "Brink.CoreObject",
             "is_constructor": 1
+        },
+        "Brink.Adapter": {
+            "name": "Brink.Adapter",
+            "shortname": "Brink.Adapter",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "Brink",
+            "file": "src/brink/data/Adapter.js",
+            "line": 13,
+            "description": "Adapters are how you interface with your persistence layer.\n            Adapters receive requests from the store and perform the necessary actions,\n            returning promises that get resolved when operations are complete.\n\n\nGenerally, you will not interact with Adapters directly, the Store and Models will proxy\n            requests to your adapters. This allows you to easily swap out Adapters\n            if you want to change your persistence layer, and even mix and match adapters\n            for different models.\n\n\nFor help with writing your own Adapter, {{#crossLink \"Brink.RESTAdapter\"}}{{/crossLink}}\n            can be used as a good reference implementation.",
+            "submodule": "data",
+            "is_constructor": 1
+        },
+        "Brink.Model": {
+            "name": "Brink.Model",
+            "shortname": "Brink.Model",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "Brink",
+            "submodule": "data",
+            "namespace": "",
+            "file": "src/brink/data/Model.js",
+            "line": 90,
+            "description": "The Model Class is what all records are created from. Models provide\n            a uniform way to work with your records no matter what your backend\n            or persistence layer is, even if you mix and match across a project."
+        },
+        "Brink.RESTAdapter": {
+            "name": "Brink.RESTAdapter",
+            "shortname": "Brink.RESTAdapter",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "Brink",
+            "namespace": "",
+            "file": "src/brink/data/RESTAdapter.js",
+            "line": 14,
+            "description": "A basic RESTAdapter implementation, this can be used as a good reference point\n            for implementing your own adapters or extended to modify the default behavior.",
+            "submodule": "data",
+            "extends": "Brink.Adapter",
+            "is_constructor": 1
+        },
+        "Brink.Schema": {
+            "name": "Brink.Schema",
+            "shortname": "Brink.Schema",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "Brink",
+            "submodule": "data",
+            "namespace": "",
+            "file": "src/brink/data/Schema.js",
+            "line": 14,
+            "description": "Schemas allow you to define your models properties and relationships."
+        },
+        "Brink.Store": {
+            "name": "Brink.Store",
+            "shortname": "Brink.Store",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "Brink",
+            "submodule": "data",
+            "namespace": "",
+            "file": "src/brink/data/Store.js",
+            "line": 17,
+            "description": "The store is a glorified cache, with convenience methods to work with your\n            Adapters to update or query your persistence layer as needed.\nBy having a Store, you will need to access your persistence layer\n            much less frequently and you will be able to return records from the\n            store instantly."
         },
         "Brink": {
             "name": "Brink",
@@ -263,10 +462,13 @@
             "extensions": [],
             "plugin_for": [],
             "extension_for": [],
+            "module": "Brink",
+            "namespace": "",
             "file": "src/brink/utils/unregisterModel.js",
             "line": 5
         }
     },
+    "elements": {},
     "classitems": [
         {
             "file": "src/brink/core/Class.js",
@@ -346,7 +548,7 @@
         },
         {
             "file": "src/brink/core/Object.js",
-            "line": 295,
+            "line": 302,
             "description": "Invalidate one or more properties. This will trigger any bound and computed properties\ndepending on these properties to also get updated.\n\nThere is almost no need to ever call this manually, as Brink will call it for you\nwhen setting a property.\n\nThis will also trigger any watchers of this property in the next Run Loop.",
             "itemtype": "method",
             "name": "propertyDidChange",
@@ -361,7 +563,7 @@
         },
         {
             "file": "src/brink/core/Object.js",
-            "line": 311,
+            "line": 318,
             "description": "Gets a subset of properties on this object.",
             "itemtype": "method",
             "name": "getProperties",
@@ -380,7 +582,7 @@
         },
         {
             "file": "src/brink/core/Object.js",
-            "line": 344,
+            "line": 351,
             "description": "Gets all properties that have changed since the last Run Loop.",
             "itemtype": "method",
             "name": "getChangedProperties",
@@ -392,7 +594,7 @@
         },
         {
             "file": "src/brink/core/Object.js",
-            "line": 354,
+            "line": 361,
             "description": "Get or create a property descriptor.",
             "itemtype": "method",
             "name": "prop",
@@ -416,7 +618,7 @@
         },
         {
             "file": "src/brink/core/Object.js",
-            "line": 458,
+            "line": 466,
             "description": "Bind a property to a property on another object.\n\nThis can also be achieved with : `a.prop('name').bindTo(b, 'name');`",
             "itemtype": "method",
             "name": "bindProperty",
@@ -441,7 +643,7 @@
         },
         {
             "file": "src/brink/core/Object.js",
-            "line": 472,
+            "line": 480,
             "description": "Get the value of a property.\n\nThis is identical to doing `obj.key` or `obj[key]`,\nunless you are supporting <= IE8.",
             "itemtype": "method",
             "name": "get",
@@ -459,7 +661,7 @@
         },
         {
             "file": "src/brink/core/Object.js",
-            "line": 486,
+            "line": 494,
             "description": "Set the value of a property.\n\nThis is identical to doing `obj.key = val` or `obj[key] = val`,\nunless you are supporting <= IE8.\n\nYou can also use this to set nested properties.\nI.e. `obj.set('some.nested.key', val)`",
             "itemtype": "method",
             "name": "set",
@@ -481,7 +683,7 @@
         },
         {
             "file": "src/brink/core/Object.js",
-            "line": 506,
+            "line": 514,
             "description": "Watch a property or properties for changes.\n\n```javascript\n\nvar obj = $b.Object.create({\n\n    color : 'green',\n    firstName : 'Joe',\n    lastName : 'Schmoe',\n\n    init : function () {\n        this.watch('color', this.colorChanged.bind(this));\n        this.watch(['firstName', 'lastName'], this.nameChanged.bind(this));\n    },\n\n    colorChanged : function () {\n        console.log(this.color);\n    },\n\n    nameChanged : function () {\n        console.log(this.firstName + ' ' + this.lastName);\n    }\n});\n\nobj.color = 'red';\nobj.firstName = 'John';\nobj.lastName = 'Doe';\n\n```\n\nWatcher functions are only invoked once per Run Loop, this means that the `nameChanged`\nmethod above will only be called once, even though we changed two properties that\n`nameChanged` watches.\n\nYou can skip the `props` argument to watch all properties on the Object.",
             "itemtype": "method",
             "name": "watch",
@@ -501,7 +703,7 @@
         },
         {
             "file": "src/brink/core/Object.js",
-            "line": 582,
+            "line": 590,
             "description": "Remove a watcher.",
             "itemtype": "method",
             "name": "unwatch",
@@ -516,7 +718,7 @@
         },
         {
             "file": "src/brink/core/Object.js",
-            "line": 600,
+            "line": 608,
             "description": "Remove all watchers watching properties this object.\n\nUSE WITH CAUTION.\n\nThis gets called automatically during `destroy()`, it's not very common\nyou would want to call this directly.\n\nAny and all other objects that have bound properties,\nwatchers or computed properties dependent on this Object instance will\nstop working.",
             "itemtype": "method",
             "name": "unwatchAll",
@@ -524,7 +726,7 @@
         },
         {
             "file": "src/brink/core/Object.js",
-            "line": 637,
+            "line": 645,
             "description": "Destroys an object, removes all bindings and watchers and clears all metadata.\n\nIn addition to calling `destroy()` be sure to remove all\nreferences to the object so that it gets Garbage Collected.",
             "itemtype": "method",
             "name": "destroy",
@@ -532,11 +734,770 @@
         },
         {
             "file": "src/brink/core/Object.js",
-            "line": 658,
+            "line": 671,
             "description": "Extends an object's prototype and creates a new subclass.\n\nThe new subclass will inherit all properties and methods of the Object being\nextended.\n\n```javascript\n\nvar Animal = $b.Object.extend({\n\n    numLegs : 4,\n\n    walk : function () {\n        for (var i = 1; i <= this.numLegs; i ++) {\n            console.log('moving leg #' + i);\n        }\n    }\n});\n\nvar Dog = Animal.extend({\n\n    bark : function () {\n        console.log('woof!!');\n    },\n\n    walkAndBark : function () {\n        this.bark();\n        this.walk();\n    }\n});\n\nvar doggy = Dog.create();\ndoggy.walkAndBark();\n\n```\n\nIf you want `super()` method support, use {{#crossLink \"Brink.Class\"}}{{/crossLink}}\n\n```javascript\n\nvar Animal = $b.Class.extend({\n\n    numLegs : 4,\n\n    walk : function () {\n        for (var i = 1; i <= this.numLegs; i ++) {\n            console.log('moving leg #' + i);\n        }\n    }\n});\n\nvar Dog = Animal.extend({\n\n    bark : function () {\n        console.log('woof!!');\n    },\n\n    walk : function () {\n        this._super();\n        console.log('all ' + this.numLegs + ' legs moved successfully.');\n    },\n\n    walkAndBark : function () {\n        this.bark();\n        this.walk();\n    }\n});\n\nvar doggy = Dog.create();\ndoggy.walkAndBark();\n\n```",
             "itemtype": "method",
             "name": "extend",
             "class": "Brink.Object"
+        },
+        {
+            "file": "src/brink/data/Adapter.js",
+            "line": 67,
+            "description": "Fetches a record from the persistence layer.",
+            "itemtype": "method",
+            "name": "fetch",
+            "params": [
+                {
+                    "name": "record",
+                    "description": "The record you want to fetch.",
+                    "type": "Model"
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "Promise"
+            },
+            "class": "Brink.Adapter",
+            "module": "Brink",
+            "submodule": "data"
+        },
+        {
+            "file": "src/brink/data/Adapter.js",
+            "line": 76,
+            "description": "Fetches all records of a Model from the persistence layer.",
+            "itemtype": "method",
+            "name": "fetchAll",
+            "params": [
+                {
+                    "name": "Model",
+                    "description": "The Class you want to fetch records of.",
+                    "type": "ModelClass"
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "Promise"
+            },
+            "class": "Brink.Adapter",
+            "module": "Brink",
+            "submodule": "data"
+        },
+        {
+            "file": "src/brink/data/Adapter.js",
+            "line": 85,
+            "description": "Saves a new record to your persistence layer.",
+            "itemtype": "method",
+            "name": "createRecord",
+            "params": [
+                {
+                    "name": "record",
+                    "description": "The record you want to create.",
+                    "type": "Model"
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "Promise"
+            },
+            "class": "Brink.Adapter",
+            "module": "Brink",
+            "submodule": "data"
+        },
+        {
+            "file": "src/brink/data/Adapter.js",
+            "line": 95,
+            "description": "Updates a record in your persistence layer.",
+            "itemtype": "method",
+            "name": "updateRecord",
+            "params": [
+                {
+                    "name": "record",
+                    "description": "The record you want to update.",
+                    "type": "Model"
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "Promise"
+            },
+            "class": "Brink.Adapter",
+            "module": "Brink",
+            "submodule": "data"
+        },
+        {
+            "file": "src/brink/data/Adapter.js",
+            "line": 105,
+            "description": "Deletes a record in your persistence layer.",
+            "itemtype": "method",
+            "name": "deleteRecord",
+            "params": [
+                {
+                    "name": "record",
+                    "description": "The record you want to delete.",
+                    "type": "Model"
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "Promise"
+            },
+            "class": "Brink.Adapter",
+            "module": "Brink",
+            "submodule": "data"
+        },
+        {
+            "file": "src/brink/data/Adapter.js",
+            "line": 116,
+            "description": "Saves a record in your persistence layer.",
+            "itemtype": "method",
+            "name": "saveRecord",
+            "params": [
+                {
+                    "name": "record",
+                    "description": "The record you want to save. This will call createRecord()\nor updateRecord(), depending on whether or not the record is new.",
+                    "type": "Model"
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "Promise"
+            },
+            "class": "Brink.Adapter",
+            "module": "Brink",
+            "submodule": "data"
+        },
+        {
+            "file": "src/brink/data/Adapter.js",
+            "line": 134,
+            "description": "Hook for doing anything you need to based on a new Model definition.",
+            "itemtype": "method",
+            "name": "registerModel",
+            "params": [
+                {
+                    "name": "Model",
+                    "description": "",
+                    "type": "Model"
+                }
+            ],
+            "class": "Brink.Adapter",
+            "module": "Brink",
+            "submodule": "data"
+        },
+        {
+            "file": "src/brink/data/LocalStorageAdapter.js",
+            "line": 14,
+            "description": "Generates a GUID string.",
+            "return": {
+                "description": "The generated GUID.",
+                "type": "String"
+            },
+            "example": [
+                " af8a8416-6e18-a307-bd9c-f2c947bbb3aa"
+            ],
+            "author": "Slavik Meltser (slavik@meltser.info).",
+            "link": "http://slavik.meltser.info/?p=142",
+            "class": "Brink.Model",
+            "module": "Brink"
+        },
+        {
+            "file": "src/brink/data/Model.js",
+            "line": 103,
+            "description": "The Store instance this model uses. You should only have one Store instance used\nacross your entire project and models.",
+            "itemtype": "property",
+            "name": "store",
+            "type": "Brink.Store",
+            "default": "null",
+            "class": "Brink.Model",
+            "module": "Brink",
+            "submodule": "data"
+        },
+        {
+            "file": "src/brink/data/Model.js",
+            "line": 114,
+            "description": "The Adapter instance you want to use for this model.",
+            "itemtype": "property",
+            "name": "adapter",
+            "type": "Brink.Adapter",
+            "default": "null",
+            "class": "Brink.Model",
+            "module": "Brink",
+            "submodule": "data"
+        },
+        {
+            "file": "src/brink/data/Model.js",
+            "line": 123,
+            "description": "The modelKey you want to use for the model. This will likely influence your adapter.\ni.e. for a RESTAdapter your modelKey would be used in the url for all requests\nmade for instances of this model. For a MongooseAdapter,\nthis would likely dictate the name of your tables.",
+            "itemtype": "property",
+            "name": "modelKey",
+            "type": "String",
+            "default": "null",
+            "class": "Brink.Model",
+            "module": "Brink",
+            "submodule": "data"
+        },
+        {
+            "file": "src/brink/data/Model.js",
+            "line": 136,
+            "description": "The collectionKey you want to use for the model. Much like modelKey this is the\npluralized form of modelKey. This will be auto-defined as your modelKey + 's' unless\nyou explicity define it.",
+            "itemtype": "property",
+            "name": "collectionKey",
+            "type": "String",
+            "default": "null",
+            "class": "Brink.Model",
+            "module": "Brink",
+            "submodule": "data"
+        },
+        {
+            "file": "src/brink/data/Model.js",
+            "line": 148,
+            "description": "The property name of the primaryKey you are using for this Model.",
+            "itemtype": "property",
+            "name": "primaryKey",
+            "type": "String",
+            "default": "'id'",
+            "class": "Brink.Model",
+            "module": "Brink",
+            "submodule": "data"
+        },
+        {
+            "file": "src/brink/data/Model.js",
+            "line": 157,
+            "description": "A Brink.Array of all the property names that have been changed since the\nlast save() or fetch().",
+            "itemtype": "property",
+            "name": "dirtyAttributes",
+            "type": "Brink.Array",
+            "default": "null",
+            "class": "Brink.Model",
+            "module": "Brink",
+            "submodule": "data"
+        },
+        {
+            "file": "src/brink/data/Model.js",
+            "line": 167,
+            "description": "Whether or not the record is currently saving.",
+            "itemtype": "property",
+            "name": "isSaving",
+            "type": "Boolean",
+            "default": "false",
+            "class": "Brink.Model",
+            "module": "Brink",
+            "submodule": "data"
+        },
+        {
+            "file": "src/brink/data/Model.js",
+            "line": 177,
+            "description": "Whether or not the record is currently being fetched.",
+            "itemtype": "property",
+            "name": "isFetching",
+            "type": "Boolean",
+            "default": "false",
+            "class": "Brink.Model",
+            "module": "Brink",
+            "submodule": "data"
+        },
+        {
+            "file": "src/brink/data/Model.js",
+            "line": 187,
+            "description": "Whether or not the record has been fetched/loaded.",
+            "itemtype": "property",
+            "name": "isLoaded",
+            "type": "Boolean",
+            "default": "false",
+            "class": "Brink.Model",
+            "module": "Brink",
+            "submodule": "data"
+        },
+        {
+            "file": "src/brink/data/Model.js",
+            "line": 196,
+            "description": "Whether or not the record is currently being deleted.",
+            "itemtype": "property",
+            "name": "isDeleting",
+            "type": "Boolean",
+            "default": "false",
+            "class": "Brink.Model",
+            "module": "Brink",
+            "submodule": "data"
+        },
+        {
+            "file": "src/brink/data/Model.js",
+            "line": 207,
+            "description": "Whether or not the record has one or more changed properties since the\nlast save() or fetch().",
+            "itemtype": "property",
+            "name": "isDirty",
+            "type": "Boolean",
+            "default": "false",
+            "class": "Brink.Model",
+            "module": "Brink",
+            "submodule": "data"
+        },
+        {
+            "file": "src/brink/data/Model.js",
+            "line": 221,
+            "description": "Opposite of isDirty.",
+            "itemtype": "property",
+            "name": "isClean",
+            "type": "Boolean",
+            "default": "true",
+            "class": "Brink.Model",
+            "module": "Brink",
+            "submodule": "data"
+        },
+        {
+            "file": "src/brink/data/Model.js",
+            "line": 233,
+            "description": "Is the record new? Determined by the existence of a primary key value.",
+            "itemtype": "property",
+            "name": "isNew",
+            "type": "Boolean",
+            "default": "false",
+            "class": "Brink.Model",
+            "module": "Brink",
+            "submodule": "data"
+        },
+        {
+            "file": "src/brink/data/Model.js",
+            "line": 246,
+            "description": "Get the primary key value of the record.",
+            "itemtype": "property",
+            "name": "pk",
+            "type": "String|Number",
+            "class": "Brink.Model",
+            "module": "Brink",
+            "submodule": "data"
+        },
+        {
+            "file": "src/brink/data/Model.js",
+            "line": 331,
+            "description": "Serialize a record.",
+            "itemtype": "method",
+            "name": "serialize",
+            "params": [
+                {
+                    "name": "filter",
+                    "description": "A custom function to filter out attributes as you see fit.",
+                    "type": "Function"
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "Object"
+            },
+            "class": "Brink.Model",
+            "module": "Brink",
+            "submodule": "data"
+        },
+        {
+            "file": "src/brink/data/Model.js",
+            "line": 386,
+            "description": "De-serialize a record.",
+            "itemtype": "method",
+            "name": "deserialize",
+            "params": [
+                {
+                    "name": "json",
+                    "description": "The object containing the properties you want to deserialize.",
+                    "type": "Object"
+                },
+                {
+                    "name": "override",
+                    "description": "Whether or not you want to update properties that have already been dirtied.",
+                    "type": "Boolean"
+                },
+                {
+                    "name": "filter",
+                    "description": "A custom function to filter out attributes as you see fit.",
+                    "type": "Function"
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "Model"
+            },
+            "class": "Brink.Model",
+            "module": "Brink",
+            "submodule": "data"
+        },
+        {
+            "file": "src/brink/data/Model.js",
+            "line": 450,
+            "description": "Saves any changes to this record to the persistence layer (via the adapter).\nAlso adds this record to the store.",
+            "itemtype": "method",
+            "name": "save",
+            "return": {
+                "description": "",
+                "type": "Promise"
+            },
+            "class": "Brink.Model",
+            "module": "Brink",
+            "submodule": "data"
+        },
+        {
+            "file": "src/brink/data/Model.js",
+            "line": 479,
+            "description": "Fetches and populates this record (via the adapter).",
+            "itemtype": "method",
+            "name": "fetch",
+            "return": {
+                "description": "",
+                "type": "Promise"
+            },
+            "class": "Brink.Model",
+            "module": "Brink",
+            "submodule": "data"
+        },
+        {
+            "file": "src/brink/data/Model.js",
+            "line": 506,
+            "description": "Deletes this record (via the adapter). Also removes it from the store.",
+            "itemtype": "method",
+            "name": "delete",
+            "return": {
+                "description": "",
+                "type": "Promise"
+            },
+            "class": "Brink.Model",
+            "module": "Brink",
+            "submodule": "data"
+        },
+        {
+            "file": "src/brink/data/Model.js",
+            "line": 533,
+            "description": "Creates and returns a copy of this record, with a null primary key.",
+            "itemtype": "method",
+            "name": "clone",
+            "return": {
+                "description": "",
+                "type": "Model"
+            },
+            "class": "Brink.Model",
+            "module": "Brink",
+            "submodule": "data"
+        },
+        {
+            "file": "src/brink/data/Model.js",
+            "line": 552,
+            "description": "Reverts all changes made to this record since the last save() or fetch().",
+            "itemtype": "method",
+            "name": "revert",
+            "return": {
+                "description": "",
+                "type": "Model"
+            },
+            "class": "Brink.Model",
+            "module": "Brink",
+            "submodule": "data"
+        },
+        {
+            "file": "src/brink/data/Store.js",
+            "line": 39,
+            "description": "Clear the store. Removes all record instances in the store.\nThis does not in any way affect the persistence layer or call any methods\non the models' adapters.",
+            "itemtype": "method",
+            "name": "clear",
+            "params": [
+                {
+                    "name": "Model",
+                    "description": "",
+                    "type": "Brink.Model"
+                }
+            ],
+            "class": "Brink.Store",
+            "module": "Brink",
+            "submodule": "data"
+        },
+        {
+            "file": "src/brink/data/Store.js",
+            "line": 52,
+            "description": "Adds new record(s) to the store.\nThis does not in any way affect the persistence layer or call any methods\non the models' adapters.",
+            "itemtype": "method",
+            "name": "add",
+            "params": [
+                {
+                    "name": "model",
+                    "description": "The modelKey or Model class to add records for.",
+                    "type": "String|Model"
+                },
+                {
+                    "name": "records",
+                    "description": "The record or records you want to add to the store.",
+                    "type": "Model|Array"
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "Brink.Collection"
+            },
+            "class": "Brink.Store",
+            "module": "Brink",
+            "submodule": "data"
+        },
+        {
+            "file": "src/brink/data/Store.js",
+            "line": 95,
+            "description": "Removes record(s) from the store.\nThis does not in any way affect the persistence layer or call any methods\non the models' adapters.",
+            "itemtype": "method",
+            "name": "remove",
+            "params": [
+                {
+                    "name": "model",
+                    "description": "The modelKey or Model class to remove records for.",
+                    "type": "String|Model"
+                },
+                {
+                    "name": "The",
+                    "description": "record or records you want to remove from the store.",
+                    "type": "Model|Array"
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "Brink.Collection"
+            },
+            "class": "Brink.Store",
+            "module": "Brink",
+            "submodule": "data"
+        },
+        {
+            "file": "src/brink/data/Store.js",
+            "line": 133,
+            "description": "Returns all the records of a specific type in the store.",
+            "itemtype": "method",
+            "name": "all",
+            "params": [
+                {
+                    "name": "model",
+                    "description": "The modelKey or Model class of the records you want to get.",
+                    "type": "String|Model"
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "Brink.Collection"
+            },
+            "class": "Brink.Store",
+            "module": "Brink",
+            "submodule": "data"
+        },
+        {
+            "file": "src/brink/data/Store.js",
+            "line": 145,
+            "description": "Returns all the records of a specific type from the persistence layer\nand adds them to the store.",
+            "itemtype": "method",
+            "name": "fetchAll",
+            "params": [
+                {
+                    "name": "model",
+                    "description": "The modelKey or Model class of the records you want to get.",
+                    "type": "String|Model"
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "Brink.Collection"
+            },
+            "class": "Brink.Store",
+            "module": "Brink",
+            "submodule": "data"
+        },
+        {
+            "file": "src/brink/data/Store.js",
+            "line": 180,
+            "description": "Find a record in the store.",
+            "itemtype": "method",
+            "name": "find",
+            "params": [
+                {
+                    "name": "model",
+                    "description": "The modelKey or Model class of the record you want to find.",
+                    "type": "String|Model"
+                },
+                {
+                    "name": "q",
+                    "description": "The primary key or an object of parameters you want to match.",
+                    "type": "String|Number|Object"
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "Brink.Model"
+            },
+            "class": "Brink.Store",
+            "module": "Brink",
+            "submodule": "data"
+        },
+        {
+            "file": "src/brink/data/Store.js",
+            "line": 218,
+            "description": "Find a record in the store by primary key or create one.",
+            "itemtype": "method",
+            "name": "findOrCreate",
+            "params": [
+                {
+                    "name": "model",
+                    "description": "The modelKey or Model class of the record you want to find.",
+                    "type": "String|Model"
+                },
+                {
+                    "name": "pk",
+                    "description": "The primary key of the record.",
+                    "type": "String|Number"
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "Brink.Model"
+            },
+            "class": "Brink.Store",
+            "module": "Brink",
+            "submodule": "data"
+        },
+        {
+            "file": "src/brink/data/Store.js",
+            "line": 244,
+            "description": "Creates a new record and adds it to the store.",
+            "itemtype": "method",
+            "name": "createRecord",
+            "params": [
+                {
+                    "name": "model",
+                    "description": "The modelKey or Model class of the record you want to find.",
+                    "type": "String|Model"
+                },
+                {
+                    "name": "data",
+                    "description": "The data you want to populate the record with.",
+                    "type": "Object"
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "Brink.Model"
+            },
+            "class": "Brink.Store",
+            "module": "Brink",
+            "submodule": "data"
+        },
+        {
+            "file": "src/brink/data/Store.js",
+            "line": 263,
+            "description": "Filters through all records in the store of a specific type and returns matches.",
+            "itemtype": "method",
+            "name": "filter",
+            "params": [
+                {
+                    "name": "model",
+                    "description": "The modelKey or Model class of the record you want to find.",
+                    "type": "String|Model"
+                },
+                {
+                    "name": "q",
+                    "description": "An object of parameters you want to match or a filter function.",
+                    "type": "Function|Object"
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "Brink.Array"
+            },
+            "class": "Brink.Store",
+            "module": "Brink",
+            "submodule": "data"
+        },
+        {
+            "file": "src/brink/data/Store.js",
+            "line": 338,
+            "description": "Given a modelKey or collectionKey returns the corresponding Model Class.",
+            "itemtype": "method",
+            "name": "modelFor",
+            "params": [
+                {
+                    "name": "model",
+                    "description": "The modelKey or collectionKey to get the Class for.",
+                    "type": "String"
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "Brink.Model"
+            },
+            "class": "Brink.Store",
+            "module": "Brink",
+            "submodule": "data"
+        },
+        {
+            "file": "src/brink/data/attr.js",
+            "line": 12,
+            "description": "Define a Schema attribute.",
+            "itemtype": "method",
+            "name": "attr",
+            "params": [
+                {
+                    "name": "type",
+                    "description": "The value type of the attribute.",
+                    "type": "Type"
+                },
+                {
+                    "name": "options",
+                    "description": "Options for the attribute",
+                    "type": "Object"
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "ComputedProperty"
+            },
+            "class": "Brink",
+            "module": "Brink"
+        },
+        {
+            "file": "src/brink/data/belongsTo.js",
+            "line": 12,
+            "description": "Define a Schema belongsTo relationship (many to one).",
+            "itemtype": "method",
+            "name": "belongsTo",
+            "params": [
+                {
+                    "name": "modelKey",
+                    "description": "The modelKey of the relationship.",
+                    "type": "String"
+                },
+                {
+                    "name": "options",
+                    "description": "Options for the relationship.",
+                    "type": "Object"
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "ComputedProperty"
+            },
+            "class": "Brink",
+            "module": "Brink"
+        },
+        {
+            "file": "src/brink/data/hasMany.js",
+            "line": 13,
+            "description": "Define a Schema hasMany relationship (one to many).",
+            "itemtype": "method",
+            "name": "hasMany",
+            "params": [
+                {
+                    "name": "modelKey",
+                    "description": "The modelKey of the relationship.",
+                    "type": "String"
+                },
+                {
+                    "name": "options",
+                    "description": "Options for the relationship.",
+                    "type": "Object"
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "ComputedProperty"
+            },
+            "class": "Brink",
+            "module": "Brink"
         },
         {
             "file": "src/brink/utils/Q.js",
@@ -548,7 +1509,8 @@
                     "description": "immediate reference or promise"
                 }
             ],
-            "class": "Brink"
+            "class": "Brink",
+            "module": "Brink"
         },
         {
             "file": "src/brink/utils/Q.js",
@@ -561,19 +1523,22 @@
                     "type": "Function"
                 }
             ],
-            "class": "Brink"
+            "class": "Brink",
+            "module": "Brink"
         },
         {
             "file": "src/brink/utils/Q.js",
             "line": 438,
             "description": "Controls whether or not long stack traces will be on",
-            "class": "Brink"
+            "class": "Brink",
+            "module": "Brink"
         },
         {
             "file": "src/brink/utils/Q.js",
             "line": 448,
             "description": "Constructs a {promise, resolve, reject} object.\n\n`resolve` is a callback to invoke with a more resolved value for the\npromise. To fulfill the promise, invoke `resolve` with any value that is\nnot a thenable. To reject the promise, invoke `resolve` with a rejected\nthenable, or invoke `reject` with the reason directly. To resolve the\npromise to another thenable, thus putting it in the same state, invoke\n`resolve` with that other thenable.",
-            "class": "Brink"
+            "class": "Brink",
+            "module": "Brink"
         },
         {
             "file": "src/brink/utils/Q.js",
@@ -582,7 +1547,8 @@
             "return": {
                 "description": "a nodeback"
             },
-            "class": "Brink"
+            "class": "Brink",
+            "module": "Brink"
         },
         {
             "file": "src/brink/utils/Q.js",
@@ -597,7 +1563,8 @@
             "return": {
                 "description": "a promise that may be resolved with the given resolve and reject\nfunctions, or rejected by a thrown exception in resolver"
             },
-            "class": "Brink"
+            "class": "Brink",
+            "module": "Brink"
         },
         {
             "file": "src/brink/utils/Q.js",
@@ -619,7 +1586,8 @@
                 "description": "a promise for x and y if they are the same, but a rejection\notherwise.",
                 "type": "Any*"
             },
-            "class": "Brink"
+            "class": "Brink",
+            "module": "Brink"
         },
         {
             "file": "src/brink/utils/Q.js",
@@ -636,13 +1604,15 @@
                 "description": "the first promise to be settled",
                 "type": "Any*"
             },
-            "class": "Brink"
+            "class": "Brink",
+            "module": "Brink"
         },
         {
             "file": "src/brink/utils/Q.js",
             "line": 680,
             "description": "Constructs a Promise with a promise descriptor object and optional fallback\nfunction.  The descriptor contains methods like when(rejected), get(name),\nset(name, value), post(name, args), and delete(name), which all\nreturn either a value, a promise for a value, or a rejection.  The fallback\naccepts the operation name, a resolver, and any further arguments that would\nhave been forwarded to the appropriate method above had a method been\nprovided with the proper name.  The API makes no guarantees about the nature\nof the returned object, apart from that it is usable whereever promises are\nbought and sold.",
-            "class": "Brink"
+            "class": "Brink",
+            "module": "Brink"
         },
         {
             "file": "src/brink/utils/Q.js",
@@ -662,7 +1632,8 @@
             "example": [
                 "\ndoSomething()\n  .then(...)\n  .tap(console.log)\n  .then(...);"
             ],
-            "class": "Brink"
+            "class": "Brink",
+            "module": "Brink"
         },
         {
             "file": "src/brink/utils/Q.js",
@@ -689,7 +1660,8 @@
             "return": {
                 "description": "promise for the return value from the invoked callback"
             },
-            "class": "Brink"
+            "class": "Brink",
+            "module": "Brink"
         },
         {
             "file": "src/brink/utils/Q.js",
@@ -704,7 +1676,8 @@
             "return": {
                 "description": "most resolved (nearest) form of the object"
             },
-            "class": "Brink"
+            "class": "Brink",
+            "module": "Brink"
         },
         {
             "file": "src/brink/utils/Q.js",
@@ -712,7 +1685,8 @@
             "return": {
                 "description": "whether the given object is a promise.\nOtherwise it is a fulfilled value."
             },
-            "class": "Brink"
+            "class": "Brink",
+            "module": "Brink"
         },
         {
             "file": "src/brink/utils/Q.js",
@@ -720,7 +1694,8 @@
             "return": {
                 "description": "whether the given object is a pending promise, meaning not\nfulfilled or rejected."
             },
-            "class": "Brink"
+            "class": "Brink",
+            "module": "Brink"
         },
         {
             "file": "src/brink/utils/Q.js",
@@ -728,7 +1703,8 @@
             "return": {
                 "description": "whether the given object is a value or fulfilled\npromise."
             },
-            "class": "Brink"
+            "class": "Brink",
+            "module": "Brink"
         },
         {
             "file": "src/brink/utils/Q.js",
@@ -736,7 +1712,8 @@
             "return": {
                 "description": "whether the given object is a rejected promise."
             },
-            "class": "Brink"
+            "class": "Brink",
+            "module": "Brink"
         },
         {
             "file": "src/brink/utils/Q.js",
@@ -748,7 +1725,8 @@
                     "description": "value describing the failure"
                 }
             ],
-            "class": "Brink"
+            "class": "Brink",
+            "module": "Brink"
         },
         {
             "file": "src/brink/utils/Q.js",
@@ -760,7 +1738,8 @@
                     "description": "immediate reference"
                 }
             ],
-            "class": "Brink"
+            "class": "Brink",
+            "module": "Brink"
         },
         {
             "file": "src/brink/utils/Q.js",
@@ -775,7 +1754,8 @@
             "return": {
                 "description": "a Q promise"
             },
-            "class": "Brink"
+            "class": "Brink",
+            "module": "Brink"
         },
         {
             "file": "src/brink/utils/Q.js",
@@ -790,7 +1770,8 @@
             "return": {
                 "description": "promise a wrapping of that object that\nadditionally responds to the \"isDef\" message\nwithout a rejection."
             },
-            "class": "Brink"
+            "class": "Brink",
+            "module": "Brink"
         },
         {
             "file": "src/brink/utils/Q.js",
@@ -809,19 +1790,22 @@
             "return": {
                 "description": "a promise for the return value or thrown exception of\neither callback."
             },
-            "class": "Brink"
+            "class": "Brink",
+            "module": "Brink"
         },
         {
             "file": "src/brink/utils/Q.js",
             "line": 1139,
             "description": "The async function is a decorator for generator functions, turning\nthem into asynchronous generators.  Although generators are only part\nof the newest ECMAScript 6 drafts, this code does not cause syntax\nerrors in older engines.  This code should continue to work and will\nin fact improve over time as the language improves.\n\nES6 generators are currently part of V8 version 3.19 with the\n--harmony-generators runtime flag enabled.  SpiderMonkey has had them\nfor longer, but under an older Python-inspired form.  This function\nworks on both kinds of generators.\n\nDecorates a generator function such that:\n - it may yield promises\n - execution will continue when that promise is fulfilled\n - the value of the yield expression will be the fulfilled value\n - it returns a promise for the return value (when the generator\n   stops iterating)\n - the decorated function returns a promise for the return value\n   of the generator or the first rejected promise among those\n   yielded.\n - if an error is thrown in the generator, it propagates through\n   every following yield until it is caught, or until it escapes\n   the generator function altogether, and is translated into a\n   rejection for the promise returned by the decorated generator.",
-            "class": "Brink"
+            "class": "Brink",
+            "module": "Brink"
         },
         {
             "file": "src/brink/utils/Q.js",
             "line": 1215,
             "description": "The spawn function is a small wrapper around async that immediately\ncalls the generator and also ends the promise chain, so that any\nunhandled errors are thrown instead of forwarded to the error\nhandler. This is useful because it's extremely common to run\ngenerators at the top-level to work with libraries.",
-            "class": "Brink"
+            "class": "Brink",
+            "module": "Brink"
         },
         {
             "file": "src/brink/utils/Q.js",
@@ -839,7 +1823,8 @@
             "example": [
                 "\n// ES6 style\nQ.async(function* () {\n     var foo = yield getFooPromise();\n     var bar = yield getBarPromise();\n     return foo + bar;\n})\n// Older SpiderMonkey style\nQ.async(function () {\n     var foo = yield getFooPromise();\n     var bar = yield getBarPromise();\n     Q.return(foo + bar);\n})"
             ],
-            "class": "Brink"
+            "class": "Brink",
+            "module": "Brink"
         },
         {
             "file": "src/brink/utils/Q.js",
@@ -859,7 +1844,8 @@
                 "description": "a function that has been decorated.",
                 "type": "Function"
             },
-            "class": "Brink"
+            "class": "Brink",
+            "module": "Brink"
         },
         {
             "file": "src/brink/utils/Q.js",
@@ -884,7 +1870,8 @@
                 "description": "result  a promise for the result of the operation",
                 "type": "Promise"
             },
-            "class": "Brink"
+            "class": "Brink",
+            "module": "Brink"
         },
         {
             "file": "src/brink/utils/Q.js",
@@ -903,7 +1890,8 @@
             "return": {
                 "description": "promise for the property value"
             },
-            "class": "Brink"
+            "class": "Brink",
+            "module": "Brink"
         },
         {
             "file": "src/brink/utils/Q.js",
@@ -926,7 +1914,8 @@
             "return": {
                 "description": "promise for the return value"
             },
-            "class": "Brink"
+            "class": "Brink",
+            "module": "Brink"
         },
         {
             "file": "src/brink/utils/Q.js",
@@ -945,7 +1934,8 @@
             "return": {
                 "description": "promise for the return value"
             },
-            "class": "Brink"
+            "class": "Brink",
+            "module": "Brink"
         },
         {
             "file": "src/brink/utils/Q.js",
@@ -968,7 +1958,8 @@
             "return": {
                 "description": "promise for the return value"
             },
-            "class": "Brink"
+            "class": "Brink",
+            "module": "Brink"
         },
         {
             "file": "src/brink/utils/Q.js",
@@ -992,7 +1983,8 @@
             "return": {
                 "description": "promise for the return value"
             },
-            "class": "Brink"
+            "class": "Brink",
+            "module": "Brink"
         },
         {
             "file": "src/brink/utils/Q.js",
@@ -1008,7 +2000,8 @@
                     "description": "array of application arguments"
                 }
             ],
-            "class": "Brink"
+            "class": "Brink",
+            "module": "Brink"
         },
         {
             "file": "src/brink/utils/Q.js",
@@ -1025,7 +2018,8 @@
                     "multiple": true
                 }
             ],
-            "class": "Brink"
+            "class": "Brink",
+            "module": "Brink"
         },
         {
             "file": "src/brink/utils/Q.js",
@@ -1042,7 +2036,8 @@
                     "multiple": true
                 }
             ],
-            "class": "Brink"
+            "class": "Brink",
+            "module": "Brink"
         },
         {
             "file": "src/brink/utils/Q.js",
@@ -1057,7 +2052,8 @@
             "return": {
                 "description": "promise for the keys of the eventually settled object"
             },
-            "class": "Brink"
+            "class": "Brink",
+            "module": "Brink"
         },
         {
             "file": "src/brink/utils/Q.js",
@@ -1073,7 +2069,8 @@
             "return": {
                 "description": "a promise for an array of the corresponding values"
             },
-            "class": "Brink"
+            "class": "Brink",
+            "module": "Brink"
         },
         {
             "file": "src/brink/utils/Q.js",
@@ -1089,7 +2086,8 @@
             "return": {
                 "description": "a promise fulfilled with the value of the first resolved promise,\nor a rejected promise if all promises are rejected."
             },
-            "class": "Brink"
+            "class": "Brink",
+            "module": "Brink"
         },
         {
             "file": "src/brink/utils/Q.js",
@@ -1104,7 +2102,8 @@
             "return": {
                 "description": "a promise for an array of promises"
             },
-            "class": "Brink"
+            "class": "Brink",
+            "module": "Brink"
         },
         {
             "file": "src/brink/utils/Q.js",
@@ -1112,7 +2111,8 @@
             "see": [
                 "Promise#allSettled"
             ],
-            "class": "Brink"
+            "class": "Brink",
+            "module": "Brink"
         },
         {
             "file": "src/brink/utils/Q.js",
@@ -1129,7 +2129,8 @@
                 "description": "an array of states for the respective values.",
                 "type": "Array[State]"
             },
-            "class": "Brink"
+            "class": "Brink",
+            "module": "Brink"
         },
         {
             "file": "src/brink/utils/Q.js",
@@ -1150,7 +2151,8 @@
             "return": {
                 "description": "a promise for the return value of the callback"
             },
-            "class": "Brink"
+            "class": "Brink",
+            "module": "Brink"
         },
         {
             "file": "src/brink/utils/Q.js",
@@ -1171,7 +2173,8 @@
             "return": {
                 "description": "the given promise, unchanged"
             },
-            "class": "Brink"
+            "class": "Brink",
+            "module": "Brink"
         },
         {
             "file": "src/brink/utils/Q.js",
@@ -1192,7 +2195,8 @@
             "return": {
                 "description": "a promise for the resolution of the given promise when\n``fin`` is done."
             },
-            "class": "Brink"
+            "class": "Brink",
+            "module": "Brink"
         },
         {
             "file": "src/brink/utils/Q.js",
@@ -1208,7 +2212,8 @@
             "return": {
                 "description": "nothing"
             },
-            "class": "Brink"
+            "class": "Brink",
+            "module": "Brink"
         },
         {
             "file": "src/brink/utils/Q.js",
@@ -1234,7 +2239,8 @@
             "return": {
                 "description": "a promise for the resolution of the given promise if it is\nfulfilled before the timeout, otherwise rejected."
             },
-            "class": "Brink"
+            "class": "Brink",
+            "module": "Brink"
         },
         {
             "file": "src/brink/utils/Q.js",
@@ -1255,13 +2261,15 @@
             "return": {
                 "description": "a promise for the resolution of the given promise after milliseconds\ntime has elapsed since the resolution of the given promise.\nIf the given promise rejects, that is passed immediately."
             },
-            "class": "Brink"
+            "class": "Brink",
+            "module": "Brink"
         },
         {
             "file": "src/brink/utils/Q.js",
             "line": 1771,
             "description": "Passes a continuation to a Node function, which is called with the given\narguments provided as an array, and returns a promise.\n\n     Q.nfapply(FS.readFile, [__filename])\n     .then(function (content) {\n     })",
-            "class": "Brink"
+            "class": "Brink",
+            "module": "Brink"
         },
         {
             "file": "src/brink/utils/Q.js",
@@ -1270,7 +2278,8 @@
             "example": [
                 "\nQ.nfcall(FS.readFile, __filename)\n.then(function (content) {\n})\n"
             ],
-            "class": "Brink"
+            "class": "Brink",
+            "module": "Brink"
         },
         {
             "file": "src/brink/utils/Q.js",
@@ -1279,7 +2288,8 @@
             "example": [
                 "\nQ.nfbind(FS.readFile, __filename)(\"utf-8\")\n.then(console.log)\n.done()"
             ],
-            "class": "Brink"
+            "class": "Brink",
+            "module": "Brink"
         },
         {
             "file": "src/brink/utils/Q.js",
@@ -1304,7 +2314,8 @@
             "return": {
                 "description": "a promise for the value or error"
             },
-            "class": "Brink"
+            "class": "Brink",
+            "module": "Brink"
         },
         {
             "file": "src/brink/utils/Q.js",
@@ -1329,7 +2340,8 @@
             "return": {
                 "description": "a promise for the value or error"
             },
-            "class": "Brink"
+            "class": "Brink",
+            "module": "Brink"
         },
         {
             "file": "src/brink/utils/Q.js",
@@ -1349,7 +2361,8 @@
             "return": {
                 "description": "either the promise or nothing"
             },
-            "class": "Brink"
+            "class": "Brink",
+            "module": "Brink"
         },
         {
             "file": "src/brink/utils/alias.js",
@@ -1368,7 +2381,8 @@
                 "description": "A computed property with a getter/setter that references the alias.",
                 "type": "ComputedProperty"
             },
-            "class": "Brink"
+            "class": "Brink",
+            "module": "Brink"
         },
         {
             "file": "src/brink/utils/bindFunction.js",
@@ -1392,7 +2406,8 @@
                 "description": "The bound version of the function.",
                 "type": "Function"
             },
-            "class": "Brink"
+            "class": "Brink",
+            "module": "Brink"
         },
         {
             "file": "src/brink/utils/bindTo.js",
@@ -1412,7 +2427,8 @@
                     "type": "String"
                 }
             ],
-            "class": "Brink"
+            "class": "Brink",
+            "module": "Brink"
         },
         {
             "file": "src/brink/utils/clone.js",
@@ -1434,7 +2450,8 @@
                     "optdefault": "false"
                 }
             ],
-            "class": "Brink"
+            "class": "Brink",
+            "module": "Brink"
         },
         {
             "file": "src/brink/utils/computed.js",
@@ -1459,7 +2476,8 @@
                 "description": "",
                 "type": "ComputedProperty"
             },
-            "class": "Brink"
+            "class": "Brink",
+            "module": "Brink"
         },
         {
             "file": "src/brink/utils/configure.js",
@@ -1474,7 +2492,8 @@
                     "type": "Object"
                 }
             ],
-            "class": "Brink"
+            "class": "Brink",
+            "module": "Brink"
         },
         {
             "file": "src/brink/utils/defineProperty.js",
@@ -1484,7 +2503,8 @@
             "name": "defineProperty",
             "access": "private",
             "tagname": "",
-            "class": "Brink"
+            "class": "Brink",
+            "module": "Brink"
         },
         {
             "file": "src/brink/utils/extend.js",
@@ -1494,7 +2514,8 @@
             "name": "extend",
             "access": "private",
             "tagname": "",
-            "class": "Brink"
+            "class": "Brink",
+            "module": "Brink"
         },
         {
             "file": "src/brink/utils/flatten.js",
@@ -1520,7 +2541,8 @@
                 "description": "The flattened array.",
                 "type": "Array"
             },
-            "class": "Brink"
+            "class": "Brink",
+            "module": "Brink"
         },
         {
             "file": "src/brink/utils/get.js",
@@ -1544,7 +2566,8 @@
                 "description": "The value of the property.",
                 "type": "Any"
             },
-            "class": "Brink"
+            "class": "Brink",
+            "module": "Brink"
         },
         {
             "file": "src/brink/utils/getObjKeyPair.js",
@@ -1575,7 +2598,8 @@
                 "description": "An `Array` of `[obj, unNestedKeyName]`",
                 "type": "Array"
             },
-            "class": "Brink"
+            "class": "Brink",
+            "module": "Brink"
         },
         {
             "file": "src/brink/utils/intersect.js",
@@ -1599,7 +2623,8 @@
                 "description": "`Array` of items that exist in both arrays.",
                 "type": "Array"
             },
-            "class": "Brink"
+            "class": "Brink",
+            "module": "Brink"
         },
         {
             "file": "src/brink/utils/isBrinkInstance.js",
@@ -1618,7 +2643,8 @@
                 "description": "Whether or not the value is an instance of `Brink.Object`.",
                 "type": "Boolean"
             },
-            "class": "Brink"
+            "class": "Brink",
+            "module": "Brink"
         },
         {
             "file": "src/brink/utils/isBrinkObject.js",
@@ -1637,7 +2663,8 @@
                 "description": "Whether or not the value is a `Brink.Object` subclass.",
                 "type": "Boolean"
             },
-            "class": "Brink"
+            "class": "Brink",
+            "module": "Brink"
         },
         {
             "file": "src/brink/utils/isFunction.js",
@@ -1656,7 +2683,8 @@
                 "description": "Whether or not the value is a `Function`.",
                 "type": "Boolean"
             },
-            "class": "Brink"
+            "class": "Brink",
+            "module": "Brink"
         },
         {
             "file": "src/brink/utils/isObject.js",
@@ -1675,7 +2703,8 @@
                 "description": "Whether or not the value is an `Object`.",
                 "type": "Boolean"
             },
-            "class": "Brink"
+            "class": "Brink",
+            "module": "Brink"
         },
         {
             "file": "src/brink/utils/merge.js",
@@ -1706,7 +2735,8 @@
                 "description": "The merged `Object` or `Array`.",
                 "type": "Object|Array"
             },
-            "class": "Brink"
+            "class": "Brink",
+            "module": "Brink"
         },
         {
             "file": "src/brink/utils/params.js",
@@ -1725,7 +2755,8 @@
                 "description": "The serialized Object.",
                 "type": "String"
             },
-            "class": "Brink"
+            "class": "Brink",
+            "module": "Brink"
         },
         {
             "file": "src/brink/utils/registerModel.js",
@@ -1739,7 +2770,8 @@
                     "type": "Brink.Model"
                 }
             ],
-            "class": "Brink"
+            "class": "Brink",
+            "module": "Brink"
         },
         {
             "file": "src/brink/utils/set.js",
@@ -1769,7 +2801,8 @@
                 "description": "The Object passed in as the first argument.",
                 "type": "Object"
             },
-            "class": "Brink"
+            "class": "Brink",
+            "module": "Brink"
         },
         {
             "file": "src/brink/utils/trim.js",
@@ -1788,7 +2821,8 @@
                 "description": "The trimmed string.",
                 "type": "String"
             },
-            "class": "Brink"
+            "class": "Brink",
+            "module": "Brink"
         },
         {
             "file": "src/brink/utils/unbound.js",
@@ -1802,7 +2836,8 @@
                     "type": "Any"
                 }
             ],
-            "class": "Brink"
+            "class": "Brink",
+            "module": "Brink"
         },
         {
             "file": "src/brink/utils/unregisterModel.js",
@@ -1816,10 +2851,19 @@
                     "type": "Brink.Model"
                 }
             ],
-            "class": "Brink"
+            "class": "Brink",
+            "module": "Brink"
         }
     ],
     "warnings": [
+        {
+            "message": "replacing incorrect tag: returns with return",
+            "line": " src/brink/data/LocalStorageAdapter.js:14"
+        },
+        {
+            "message": "unknown tag: link",
+            "line": " src/brink/data/LocalStorageAdapter.js:14"
+        },
         {
             "message": "replacing incorrect tag: returns with return",
             "line": " src/brink/utils/Q.js:574"
@@ -1927,6 +2971,10 @@
         {
             "message": "replacing incorrect tag: returns with return",
             "line": " src/brink/utils/Q.js:1914"
+        },
+        {
+            "message": "Missing item type\nGenerates a GUID string.",
+            "line": " src/brink/data/LocalStorageAdapter.js:14"
         },
         {
             "message": "Missing item type\nConstructs a promise for an immediate reference, passes promises through, or\ncoerces promises from different systems.",

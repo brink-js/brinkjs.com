@@ -1,0 +1,877 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Brink.Model - brink.js</title>
+    <link rel="stylesheet" href="">
+    <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
+    <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
+    <link rel="stylesheet" href="../assets/css/custom.css">
+    <link rel="stylesheet" href="../assets/css/lucid.css">
+    <link rel="stylesheet" href="../assets/vendor/bootstrap/css/bootstrap.css">
+    <link rel="shortcut icon" type="image/png" href="../assets/favicon.png">
+</head>
+<body class="yui3-skin-sam">
+<div class="navbar navbar-fixed-top">
+    <div class="navbar-inner">
+        <h1 class="brand" style="padding: 10px 16px 10px; height: 20px; line-height: 20px; margin-left: 0;">
+	    <img alt="brink.js" src="../../../img/brink-logo.png" style="max-height: 100%;" title="brink.js">
+        </h1>
+	<div class="nav">
+            <li class="divider-vertical"></li>
+            <li>
+                <p class="navbar-text">
+                    API Docs for Version: <b>0.3.3</b>
+                </p>
+            </li>
+        </div>
+        <form class="navbar-form pull-right" style="line-height: 40px; height: 40px;">
+            <input style="margin-top: 0;" type="text" class="search-query" placeholder="Search for classes/modules..." data-obj='["classes/Brink", "classes/Brink.Adapter", "classes/Brink.Class", "classes/Brink.CoreObject", "classes/Brink.Model", "classes/Brink.Object", "classes/Brink.RESTAdapter", "classes/Brink.Schema", "classes/Brink.Store", "modules/Brink", "modules/data"]'>
+        </form>
+    </div>
+</div>
+<div class="container">
+    <div class="row">
+        <div class="span3">
+	    <div>
+	        <div id="sidebar">
+	        <div id="classes">
+	            <ul id="api-classes" class="nav nav-list">
+	                    <li><a href="../classes/Brink.html">Brink</a></li>
+	                    <li><a href="../classes/Brink.Adapter.html">Brink.Adapter</a></li>
+	                    <li><a href="../classes/Brink.Class.html">Brink.Class</a></li>
+	                    <li><a href="../classes/Brink.CoreObject.html">Brink.CoreObject</a></li>
+	                    <li><a href="../classes/Brink.Model.html">Brink.Model</a></li>
+	                    <li><a href="../classes/Brink.Object.html">Brink.Object</a></li>
+	                    <li><a href="../classes/Brink.RESTAdapter.html">Brink.RESTAdapter</a></li>
+	                    <li><a href="../classes/Brink.Schema.html">Brink.Schema</a></li>
+	                    <li><a href="../classes/Brink.Store.html">Brink.Store</a></li>
+	            </ul>
+	        </div>
+	        </div>
+	    </div>
+        </div>
+        <div class="span9">
+                <form id="options-form" class="form-inline pull-right">
+                    Show:
+                    <label for="api-show-inherited" class="checkbox">
+                        <input type="checkbox" id="api-show-inherited" checked>
+                        Inherited
+                    </label>
+            
+                    <label for="api-show-protected" class="checkbox">
+                        <input type="checkbox" id="api-show-protected">
+                        Protected
+                    </label>
+            
+                    <label for="api-show-private" class="checkbox">
+                        <input type="checkbox" id="api-show-private">
+                        Private
+                    </label>
+                    <label for="api-show-deprecated" class="checkbox">
+                        <input type="checkbox" id="api-show-deprecated">
+                        Deprecated
+                    </label>
+            
+                </form>
+            
+            <div class="apidocs">
+                <div id="docs-main">
+                    <div class="content">
+<div class="page-header">
+    <h1>Brink.Model</h1>
+</div>
+
+
+
+	<div class="well well-small">
+            Module: <a href="../modules/data.html">data</a><br>
+            Parent Module: <a href="../modules/Brink.html">Brink</a>
+    </div>
+
+
+
+<div class="yuidoc-class-description">
+<p>The Model Class is what all records are created from. Models provide
+a uniform way to work with your records no matter what your backend
+or persistence layer is, even if you mix and match across a project.</p>
+
+</div>
+
+<!-- table of contents -->
+
+<div id="class-toc" class="page-section">
+	<h2>Table of Contents</h2>
+    <ul>
+		<li>
+			<strong>Methods</strong>
+			<ul>
+				<li><a href="#method-clone"><span class="im">clone</span>()</a></li>
+				<li><a href="#method-delete"><span class="im">delete</span>()</a></li>
+				<li><a href="#method-deserialize"><span class="im">deserialize</span>(<span class="ia">json</span><span class="ia">override</span><span class="ia">filter</span>)</a></li>
+				<li><a href="#method-fetch"><span class="im">fetch</span>()</a></li>
+				<li><a href="#method-revert"><span class="im">revert</span>()</a></li>
+				<li><a href="#method-save"><span class="im">save</span>()</a></li>
+				<li><a href="#method-serialize"><span class="im">serialize</span>(<span class="ia">filter</span>)</a></li>
+			</ul>
+		</li>
+
+		<li>
+			<strong>Properties</strong>
+			<ul>
+				<li><a href="#prop-adapter"><span class="ip">adapter</span></a></li>
+				<li><a href="#prop-collectionKey"><span class="ip">collectionKey</span></a></li>
+				<li><a href="#prop-dirtyAttributes"><span class="ip">dirtyAttributes</span></a></li>
+				<li><a href="#prop-isClean"><span class="ip">isClean</span></a></li>
+				<li><a href="#prop-isDeleting"><span class="ip">isDeleting</span></a></li>
+				<li><a href="#prop-isDirty"><span class="ip">isDirty</span></a></li>
+				<li><a href="#prop-isFetching"><span class="ip">isFetching</span></a></li>
+				<li><a href="#prop-isLoaded"><span class="ip">isLoaded</span></a></li>
+				<li><a href="#prop-isNew"><span class="ip">isNew</span></a></li>
+				<li><a href="#prop-isSaving"><span class="ip">isSaving</span></a></li>
+				<li><a href="#prop-modelKey"><span class="ip">modelKey</span></a></li>
+				<li><a href="#prop-pk"><span class="ip">pk</span></a></li>
+				<li><a href="#prop-primaryKey"><span class="ip">primaryKey</span></a></li>
+				<li><a href="#prop-store"><span class="ip">store</span></a></li>
+			</ul>
+		</li>
+
+
+	</ul>
+</div>
+
+<!-- details -->
+
+
+    <div id="methods" class="page-section">
+        <h2 class="off-left">Methods</h2>
+        <div class="item-list">
+<div id="method-clone" class="method item">
+	<div class="method-signature">
+	<span class="name"><code>clone</code></span>
+
+		<span class="paren">()</span>
+		<span class="returns-inline">
+			<span class="type">Model</span>
+		</span>
+	</div>
+
+
+
+
+
+
+	<div class="meta">
+				<p>
+				Defined in
+		<a href="../files/src_brink_data_Model.js.html#l533"><code>src&#x2F;brink&#x2F;data&#x2F;Model.js:533</code></a>
+		</p>
+
+
+
+	</div>
+
+	<div class="description"><p>Creates and returns a copy of this record, with a null primary key.</p>
+</div>
+
+
+		<div class="returns">
+			<h4>Returns:</h4>
+
+			<div class="returns-description">
+						<span class="type">Model</span>
+			</div>
+		</div>
+
+</div>
+<div id="method-delete" class="method item">
+	<div class="method-signature">
+	<span class="name"><code>delete</code></span>
+
+		<span class="paren">()</span>
+		<span class="returns-inline">
+			<span class="type">Promise</span>
+		</span>
+	</div>
+
+
+
+
+
+
+	<div class="meta">
+				<p>
+				Defined in
+		<a href="../files/src_brink_data_Model.js.html#l506"><code>src&#x2F;brink&#x2F;data&#x2F;Model.js:506</code></a>
+		</p>
+
+
+
+	</div>
+
+	<div class="description"><p>Deletes this record (via the adapter). Also removes it from the store.</p>
+</div>
+
+
+		<div class="returns">
+			<h4>Returns:</h4>
+
+			<div class="returns-description">
+						<span class="type">Promise</span>
+			</div>
+		</div>
+
+</div>
+<div id="method-deserialize" class="method item">
+	<div class="method-signature">
+	<span class="name"><code>deserialize</code></span>
+
+		<div class="args">
+			<span class="paren">(</span><ul class="args-list inline commas">
+				<li class="arg">
+						<code>json</code>
+				</li>
+				<li class="arg">
+						<code>override</code>
+				</li>
+				<li class="arg">
+						<code>filter</code>
+				</li>
+			</ul><span class="paren">)</span>
+		</div>
+		<span class="returns-inline">
+			<span class="type">Model</span>
+		</span>
+	</div>
+
+
+
+
+
+
+	<div class="meta">
+				<p>
+				Defined in
+		<a href="../files/src_brink_data_Model.js.html#l386"><code>src&#x2F;brink&#x2F;data&#x2F;Model.js:386</code></a>
+		</p>
+
+
+
+	</div>
+
+	<div class="description"><p>De-serialize a record.</p>
+</div>
+
+		<div class="params">
+			<h4>Parameters:</h4>
+
+			<ul class="params-list">
+				<li class="param">
+						<code class="param-name">json</code>
+						<span class="type">Object</span>
+
+
+					<div class="param-description"><p>The object containing the properties you want to deserialize.</p>
+</div>
+
+				</li>
+				<li class="param">
+						<code class="param-name">override</code>
+						<span class="type">Boolean</span>
+
+
+					<div class="param-description"><p>Whether or not you want to update properties that have already been dirtied.</p>
+</div>
+
+				</li>
+				<li class="param">
+						<code class="param-name">filter</code>
+						<span class="type">Function</span>
+
+
+					<div class="param-description"><p>A custom function to filter out attributes as you see fit.</p>
+</div>
+
+				</li>
+			</ul>
+		</div>
+
+		<div class="returns">
+			<h4>Returns:</h4>
+
+			<div class="returns-description">
+						<span class="type">Model</span>
+			</div>
+		</div>
+
+</div>
+<div id="method-fetch" class="method item">
+	<div class="method-signature">
+	<span class="name"><code>fetch</code></span>
+
+		<span class="paren">()</span>
+		<span class="returns-inline">
+			<span class="type">Promise</span>
+		</span>
+	</div>
+
+
+
+
+
+
+	<div class="meta">
+				<p>
+				Defined in
+		<a href="../files/src_brink_data_Model.js.html#l479"><code>src&#x2F;brink&#x2F;data&#x2F;Model.js:479</code></a>
+		</p>
+
+
+
+	</div>
+
+	<div class="description"><p>Fetches and populates this record (via the adapter).</p>
+</div>
+
+
+		<div class="returns">
+			<h4>Returns:</h4>
+
+			<div class="returns-description">
+						<span class="type">Promise</span>
+			</div>
+		</div>
+
+</div>
+<div id="method-revert" class="method item">
+	<div class="method-signature">
+	<span class="name"><code>revert</code></span>
+
+		<span class="paren">()</span>
+		<span class="returns-inline">
+			<span class="type">Model</span>
+		</span>
+	</div>
+
+
+
+
+
+
+	<div class="meta">
+				<p>
+				Defined in
+		<a href="../files/src_brink_data_Model.js.html#l552"><code>src&#x2F;brink&#x2F;data&#x2F;Model.js:552</code></a>
+		</p>
+
+
+
+	</div>
+
+	<div class="description"><p>Reverts all changes made to this record since the last save() or fetch().</p>
+</div>
+
+
+		<div class="returns">
+			<h4>Returns:</h4>
+
+			<div class="returns-description">
+						<span class="type">Model</span>
+			</div>
+		</div>
+
+</div>
+<div id="method-save" class="method item">
+	<div class="method-signature">
+	<span class="name"><code>save</code></span>
+
+		<span class="paren">()</span>
+		<span class="returns-inline">
+			<span class="type">Promise</span>
+		</span>
+	</div>
+
+
+
+
+
+
+	<div class="meta">
+				<p>
+				Defined in
+		<a href="../files/src_brink_data_Model.js.html#l450"><code>src&#x2F;brink&#x2F;data&#x2F;Model.js:450</code></a>
+		</p>
+
+
+
+	</div>
+
+	<div class="description"><p>Saves any changes to this record to the persistence layer (via the adapter).
+Also adds this record to the store.</p>
+</div>
+
+
+		<div class="returns">
+			<h4>Returns:</h4>
+
+			<div class="returns-description">
+						<span class="type">Promise</span>
+			</div>
+		</div>
+
+</div>
+<div id="method-serialize" class="method item">
+	<div class="method-signature">
+	<span class="name"><code>serialize</code></span>
+
+		<div class="args">
+			<span class="paren">(</span><ul class="args-list inline commas">
+				<li class="arg">
+						<code>filter</code>
+				</li>
+			</ul><span class="paren">)</span>
+		</div>
+		<span class="returns-inline">
+			<span class="type">Object</span>
+		</span>
+	</div>
+
+
+
+
+
+
+	<div class="meta">
+				<p>
+				Defined in
+		<a href="../files/src_brink_data_Model.js.html#l331"><code>src&#x2F;brink&#x2F;data&#x2F;Model.js:331</code></a>
+		</p>
+
+
+
+	</div>
+
+	<div class="description"><p>Serialize a record.</p>
+</div>
+
+		<div class="params">
+			<h4>Parameters:</h4>
+
+			<ul class="params-list">
+				<li class="param">
+						<code class="param-name">filter</code>
+						<span class="type">Function</span>
+
+
+					<div class="param-description"><p>A custom function to filter out attributes as you see fit.</p>
+</div>
+
+				</li>
+			</ul>
+		</div>
+
+		<div class="returns">
+			<h4>Returns:</h4>
+
+			<div class="returns-description">
+						<span class="type">Object</span>
+			</div>
+		</div>
+
+</div>
+        </div>
+    </div>
+
+    <div id="properties" class="page-section">
+        <h2 class="off-left">Properties</h2>
+
+        <div class="item-list">
+            <div id="prop-adapter" class="property item">
+                <h3 class="name"><code>adapter</code></h3>
+                <span class="type"><a href="../classes/Brink.Adapter.html" class="crosslink">Brink.Adapter</a></span>
+            
+            
+            
+            
+            
+                <div class="meta">
+                            <p>
+                            Defined in
+                    <a href="../files/src_brink_data_Model.js.html#l114"><code>src&#x2F;brink&#x2F;data&#x2F;Model.js:114</code></a>
+                    </p>
+            
+            
+                </div>
+            
+                <div class="description">
+                    <p>The Adapter instance you want to use for this model.</p>
+            
+                </div>
+            
+                    <p><strong>Default:</strong> null</p>
+            
+            
+            </div>
+            <div id="prop-collectionKey" class="property item">
+                <h3 class="name"><code>collectionKey</code></h3>
+                <span class="type">String</span>
+            
+            
+            
+            
+            
+                <div class="meta">
+                            <p>
+                            Defined in
+                    <a href="../files/src_brink_data_Model.js.html#l136"><code>src&#x2F;brink&#x2F;data&#x2F;Model.js:136</code></a>
+                    </p>
+            
+            
+                </div>
+            
+                <div class="description">
+                    <p>The collectionKey you want to use for the model. Much like modelKey this is the
+            pluralized form of modelKey. This will be auto-defined as your modelKey + 's' unless
+            you explicity define it.</p>
+            
+                </div>
+            
+                    <p><strong>Default:</strong> null</p>
+            
+            
+            </div>
+            <div id="prop-dirtyAttributes" class="property item">
+                <h3 class="name"><code>dirtyAttributes</code></h3>
+                <span class="type">Brink.Array</span>
+            
+            
+            
+            
+            
+                <div class="meta">
+                            <p>
+                            Defined in
+                    <a href="../files/src_brink_data_Model.js.html#l157"><code>src&#x2F;brink&#x2F;data&#x2F;Model.js:157</code></a>
+                    </p>
+            
+            
+                </div>
+            
+                <div class="description">
+                    <p>A Brink.Array of all the property names that have been changed since the
+            last save() or fetch().</p>
+            
+                </div>
+            
+                    <p><strong>Default:</strong> null</p>
+            
+            
+            </div>
+            <div id="prop-isClean" class="property item">
+                <h3 class="name"><code>isClean</code></h3>
+                <span class="type">Boolean</span>
+            
+            
+            
+            
+            
+                <div class="meta">
+                            <p>
+                            Defined in
+                    <a href="../files/src_brink_data_Model.js.html#l221"><code>src&#x2F;brink&#x2F;data&#x2F;Model.js:221</code></a>
+                    </p>
+            
+            
+                </div>
+            
+                <div class="description">
+                    <p>Opposite of isDirty.</p>
+            
+                </div>
+            
+                    <p><strong>Default:</strong> true</p>
+            
+            
+            </div>
+            <div id="prop-isDeleting" class="property item">
+                <h3 class="name"><code>isDeleting</code></h3>
+                <span class="type">Boolean</span>
+            
+            
+            
+            
+            
+                <div class="meta">
+                            <p>
+                            Defined in
+                    <a href="../files/src_brink_data_Model.js.html#l196"><code>src&#x2F;brink&#x2F;data&#x2F;Model.js:196</code></a>
+                    </p>
+            
+            
+                </div>
+            
+                <div class="description">
+                    <p>Whether or not the record is currently being deleted.</p>
+            
+                </div>
+            
+                    <p><strong>Default:</strong> false</p>
+            
+            
+            </div>
+            <div id="prop-isDirty" class="property item">
+                <h3 class="name"><code>isDirty</code></h3>
+                <span class="type">Boolean</span>
+            
+            
+            
+            
+            
+                <div class="meta">
+                            <p>
+                            Defined in
+                    <a href="../files/src_brink_data_Model.js.html#l207"><code>src&#x2F;brink&#x2F;data&#x2F;Model.js:207</code></a>
+                    </p>
+            
+            
+                </div>
+            
+                <div class="description">
+                    <p>Whether or not the record has one or more changed properties since the
+            last save() or fetch().</p>
+            
+                </div>
+            
+                    <p><strong>Default:</strong> false</p>
+            
+            
+            </div>
+            <div id="prop-isFetching" class="property item">
+                <h3 class="name"><code>isFetching</code></h3>
+                <span class="type">Boolean</span>
+            
+            
+            
+            
+            
+                <div class="meta">
+                            <p>
+                            Defined in
+                    <a href="../files/src_brink_data_Model.js.html#l177"><code>src&#x2F;brink&#x2F;data&#x2F;Model.js:177</code></a>
+                    </p>
+            
+            
+                </div>
+            
+                <div class="description">
+                    <p>Whether or not the record is currently being fetched.</p>
+            
+                </div>
+            
+                    <p><strong>Default:</strong> false</p>
+            
+            
+            </div>
+            <div id="prop-isLoaded" class="property item">
+                <h3 class="name"><code>isLoaded</code></h3>
+                <span class="type">Boolean</span>
+            
+            
+            
+            
+            
+                <div class="meta">
+                            <p>
+                            Defined in
+                    <a href="../files/src_brink_data_Model.js.html#l187"><code>src&#x2F;brink&#x2F;data&#x2F;Model.js:187</code></a>
+                    </p>
+            
+            
+                </div>
+            
+                <div class="description">
+                    <p>Whether or not the record has been fetched/loaded.</p>
+            
+                </div>
+            
+                    <p><strong>Default:</strong> false</p>
+            
+            
+            </div>
+            <div id="prop-isNew" class="property item">
+                <h3 class="name"><code>isNew</code></h3>
+                <span class="type">Boolean</span>
+            
+            
+            
+            
+            
+                <div class="meta">
+                            <p>
+                            Defined in
+                    <a href="../files/src_brink_data_Model.js.html#l233"><code>src&#x2F;brink&#x2F;data&#x2F;Model.js:233</code></a>
+                    </p>
+            
+            
+                </div>
+            
+                <div class="description">
+                    <p>Is the record new? Determined by the existence of a primary key value.</p>
+            
+                </div>
+            
+                    <p><strong>Default:</strong> false</p>
+            
+            
+            </div>
+            <div id="prop-isSaving" class="property item">
+                <h3 class="name"><code>isSaving</code></h3>
+                <span class="type">Boolean</span>
+            
+            
+            
+            
+            
+                <div class="meta">
+                            <p>
+                            Defined in
+                    <a href="../files/src_brink_data_Model.js.html#l167"><code>src&#x2F;brink&#x2F;data&#x2F;Model.js:167</code></a>
+                    </p>
+            
+            
+                </div>
+            
+                <div class="description">
+                    <p>Whether or not the record is currently saving.</p>
+            
+                </div>
+            
+                    <p><strong>Default:</strong> false</p>
+            
+            
+            </div>
+            <div id="prop-modelKey" class="property item">
+                <h3 class="name"><code>modelKey</code></h3>
+                <span class="type">String</span>
+            
+            
+            
+            
+            
+                <div class="meta">
+                            <p>
+                            Defined in
+                    <a href="../files/src_brink_data_Model.js.html#l123"><code>src&#x2F;brink&#x2F;data&#x2F;Model.js:123</code></a>
+                    </p>
+            
+            
+                </div>
+            
+                <div class="description">
+                    <p>The modelKey you want to use for the model. This will likely influence your adapter.
+            i.e. for a RESTAdapter your modelKey would be used in the url for all requests
+            made for instances of this model. For a MongooseAdapter,
+            this would likely dictate the name of your tables.</p>
+            
+                </div>
+            
+                    <p><strong>Default:</strong> null</p>
+            
+            
+            </div>
+            <div id="prop-pk" class="property item">
+                <h3 class="name"><code>pk</code></h3>
+                <span class="type">String | Number</span>
+            
+            
+            
+            
+            
+                <div class="meta">
+                            <p>
+                            Defined in
+                    <a href="../files/src_brink_data_Model.js.html#l246"><code>src&#x2F;brink&#x2F;data&#x2F;Model.js:246</code></a>
+                    </p>
+            
+            
+                </div>
+            
+                <div class="description">
+                    <p>Get the primary key value of the record.</p>
+            
+                </div>
+            
+            
+            
+            </div>
+            <div id="prop-primaryKey" class="property item">
+                <h3 class="name"><code>primaryKey</code></h3>
+                <span class="type">String</span>
+            
+            
+            
+            
+            
+                <div class="meta">
+                            <p>
+                            Defined in
+                    <a href="../files/src_brink_data_Model.js.html#l148"><code>src&#x2F;brink&#x2F;data&#x2F;Model.js:148</code></a>
+                    </p>
+            
+            
+                </div>
+            
+                <div class="description">
+                    <p>The property name of the primaryKey you are using for this Model.</p>
+            
+                </div>
+            
+                    <p><strong>Default:</strong> &#x27;id&#x27;</p>
+            
+            
+            </div>
+            <div id="prop-store" class="property item">
+                <h3 class="name"><code>store</code></h3>
+                <span class="type"><a href="../classes/Brink.Store.html" class="crosslink">Brink.Store</a></span>
+            
+            
+            
+            
+            
+                <div class="meta">
+                            <p>
+                            Defined in
+                    <a href="../files/src_brink_data_Model.js.html#l103"><code>src&#x2F;brink&#x2F;data&#x2F;Model.js:103</code></a>
+                    </p>
+            
+            
+                </div>
+            
+                <div class="description">
+                    <p>The Store instance this model uses. You should only have one Store instance used
+            across your entire project and models.</p>
+            
+                </div>
+            
+                    <p><strong>Default:</strong> null</p>
+            
+            
+            </div>
+        </div>
+    </div>
+
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="../assets/vendor/jquery/jquery-1.8.2.min.js"></script>
+<script src="../assets/vendor/bootstrap/js/bootstrap.js"></script>
+<script src="../assets/vendor/prettify/prettify-min.js"></script>
+<script src="../assets/js/yuidoc-bootstrap.js"></script>
+<script>prettyPrint();</script>
+</body>
+</html>

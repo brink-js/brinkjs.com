@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>src/brink/utils/expandProps.js - brink.js</title>
+    <title>Brink - brink.js</title>
     <link rel="stylesheet" href="">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -79,70 +79,138 @@
                 <div id="docs-main">
                     <div class="content">
 <div class="page-header">
-    <h1>src/brink/utils/expandProps.js <small>File</small></h1>
+    <h1>Brink <small>Module</small></h1>
 </div>
 
-<div class="file">
-    <pre class="prettyprint linenums">
-$b(
+<div class="clearfix well well-small">
 
-    /***********************************************************************
-    @class Brink
-    ************************************************************************/
-    function () {
 
-        &#x27;use strict&#x27;;
+        <div class="foundat">
+            Defined in: <a href="../files/src_brink_utils_unregisterModel.js.html#l5"><code>src&#x2F;brink&#x2F;utils&#x2F;unregisterModel.js:5</code></a>
+        </div>
 
-        return function (a, skipRoot) {
+</div>
 
-            var b,
-                i,
-                j,
-                p,
-                n,
-                s;
 
-            a = [].concat(a);
+<div class="moduledesc well well-small">
+    
+</div>
 
-            s = [];
 
-            for (i = 0; i &lt; a.length; i ++) {
+<div class="yui3-g">
+    <div class="yui3-u-1-2">
+            <p>This module provides the following classes:</p>
 
-                p = a[i];
+            <ul class="module-classes">
+                <li class="module-class">
+                    <a href="../classes/Brink.html">
+                        Brink
+                    </a>
+                </li>
+                <li class="module-class">
+                    <a href="../classes/Brink.Adapter.html">
+                        Brink.Adapter
+                    </a>
+                </li>
+                <li class="module-class">
+                    <a href="../classes/Brink.Class.html">
+                        Brink.Class
+                    </a>
+                </li>
+                <li class="module-class">
+                    <a href="../classes/Brink.CoreObject.html">
+                        Brink.CoreObject
+                    </a>
+                </li>
+                <li class="module-class">
+                    <a href="../classes/Brink.Model.html">
+                        Brink.Model
+                    </a>
+                </li>
+                <li class="module-class">
+                    <a href="../classes/Brink.Object.html">
+                        Brink.Object
+                    </a>
+                </li>
+                <li class="module-class">
+                    <a href="../classes/Brink.RESTAdapter.html">
+                        Brink.RESTAdapter
+                    </a>
+                </li>
+                <li class="module-class">
+                    <a href="../classes/Brink.Schema.html">
+                        Brink.Schema
+                    </a>
+                </li>
+                <li class="module-class">
+                    <a href="../classes/Brink.Store.html">
+                        Brink.Store
+                    </a>
+                </li>
+            </ul>
+    </div>
 
-                if (!skipRoot &amp;&amp; ~p.indexOf(&#x27;.&#x27;)) {
+    <div class="yui3-u-1-2">
+            <p>This module is a rollup of the following modules:</p>
 
-                    b = p.split(&#x27;.&#x27;);
-                    b.splice(b.length - 1, 1);
-                    n = null;
+            <ul class="module-submodules">
+                <li class="module-submodule">
+                    <a href="../modules/data.html">
+                        data
+                    </a>
 
-                    while (b.length) {
-                        n = n ? n + &#x27;.&#x27; : &#x27;&#x27;;
-                        n += b.splice(0, 1)[0];
-                        s.push(n);
-                    }
-                }
-
-                if (~p.indexOf(&#x27;,&#x27;)) {
-                    p = p.split(&#x27;.&#x27;);
-                    n = p.splice(0, p.length - 1).join(&#x27;.&#x27;);
-                    b = p[0].split(&#x27;,&#x27;);
-                    p = [];
-
-                    for (j = 0; j &lt; b.length; j ++) {
-                        p.push([n, b[j]].join(n ? &#x27;.&#x27; : &#x27;&#x27;));
-                    }
-                }
-
-                s = s.concat(p);
-            }
-
-            return s;
-        };
-    }
-
-).attach(&#x27;$b&#x27;);
-    </pre>
+                    <div class="module-submodule-description">
+                        Brink's Model, Store and Adapter Classes offers you flexible and easy way to work with your data layer.
+Using Brink.attr(), Brink.belongsTo() and Brink.hasMany() you can define simple or complex model
+structures.
+<code>&#x60;</code>javascript
+var MyStore = $b.Store.create();
+var Person = $b.Model.extend({
+    primaryKey : 'id',
+    modelKey : 'person',
+    adapter : $b.RESTAdapter.create(),
+    store : MyStore,
+    schema : $b.Schema.create({
+        firstName : $b.attr(String),
+        lastName : $b.attr(String),
+        children : $b.hasMany('person'),
+        spouse : $b.belongsTo('person')
+    })
+});
+var dad = Person.create({
+    firstName : 'John',
+    lastName : 'Doe'
+});
+var mom = Person.create({
+    firstName : 'Jane',
+    lastName : 'Doe'
+});
+var child1 = Person.create({
+    firstName : 'Mary',
+    lastName  : 'Doe'
+});
+var child2 = Person.create({
+    firstName : 'Bob',
+    lastName  : 'Doe'
+});
+dad.spouse = mom;
+dad.children.push(child1, child2);
+$b.Q.all([
+    mom.save(),
+    child1.save(),
+    child2.save()
+]).then(function () {
+    dad.save();
+});
+<code>&#x60;</code>
+Looking at the example above, it might be a bit confusing why we are saving the mom and children
+before we save the <code>dad</code> record.
+The reason for this is that the mom and children do not yet exist, thus if we tried to <code>serialize()</code> the <code>dad</code>
+record they would come back with null primary key values.
+                    </div>
+                </li>
+            </ul>
+    </div>
 </div>
                     </div>
                 </div>

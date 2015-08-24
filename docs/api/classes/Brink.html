@@ -21,12 +21,12 @@
             <li class="divider-vertical"></li>
             <li>
                 <p class="navbar-text">
-                    API Docs for Version: <b>0.2.3</b>
+                    API Docs for Version: <b>0.3.3</b>
                 </p>
             </li>
         </div>
         <form class="navbar-form pull-right" style="line-height: 40px; height: 40px;">
-            <input style="margin-top: 0;" type="text" class="search-query" placeholder="Search for classes/modules..." data-obj='["classes/Brink", "classes/Brink.Class", "classes/Brink.CoreObject", "classes/Brink.Object"]'>
+            <input style="margin-top: 0;" type="text" class="search-query" placeholder="Search for classes/modules..." data-obj='["classes/Brink", "classes/Brink.Adapter", "classes/Brink.Class", "classes/Brink.CoreObject", "classes/Brink.Model", "classes/Brink.Object", "classes/Brink.RESTAdapter", "classes/Brink.Schema", "classes/Brink.Store", "modules/Brink", "modules/data"]'>
         </form>
     </div>
 </div>
@@ -38,9 +38,14 @@
 	        <div id="classes">
 	            <ul id="api-classes" class="nav nav-list">
 	                    <li><a href="../classes/Brink.html">Brink</a></li>
+	                    <li><a href="../classes/Brink.Adapter.html">Brink.Adapter</a></li>
 	                    <li><a href="../classes/Brink.Class.html">Brink.Class</a></li>
 	                    <li><a href="../classes/Brink.CoreObject.html">Brink.CoreObject</a></li>
+	                    <li><a href="../classes/Brink.Model.html">Brink.Model</a></li>
 	                    <li><a href="../classes/Brink.Object.html">Brink.Object</a></li>
+	                    <li><a href="../classes/Brink.RESTAdapter.html">Brink.RESTAdapter</a></li>
+	                    <li><a href="../classes/Brink.Schema.html">Brink.Schema</a></li>
+	                    <li><a href="../classes/Brink.Store.html">Brink.Store</a></li>
 	            </ul>
 	        </div>
 	        </div>
@@ -79,6 +84,9 @@
 
 
 
+	<div class="well well-small">
+            Module: <a href="../modules/Brink.html">Brink</a>
+    </div>
 
 
 
@@ -92,6 +100,8 @@
 			<strong>Methods</strong>
 			<ul>
 				<li><a href="#method-alias"><span class="im">alias</span>(<span class="ia">key</span>)</a></li>
+				<li><a href="#method-attr"><span class="im">attr</span>(<span class="ia">type</span><span class="ia">options</span>)</a></li>
+				<li><a href="#method-belongsTo"><span class="im">belongsTo</span>(<span class="ia">modelKey</span><span class="ia">options</span>)</a></li>
 				<li><a href="#method-bindFunction"><span class="im">bindFunction</span>(<span class="ia">fn</span><span class="ia">The</span>)</a></li>
 				<li><a href="#method-bindTo"><span class="im">bindTo</span>(<span class="ia">obj</span><span class="ia">key</span>)</a></li>
 				<li><a href="#method-clone"><span class="im">clone</span>(<span class="ia">obj</span><span class="ia">deep</span>)</a></li>
@@ -102,6 +112,7 @@
 				<li><a href="#method-flatten"><span class="im">flatten</span>(<span class="ia">arr</span><span class="ia">keepDuplicates</span>)</a></li>
 				<li><a href="#method-get"><span class="im">get</span>(<span class="ia">The</span><span class="ia">key</span>)</a></li>
 				<li><a href="#method-getObjKeyPair"><span class="im">getObjKeyPair</span>(<span class="ia">The</span><span class="ia">key</span><span class="ia">createIfNull</span>)</a></li>
+				<li><a href="#method-hasMany"><span class="im">hasMany</span>(<span class="ia">modelKey</span><span class="ia">options</span>)</a></li>
 				<li><a href="#method-intersect"><span class="im">intersect</span>(<span class="ia">arr1</span><span class="ia">arr2</span>)</a></li>
 				<li><a href="#method-isBrinkInstance"><span class="im">isBrinkInstance</span>(<span class="ia">obj</span>)</a></li>
 				<li><a href="#method-isBrinkObject"><span class="im">isBrinkObject</span>(<span class="ia">obj</span>)</a></li>
@@ -207,6 +218,148 @@ console.log(obj.a, obj.b); // test2, test2
 						<span class="type">ComputedProperty</span>:
 					<p>A computed property with a getter/setter that references the alias.</p>
 
+			</div>
+		</div>
+
+</div>
+<div id="method-attr" class="method item">
+	<div class="method-signature">
+	<span class="name"><code>attr</code></span>
+
+		<div class="args">
+			<span class="paren">(</span><ul class="args-list inline commas">
+				<li class="arg">
+						<code>type</code>
+				</li>
+				<li class="arg">
+						<code>options</code>
+				</li>
+			</ul><span class="paren">)</span>
+		</div>
+		<span class="returns-inline">
+			<span class="type">ComputedProperty</span>
+		</span>
+	</div>
+
+
+
+
+
+
+	<div class="meta">
+				<p>
+				Defined in
+		<a href="../files/src_brink_data_attr.js.html#l12"><code>src&#x2F;brink&#x2F;data&#x2F;attr.js:12</code></a>
+		</p>
+
+
+
+	</div>
+
+	<div class="description"><p>Define a Schema attribute.</p>
+</div>
+
+		<div class="params">
+			<h4>Parameters:</h4>
+
+			<ul class="params-list">
+				<li class="param">
+						<code class="param-name">type</code>
+						<span class="type">Type</span>
+
+
+					<div class="param-description"><p>The value type of the attribute.</p>
+</div>
+
+				</li>
+				<li class="param">
+						<code class="param-name">options</code>
+						<span class="type">Object</span>
+
+
+					<div class="param-description"><p>Options for the attribute</p>
+</div>
+
+				</li>
+			</ul>
+		</div>
+
+		<div class="returns">
+			<h4>Returns:</h4>
+
+			<div class="returns-description">
+						<span class="type">ComputedProperty</span>
+			</div>
+		</div>
+
+</div>
+<div id="method-belongsTo" class="method item">
+	<div class="method-signature">
+	<span class="name"><code>belongsTo</code></span>
+
+		<div class="args">
+			<span class="paren">(</span><ul class="args-list inline commas">
+				<li class="arg">
+						<code>modelKey</code>
+				</li>
+				<li class="arg">
+						<code>options</code>
+				</li>
+			</ul><span class="paren">)</span>
+		</div>
+		<span class="returns-inline">
+			<span class="type">ComputedProperty</span>
+		</span>
+	</div>
+
+
+
+
+
+
+	<div class="meta">
+				<p>
+				Defined in
+		<a href="../files/src_brink_data_belongsTo.js.html#l12"><code>src&#x2F;brink&#x2F;data&#x2F;belongsTo.js:12</code></a>
+		</p>
+
+
+
+	</div>
+
+	<div class="description"><p>Define a Schema belongsTo relationship (many to one).</p>
+</div>
+
+		<div class="params">
+			<h4>Parameters:</h4>
+
+			<ul class="params-list">
+				<li class="param">
+						<code class="param-name">modelKey</code>
+						<span class="type">String</span>
+
+
+					<div class="param-description"><p>The modelKey of the relationship.</p>
+</div>
+
+				</li>
+				<li class="param">
+						<code class="param-name">options</code>
+						<span class="type">Object</span>
+
+
+					<div class="param-description"><p>Options for the relationship.</p>
+</div>
+
+				</li>
+			</ul>
+		</div>
+
+		<div class="returns">
+			<h4>Returns:</h4>
+
+			<div class="returns-description">
+						<span class="type">ComputedProperty</span>
 			</div>
 		</div>
 
@@ -925,6 +1078,77 @@ console.log($b.getObjKeyPair(obj, 'some.nested.key')) // [ { key: 'test' }, 'key
 		</div>
 
 </div>
+<div id="method-hasMany" class="method item">
+	<div class="method-signature">
+	<span class="name"><code>hasMany</code></span>
+
+		<div class="args">
+			<span class="paren">(</span><ul class="args-list inline commas">
+				<li class="arg">
+						<code>modelKey</code>
+				</li>
+				<li class="arg">
+						<code>options</code>
+				</li>
+			</ul><span class="paren">)</span>
+		</div>
+		<span class="returns-inline">
+			<span class="type">ComputedProperty</span>
+		</span>
+	</div>
+
+
+
+
+
+
+	<div class="meta">
+				<p>
+				Defined in
+		<a href="../files/src_brink_data_hasMany.js.html#l13"><code>src&#x2F;brink&#x2F;data&#x2F;hasMany.js:13</code></a>
+		</p>
+
+
+
+	</div>
+
+	<div class="description"><p>Define a Schema hasMany relationship (one to many).</p>
+</div>
+
+		<div class="params">
+			<h4>Parameters:</h4>
+
+			<ul class="params-list">
+				<li class="param">
+						<code class="param-name">modelKey</code>
+						<span class="type">String</span>
+
+
+					<div class="param-description"><p>The modelKey of the relationship.</p>
+</div>
+
+				</li>
+				<li class="param">
+						<code class="param-name">options</code>
+						<span class="type">Object</span>
+
+
+					<div class="param-description"><p>Options for the relationship.</p>
+</div>
+
+				</li>
+			</ul>
+		</div>
+
+		<div class="returns">
+			<h4>Returns:</h4>
+
+			<div class="returns-description">
+						<span class="type">ComputedProperty</span>
+			</div>
+		</div>
+
+</div>
 <div id="method-intersect" class="method item">
 	<div class="method-signature">
 	<span class="name"><code>intersect</code></span>
@@ -1427,7 +1651,7 @@ Modifies the first <code>Object</code> or <code>Array</code> passed in as an arg
 			<ul class="params-list">
 				<li class="param">
 						<code class="param-name">Model</code>
-						<span class="type">Brink.Model</span>
+						<span class="type"><a href="../classes/Brink.Model.html" class="crosslink">Brink.Model</a></span>
 
 
 
@@ -1683,7 +1907,7 @@ If setting multiple properties, an <code>Object</code> containing key : value pa
 			<ul class="params-list">
 				<li class="param">
 						<code class="param-name">Model</code>
-						<span class="type">Brink.Model</span>
+						<span class="type"><a href="../classes/Brink.Model.html" class="crosslink">Brink.Model</a></span>
 
 
 

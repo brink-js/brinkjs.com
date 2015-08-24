@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>src/brink/utils/expandProps.js - brink.js</title>
+    <title>Brink.Schema - brink.js</title>
     <link rel="stylesheet" href="">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -79,71 +79,41 @@
                 <div id="docs-main">
                     <div class="content">
 <div class="page-header">
-    <h1>src/brink/utils/expandProps.js <small>File</small></h1>
+    <h1>Brink.Schema</h1>
 </div>
 
-<div class="file">
-    <pre class="prettyprint linenums">
-$b(
 
-    /***********************************************************************
-    @class Brink
-    ************************************************************************/
-    function () {
 
-        &#x27;use strict&#x27;;
+	<div class="well well-small">
+            Module: <a href="../modules/data.html">data</a><br>
+            Parent Module: <a href="../modules/Brink.html">Brink</a>
+    </div>
 
-        return function (a, skipRoot) {
 
-            var b,
-                i,
-                j,
-                p,
-                n,
-                s;
 
-            a = [].concat(a);
+<div class="yuidoc-class-description">
+<p>Schemas allow you to define your models properties and relationships.</p>
 
-            s = [];
-
-            for (i = 0; i &lt; a.length; i ++) {
-
-                p = a[i];
-
-                if (!skipRoot &amp;&amp; ~p.indexOf(&#x27;.&#x27;)) {
-
-                    b = p.split(&#x27;.&#x27;);
-                    b.splice(b.length - 1, 1);
-                    n = null;
-
-                    while (b.length) {
-                        n = n ? n + &#x27;.&#x27; : &#x27;&#x27;;
-                        n += b.splice(0, 1)[0];
-                        s.push(n);
-                    }
-                }
-
-                if (~p.indexOf(&#x27;,&#x27;)) {
-                    p = p.split(&#x27;.&#x27;);
-                    n = p.splice(0, p.length - 1).join(&#x27;.&#x27;);
-                    b = p[0].split(&#x27;,&#x27;);
-                    p = [];
-
-                    for (j = 0; j &lt; b.length; j ++) {
-                        p.push([n, b[j]].join(n ? &#x27;.&#x27; : &#x27;&#x27;));
-                    }
-                }
-
-                s = s.concat(p);
-            }
-
-            return s;
-        };
-    }
-
-).attach(&#x27;$b&#x27;);
-    </pre>
 </div>
+
+<!-- table of contents -->
+
+<div id="class-toc" class="page-section">
+	<h2>Table of Contents</h2>
+    <ul>
+
+
+
+	</ul>
+</div>
+
+<!-- details -->
+
+
+
+
+
+
                     </div>
                 </div>
             </div>

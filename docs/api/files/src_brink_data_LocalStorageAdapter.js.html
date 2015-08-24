@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>src/brink/utils/expandProps.js - brink.js</title>
+    <title>src/brink/data/LocalStorageAdapter.js - brink.js</title>
     <link rel="stylesheet" href="">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -79,66 +79,134 @@
                 <div id="docs-main">
                     <div class="content">
 <div class="page-header">
-    <h1>src/brink/utils/expandProps.js <small>File</small></h1>
+    <h1>src/brink/data/LocalStorageAdapter.js <small>File</small></h1>
 </div>
 
 <div class="file">
     <pre class="prettyprint linenums">
 $b(
 
-    /***********************************************************************
-    @class Brink
-    ************************************************************************/
-    function () {
+    [
+        &#x27;./Adapter&#x27;,
+        &#x27;../utils/Q&#x27;
+    ],
+
+    function (Adapter, Q) {
 
         &#x27;use strict&#x27;;
 
-        return function (a, skipRoot) {
+        /* jscs : disable */
 
-            var b,
-                i,
-                j,
-                p,
-                n,
-                s;
+        /**
+        * Generates a GUID string.
+        * @returns {String} The generated GUID.
+        * @example af8a8416-6e18-a307-bd9c-f2c947bbb3aa
+        * @author Slavik Meltser (slavik@meltser.info).
+        * @link http://slavik.meltser.info/?p=142
+        */
 
-            a = [].concat(a);
-
-            s = [];
-
-            for (i = 0; i &lt; a.length; i ++) {
-
-                p = a[i];
-
-                if (!skipRoot &amp;&amp; ~p.indexOf(&#x27;.&#x27;)) {
-
-                    b = p.split(&#x27;.&#x27;);
-                    b.splice(b.length - 1, 1);
-                    n = null;
-
-                    while (b.length) {
-                        n = n ? n + &#x27;.&#x27; : &#x27;&#x27;;
-                        n += b.splice(0, 1)[0];
-                        s.push(n);
-                    }
-                }
-
-                if (~p.indexOf(&#x27;,&#x27;)) {
-                    p = p.split(&#x27;.&#x27;);
-                    n = p.splice(0, p.length - 1).join(&#x27;.&#x27;);
-                    b = p[0].split(&#x27;,&#x27;);
-                    p = [];
-
-                    for (j = 0; j &lt; b.length; j ++) {
-                        p.push([n, b[j]].join(n ? &#x27;.&#x27; : &#x27;&#x27;));
-                    }
-                }
-
-                s = s.concat(p);
+        function guid () {
+            function _p8(s) {
+                var p = (Math.random().toString(16) + &#x27;000000000&#x27;).substr(2, 8);
+                return s ? &#x27;-&#x27; + p.substr(0, 4) + &#x27;-&#x27; + p.substr(4, 4) : p ;
             }
+            return _p8() + _p8(true) + _p8(true) + _p8();
+        }
 
-            return s;
-        };
+        /* jscs : enable */
+
+        return Adapter({
+
+            init : function () {
+                this.__cache = {};
+            },
+
+            loadRecords : function (key) {
+
+                if (!this.__cache[key]) {
+                    this.__cache[key] = JSON.parse(localStorage[key]);
+                }
+
+                return this.__cache[key];
+            },
+
+            saveRecords : function (key) {
+                localStorage[key] = JSON.stringify(this.__cache[key]);
+            },
+
+            fetch : function (record) {
+
+                var records,
+                    deferred;
+
+                deferred = Q.deferred();
+                records = this.loadRecords(record.collectionKey);
+
+                setTimeout(function () {
+                    deferred.resolve(records[record.get(&#x27;pk&#x27;)]);
+                }, 0);
+
+                return deferred.promise;
+            },
+
+            fetchAll : function (model) {
+
+                var records,
+                    deferred;
+
+                deferred = Q.deferred();
+                records = this.loadRecords(model.collectionKey);
+
+                setTimeout(function () {
+                    deferred.resolve(records);
+                }, 0);
+
+                return deferred.promise;
+            },
+
+            createRecord : function (record) {
+                record.set(&#x27;pk&#x27;, guid());
+                return this.updateRecord(record);
+            },
+
+            updateRecord : function (record) {
+
+                var json,
+                    records,
+                    deferred;
+
+                json = record.serialize();
+
+                deferred = Q.deferred();
+                records = this.loadRecords(record.collectionKey);
+                records[record.get(&#x27;pk&#x27;)] = json;
+                this.saveRecords(record.collectionKey);
+
+                setTimeout(function () {
+                    deferred.resolve(json);
+                }, 0);
+
+                return deferred.promise;
+            },
+
+            deleteRecord : function (record) {
+
+                var records,
+                    deferred;
+
+                deferred = Q.deferred();
+                records = this.loadRecords(record.collectionKey);
+                delete records[record.get(&#x27;pk&#x27;)];
+
+                this.saveRecords(record.collectionKey);
+
+                setTimeout(function () {
+                    deferred.resolve();
+                }, 0);
+
+                return deferred.promise;
+            }
+        });
     }
 
 ).attach(&#x27;$b&#x27;);

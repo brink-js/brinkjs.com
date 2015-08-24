@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>src/brink/data/belongsTo.js - brink.js</title>
+    <link rel="stylesheet" href="">
+    <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
+    <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
+    <link rel="stylesheet" href="../assets/css/custom.css">
+    <link rel="stylesheet" href="../assets/css/lucid.css">
+    <link rel="stylesheet" href="../assets/vendor/bootstrap/css/bootstrap.css">
+    <link rel="shortcut icon" type="image/png" href="../assets/favicon.png">
+</head>
+<body class="yui3-skin-sam">
+<div class="navbar navbar-fixed-top">
+    <div class="navbar-inner">
+        <h1 class="brand" style="padding: 10px 16px 10px; height: 20px; line-height: 20px; margin-left: 0;">
+	    <img alt="brink.js" src="../../../img/brink-logo.png" style="max-height: 100%;" title="brink.js">
+        </h1>
+	<div class="nav">
+            <li class="divider-vertical"></li>
+            <li>
+                <p class="navbar-text">
+                    API Docs for Version: <b>0.3.3</b>
+                </p>
+            </li>
+        </div>
+        <form class="navbar-form pull-right" style="line-height: 40px; height: 40px;">
+            <input style="margin-top: 0;" type="text" class="search-query" placeholder="Search for classes/modules..." data-obj='["classes/Brink", "classes/Brink.Adapter", "classes/Brink.Class", "classes/Brink.CoreObject", "classes/Brink.Model", "classes/Brink.Object", "classes/Brink.RESTAdapter", "classes/Brink.Schema", "classes/Brink.Store", "modules/Brink", "modules/data"]'>
+        </form>
+    </div>
+</div>
+<div class="container">
+    <div class="row">
+        <div class="span3">
+	    <div>
+	        <div id="sidebar">
+	        <div id="classes">
+	            <ul id="api-classes" class="nav nav-list">
+	                    <li><a href="../classes/Brink.html">Brink</a></li>
+	                    <li><a href="../classes/Brink.Adapter.html">Brink.Adapter</a></li>
+	                    <li><a href="../classes/Brink.Class.html">Brink.Class</a></li>
+	                    <li><a href="../classes/Brink.CoreObject.html">Brink.CoreObject</a></li>
+	                    <li><a href="../classes/Brink.Model.html">Brink.Model</a></li>
+	                    <li><a href="../classes/Brink.Object.html">Brink.Object</a></li>
+	                    <li><a href="../classes/Brink.RESTAdapter.html">Brink.RESTAdapter</a></li>
+	                    <li><a href="../classes/Brink.Schema.html">Brink.Schema</a></li>
+	                    <li><a href="../classes/Brink.Store.html">Brink.Store</a></li>
+	            </ul>
+	        </div>
+	        </div>
+	    </div>
+        </div>
+        <div class="span9">
+                <form id="options-form" class="form-inline pull-right">
+                    Show:
+                    <label for="api-show-inherited" class="checkbox">
+                        <input type="checkbox" id="api-show-inherited" checked>
+                        Inherited
+                    </label>
+            
+                    <label for="api-show-protected" class="checkbox">
+                        <input type="checkbox" id="api-show-protected">
+                        Protected
+                    </label>
+            
+                    <label for="api-show-private" class="checkbox">
+                        <input type="checkbox" id="api-show-private">
+                        Private
+                    </label>
+                    <label for="api-show-deprecated" class="checkbox">
+                        <input type="checkbox" id="api-show-deprecated">
+                        Deprecated
+                    </label>
+            
+                </form>
+            
+            <div class="apidocs">
+                <div id="docs-main">
+                    <div class="content">
+<div class="page-header">
+    <h1>src/brink/data/belongsTo.js <small>File</small></h1>
+</div>
+
+<div class="file">
+    <pre class="prettyprint linenums">
+$b(
+    [
+        &#x27;../utils/get&#x27;,
+        &#x27;../utils/set&#x27;,
+        &#x27;../utils/computed&#x27;
+    ],
+
+    function (get, set, computed) {
+
+        &#x27;use strict&#x27;;
+
+        /***********************************************************************
+        Define a Schema belongsTo relationship (many to one).
+
+        @method belongsTo
+        @param  {String} modelKey The modelKey of the relationship.
+        @param  {Object} options Options for the relationship.
+        @return {ComputedProperty}
+        ************************************************************************/
+
+        return (function make (mKey, options) {
+
+            options = options || {};
+
+            var belongsTo = computed({
+
+                get : function (key) {
+                    return this.__meta.data[key];
+                },
+
+                set : function (val, key) {
+
+                    var meta,
+                        data,
+                        store,
+                        dirty,
+                        dirtyIdx,
+                        pristine;
+
+                    meta = this.__meta;
+                    store = this.store;
+                    dirty = get(this, &#x27;dirtyAttributes&#x27;);
+                    data = meta.data;
+                    pristine = meta.pristineData;
+
+                    if (dirty) {
+
+                        if (typeof pristine[key] === &#x27;undefined&#x27;) {
+
+                            if (typeof data[key] === &#x27;undefined&#x27;) {
+                                pristine[key] = options.defaultValue;
+                            }
+
+                            else {
+                                pristine[key] = data[key];
+                            }
+
+                            dirty.push(key);
+                        }
+
+                        else {
+
+                            dirtyIdx = dirty.indexOf(key);
+
+                            if (pristine[key] === val &amp;&amp; ~dirtyIdx) {
+                                dirty.remove(key);
+                            }
+
+                            else if (!~dirtyIdx) {
+                                dirty.push(key);
+                            }
+                        }
+                    }
+
+                    if (
+                        store &amp;&amp;
+                        (typeof val === &#x27;string&#x27; || typeof val === &#x27;number&#x27;)
+                    ) {
+                        val = store.findOrCreate(mKey, val);
+                    }
+
+                    if (val) {
+                        $b.assert(
+                            &#x27;Must be a model of type &quot;&#x27; + mKey + &#x27;&quot;.&#x27;,
+                            val instanceof $b.__models[mKey]
+                        );
+                    }
+
+                    data[key] = val;
+                }
+            });
+
+            belongsTo.meta({
+
+                type : &#x27;belongsTo&#x27;,
+                isRelationship : true,
+                options : options,
+
+                serialize : function (filter) {
+
+                    var key,
+                        val,
+                        meta;
+
+                    meta = belongsTo.meta();
+                    key = meta.key;
+
+                    val = get(this, key);
+
+                    if (val &amp;&amp; val instanceof $b.__models[mKey]) {
+
+                        if (options.embedded) {
+                            val = val.serialize(filter);
+                        } else {
+                            val = get(val, &#x27;pk&#x27;);
+                        }
+
+                    }
+
+                    if (!filter || filter(meta, key, val)) {
+                        return val;
+                    }
+
+                },
+
+                deserialize : function (val, override, filter) {
+
+                    var key,
+                        meta,
+                        record;
+
+                    meta = belongsTo.meta();
+                    key = meta.key;
+
+                    if (options.embedded) {
+                        record = get(this, key) || $b.__models[mKey].create();
+
+                        if (val &amp;&amp; typeof val === &#x27;object&#x27;) {
+                            val = record.deserialize(val, override, filter);
+                        }
+                    }
+
+                    set(this, key, val);
+
+                    return val;
+                },
+
+                revert : function (revertRelationships) {
+
+                    var key,
+                        val,
+                        meta;
+
+                    meta = belongsTo.meta();
+                    key = meta.key;
+
+                    val = get(this, key);
+
+                    if (val) {
+                        val.revert(revertRelationships);
+                    }
+                }
+            });
+
+            belongsTo.clone = function () {
+                return make(mKey, options);
+            };
+
+            return belongsTo;
+        });
+    }
+
+).attach(&#x27;$b&#x27;);
+
+    </pre>
+</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="../assets/vendor/jquery/jquery-1.8.2.min.js"></script>
+<script src="../assets/vendor/bootstrap/js/bootstrap.js"></script>
+<script src="../assets/vendor/prettify/prettify-min.js"></script>
+<script src="../assets/js/yuidoc-bootstrap.js"></script>
+<script>prettyPrint();</script>
+</body>
+</html>
