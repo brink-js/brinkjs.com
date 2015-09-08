@@ -1796,6 +1796,53 @@
     
     ).attach('$b');
 
+    $b('brink/dev/error', 
+    
+        function () {
+    
+            'use strict';
+    
+            return function (msg) {
+                throw new Error(msg);
+            };
+        }
+    
+    ).attach('$b');
+
+    $b('brink/dev/assert', 
+    
+        [
+            './error'
+        ],
+    
+        function (error) {
+    
+            'use strict';
+    
+            return function (msg, test) {
+    
+                if (!test) {
+                    error(msg);
+                }
+            };
+        }
+    
+    ).attach('$b');
+    
+
+    $b('brink/dev/warn', 
+    
+        function () {
+    
+            'use strict';
+    
+            return function (msg) {
+                console.warn(msg);
+            };
+        }
+    
+    ).attach('$b');
+
     $b('brink/utils/isFunction', 
     
         /***********************************************************************

@@ -10,9 +10,8 @@
         EMPTY_FN;
     
     /*jshint ignore : start */
-    IS_NODE = typeof module !== 'undefined' && module.exports;
+    IS_NODE = typeof exports !== 'undefined' && this.exports !== exports;
     IS_BROWSER = !IS_NODE;
-    
     /*jshint ignore : end */
     
     _global = IS_NODE ? global : window;
@@ -910,7 +909,7 @@
         
             moduleIndex = 0;
         
-            IS_NODE = typeof module !== 'undefined' && module.exports;
+            IS_NODE = typeof exports !== 'undefined' && this.exports !== exports;
         
             _global = IS_NODE ? global : window;
             origRequire = typeof require !== 'undefined' ? require : null;
@@ -1796,6 +1795,53 @@
     
     ).attach('$b');
 
+    $b('brink/dev/error', 
+    
+        function () {
+    
+            'use strict';
+    
+            return function (msg) {
+                throw new Error(msg);
+            };
+        }
+    
+    ).attach('$b');
+
+    $b('brink/dev/assert', 
+    
+        [
+            './error'
+        ],
+    
+        function (error) {
+    
+            'use strict';
+    
+            return function (msg, test) {
+    
+                if (!test) {
+                    error(msg);
+                }
+            };
+        }
+    
+    ).attach('$b');
+    
+
+    $b('brink/dev/warn', 
+    
+        function () {
+    
+            'use strict';
+    
+            return function (msg) {
+                console.warn(msg);
+            };
+        }
+    
+    ).attach('$b');
+
     $b('brink/utils/isFunction', 
     
         /***********************************************************************
@@ -2039,6 +2085,7 @@
     
                 var i,
                     k;
+    
                 key = key.split('.');
     
                 for (i = 0; i < key.length; i ++) {
@@ -2426,41 +2473,32 @@
             ************************************************************************/
             return function (obj, prop, descriptor) {
     
-                var d;
-    
-                d = descriptor;
-    
-                if (d.__meta && (d.__meta.isAttribute || d.__meta.isRelationship)) {
-                    d = d.clone();
-                }
-    
                 $b.assert('Object must be an instance of Brink.Object or Brink.Class', isBrinkInstance(obj));
     
-                d.configurable = true;
-                d.enumerable = descriptor.enumerable !== 'undefined' ? descriptor.enumerable : true;
+                descriptor.configurable = true;
+                descriptor.enumerable = descriptor.enumerable !== 'undefined' ? descriptor.enumerable : true;
     
                 if (prop.indexOf('__') === 0) {
-                    d.configurable = false;
-                    d.enumerable = false;
+                    descriptor.configurable = false;
+                    descriptor.enumerable = false;
                 }
     
-                d.get = obj.__defineGetter(prop, descriptor.get || obj.__writeOnly(prop));
-                d.set = obj.__defineSetter(prop, descriptor.set || obj.__readOnly(prop));
+                descriptor.get = obj.__defineGetter(prop, descriptor.get || obj.__writeOnly(prop));
+                descriptor.set = obj.__defineSetter(prop, descriptor.set || obj.__readOnly(prop));
     
-                d.defaultValue = (
+                descriptor.defaultValue = (
                     typeof descriptor.defaultValue !== 'undefined' ?
                         descriptor.defaultValue : descriptor.value
                 );
     
-                delete d.value;
-                delete d.writable;
+                delete descriptor.value;
+                delete descriptor.writable;
     
-                return d;
+                return descriptor;
             };
         }
     
     ).attach('$b');
-    
 
     $b('brink/utils/extend', 
     
@@ -5308,7 +5346,6 @@
             '../utils/get',
             '../utils/set',
             '../utils/clone',
-            '../utils/extend',
             '../utils/merge',
             '../utils/bindTo',
             '../utils/flatten',
@@ -5327,7 +5364,6 @@
             get,
             set,
             clone,
-            extend,
             merge,
             bindTo,
             flatten,
@@ -5405,7 +5441,7 @@
                         }
                     }
     
-                    if (this.init && this.__callInit !== false) {
+                    if (this.init) {
                         this.init.apply(this, arguments);
                     }
     
@@ -5450,7 +5486,7 @@
                     this.__appendToMeta(this, this.__buildMeta(), true);
                 },
     
-                __appendToMeta : function (o, meta, isThis, deep) {
+                __appendToMeta : function (o, meta, isThis) {
     
                     var p,
                         v;
@@ -5468,7 +5504,7 @@
                             }
                         }
     
-                        else if (deep || o.hasOwnProperty(p)) {
+                        else if (o.hasOwnProperty(p)) {
     
                             if (p !== '__meta') {
     
@@ -5477,11 +5513,6 @@
                                 }
     
                                 else {
-    
-                                    if (v && v.__meta && v.__meta.isSchema) {
-                                        this.__appendToMeta(v, meta, isThis, true);
-                                    }
-    
                                     this.prop.call(this, p, v);
                                 }
                             }
@@ -5687,7 +5718,7 @@
                     meta.bindings = meta.bindings || {};
                     meta.externalBindings = meta.externalBindings || {};
     
-                    if (!val && typeof meta.properties[key] !== 'undefined') {
+                    if (typeof meta.properties[key] !== 'undefined') {
                         if (typeof val === 'undefined') {
                             return meta.properties[key];
                         }
@@ -5703,12 +5734,11 @@
                         };
                     }
     
-                    val = meta.properties[key] = defineProperty(obj, key, val);
-    
-                    if (val.__isComputed) {
+                    else {
                         val.__meta.key = key;
                     }
     
+                    val = meta.properties[key] = defineProperty(obj, key, val);
                     val.key = key;
     
                     watched = val.watch;
@@ -6063,7 +6093,6 @@
         }
     
     ).attach('$b');
-    
 
     $b('brink/core/NotificationManager', 
     
@@ -7547,31 +7576,6 @@
     
             var Adapter = Class({
     
-                /***********************************************************************
-    
-                Adapters are how you interface with your persistence layer.
-                Adapters receive requests from the store and perform the necessary actions,
-                returning promises that get resolved when operations are complete.
-    
-    
-    
-                Generally, you will not interact with Adapters directly, the Store and Models will proxy
-                requests to your adapters. This allows you to easily swap out Adapters
-                if you want to change your persistence layer, and even mix and match adapters
-                for different models.
-    
-    
-    
-                For help with writing your own Adapter, {{#crossLink "Brink.RESTAdapter"}}{{/crossLink}}
-                can be used as a good reference implementation.
-    
-                @class Brink.Adapter
-                @constructor
-    
-                @module Brink
-                @submodule data
-                ************************************************************************/
-    
                 __init : function () {
     
                     var meta;
@@ -7601,63 +7605,11 @@
                     return this._super.apply(this, arguments);
                 },
     
-                /***********************************************************************
-                Fetches a record from the persistence layer.
-    
-                @method fetch
-                @param  {Model} record The record you want to fetch.
-                @return {Promise}
-                ************************************************************************/
                 fetch : $b.F,
-    
-                /***********************************************************************
-                Fetches all records of a Model from the persistence layer.
-    
-                @method fetchAll
-                @param  {ModelClass} Model The Class you want to fetch records of.
-                @return {Promise}
-                ************************************************************************/
                 fetchAll : $b.F,
-    
-                /***********************************************************************
-                Saves a new record to your persistence layer.
-    
-                @method createRecord
-                @param  {Model} record The record you want to create.
-                @return {Promise}
-                ************************************************************************/
-    
                 createRecord : $b.F,
-    
-                /***********************************************************************
-                Updates a record in your persistence layer.
-    
-                @method updateRecord
-                @param  {Model} record The record you want to update.
-                @return {Promise}
-                ************************************************************************/
-    
                 updateRecord : $b.F,
-    
-                /***********************************************************************
-                Deletes a record in your persistence layer.
-    
-                @method deleteRecord
-                @param  {Model} record The record you want to delete.
-                @return {Promise}
-                ************************************************************************/
-    
                 deleteRecord : $b.F,
-    
-    
-                /***********************************************************************
-                Saves a record in your persistence layer.
-    
-                @method saveRecord
-                @param  {Model} record The record you want to save. This will call createRecord()
-                or updateRecord(), depending on whether or not the record is new.
-                @return {Promise}
-                ************************************************************************/
     
                 saveRecord : function (record) {
     
@@ -7667,13 +7619,6 @@
     
                     return this.updateRecord(record);
                 },
-    
-                /***********************************************************************
-                Hook for doing anything you need to based on a new Model definition.
-    
-                @method registerModel
-                @param  {Model} Model
-                ************************************************************************/
     
                 registerModel : function () {
                     // Hook for if you need to do any fancy pants stuff...
@@ -7685,7 +7630,6 @@
         }
     
     ).attach('$b');
-    
 
     $b('brink/data/RESTAdapter', 
     
@@ -7699,19 +7643,6 @@
             'use strict';
     
             return Adapter({
-    
-                /***********************************************************************
-    
-                A basic RESTAdapter implementation, this can be used as a good reference point
-                for implementing your own adapters or extended to modify the default behavior.
-    
-                @class Brink.RESTAdapter
-                @extends Brink.Adapter
-                @constructor
-    
-                @module Brink
-                @submodule data
-                ************************************************************************/
     
                 host : '',
                 prefix : '',
@@ -7754,7 +7685,6 @@
         }
     
     ).attach('$b');
-    
 
     $b('brink/data/attr', 
         [
@@ -7767,16 +7697,7 @@
     
             'use strict';
     
-            /***********************************************************************
-            Define a Schema attribute.
-    
-            @method attr
-            @param  {Type} type The value type of the attribute.
-            @param  {Object} options Options for the attribute
-            @return {ComputedProperty}
-            ************************************************************************/
-    
-            return (function make (type, options) {
+            return (function (type, options) {
     
                 if (typeof type === 'object') {
                     options = type;
@@ -7791,11 +7712,15 @@
     
                     get : function (key) {
     
-                        if (typeof this.__meta.data[key] === 'undefined') {
+                        var data;
+    
+                        data = this.__meta.data;
+    
+                        if (typeof data[key] === 'undefined') {
                             return options.defaultValue;
                         }
     
-                        return this.__meta.data[key];
+                        return data[key];
                     },
     
                     set : function (val, key) {
@@ -7851,13 +7776,8 @@
                     isAttribute : true,
                     options : options,
     
-                    serialize : function (filter) {
-                        var meta = attr.meta(),
-                            k = meta.key,
-                            v = get(this, k);
-                        if (!filter || filter(meta, k, v)) {
-                            return v;
-                        }
+                    serialize : function () {
+                        return get(this, attr.meta().key);
                     },
     
                     deserialize : function (val) {
@@ -7882,16 +7802,11 @@
                     }
                 });
     
-                attr.clone = function () {
-                    return make(type, options);
-                };
-    
                 return attr;
             });
         }
     
     ).attach('$b');
-    
 
     $b('brink/data/belongsTo', 
         [
@@ -7904,16 +7819,7 @@
     
             'use strict';
     
-            /***********************************************************************
-            Define a Schema belongsTo relationship (many to one).
-    
-            @method belongsTo
-            @param  {String} modelKey The modelKey of the relationship.
-            @param  {Object} options Options for the relationship.
-            @return {ComputedProperty}
-            ************************************************************************/
-    
-            return (function make (mKey, options) {
+            return (function (mKey, options) {
     
                 options = options || {};
     
@@ -7967,16 +7873,14 @@
                             }
                         }
     
-                        if (store && val && !(val instanceof $b.__models[mKey])) {
-    
-                            if (typeof val !== 'string' && typeof val !== 'number') {
-                                val = String(val);
-                            }
-    
+                        if (
+                            store &&
+                            (typeof val === 'string' || typeof val === 'number')
+                        ) {
                             val = store.findOrCreate(mKey, val);
                         }
     
-                        else if (val) {
+                        if (val) {
                             $b.assert(
                                 'Must be a model of type "' + mKey + '".',
                                 val instanceof $b.__models[mKey]
@@ -7993,7 +7897,7 @@
                     isRelationship : true,
                     options : options,
     
-                    serialize : function (filter) {
+                    serialize : function () {
     
                         var key,
                             val,
@@ -8007,20 +7911,16 @@
                         if (val && val instanceof $b.__models[mKey]) {
     
                             if (options.embedded) {
-                                val = val.serialize(filter);
-                            } else {
-                                val = get(val, 'pk');
+                                return val.serialize();
                             }
     
+                            return get(val, 'pk');
                         }
     
-                        if (!filter || filter(meta, key, val)) {
-                            return val;
-                        }
-    
+                        return val;
                     },
     
-                    deserialize : function (val, override, filter) {
+                    deserialize : function (val, override) {
     
                         var key,
                             meta,
@@ -8033,7 +7933,7 @@
                             record = get(this, key) || $b.__models[mKey].create();
     
                             if (val && typeof val === 'object') {
-                                val = record.deserialize(val, override, filter);
+                                val = record.deserialize(val, override);
                             }
                         }
     
@@ -8059,16 +7959,11 @@
                     }
                 });
     
-                belongsTo.clone = function () {
-                    return make(mKey, options);
-                };
-    
                 return belongsTo;
             });
         }
     
     ).attach('$b');
-    
 
     $b('brink/data/Collection', 
     
@@ -8152,14 +8047,14 @@
                     return this.length;
                 },
     
-                serialize : function (isEmbedded, filter) {
+                serialize : function (isEmbedded) {
     
                     var a = [];
     
                     this.forEach(function (item) {
     
                         if (isEmbedded) {
-                            a.push(item.serialize(filter));
+                            a.push(item.serialize());
                         }
     
                         else {
@@ -8196,7 +8091,6 @@
         }
     
     ).attach('$b');
-    
 
     $b('brink/data/hasMany', 
         [
@@ -8210,16 +8104,7 @@
     
             'use strict';
     
-            /***********************************************************************
-            Define a Schema hasMany relationship (one to many).
-    
-            @method hasMany
-            @param  {String} modelKey The modelKey of the relationship.
-            @param  {Object} options Options for the relationship.
-            @return {ComputedProperty}
-            ************************************************************************/
-    
-            return (function make (mKey, options) {
+            return (function (mKey, options) {
     
                 options = options || {};
     
@@ -8230,11 +8115,6 @@
                 var hasMany = computed({
     
                     get : function (key) {
-    
-                        if (!this.__meta.data[key]) {
-                            this.__meta.data[key] = Collection.create();
-                        }
-    
                         return this.__meta.data[key];
                     },
     
@@ -8299,7 +8179,7 @@
                     isRelationship : true,
                     options : options,
     
-                    serialize : function (filter) {
+                    serialize : function () {
     
                         var i,
                             val,
@@ -8315,7 +8195,7 @@
                         val = get(this, key);
     
                         if (val) {
-                            val = val.serialize(options.embedded, filter);
+                            val = val.serialize(options.embedded);
                         }
     
                         if (val && options.map) {
@@ -8337,13 +8217,10 @@
                             val = val2;
                         }
     
-                        if (!filter || filter(meta, key, val)) {
-                            return val;
-                        }
-    
+                        return val;
                     },
     
-                    deserialize : function (val, override, filter) {
+                    deserialize : function (val) {
     
                         var i,
                             j,
@@ -8406,7 +8283,7 @@
                                         store.add(mKey, record);
                                     }
     
-                                    record.deserialize(val[i], override, filter);
+                                    record.deserialize(val[i]);
                                 }
     
                                 else {
@@ -8455,92 +8332,97 @@
                     }
                 });
     
-                hasMany.clone = function () {
-                    return make(mKey, options);
-                };
-    
                 return hasMany;
             });
         }
     
     ).attach('$b');
+
+    $b('brink/data/ModelController', 
+    
+        [
+            '../core/Class',
+            '../utils/get'
+        ],
+    
+        function (Class, get) {
+    
+            'use strict';
+    
+            var ModelController = Class({
+    
+                store : $b.bindTo('model.store'),
+    
+                model : $b.computed({
+    
+                    get : function () {
+                        return this._model;
+                    },
+    
+                    set : function (val) {
+    
+                        this._model = val;
+    
+                        if (val.__meta.controller) {
+                            val.__meta.controller.destroy(false);
+                        }
+    
+                        val.__meta.controller = this;
+                    }
+                }),
+    
+                serialize : function () {
+                    return this.model.serialize.apply(null, arguments);
+                },
+    
+                deserialize : function () {
+                    return this.model.deserialize.apply(null, arguments);
+                },
+    
+                save : function () {
+                    return this.model.save.apply(null, arguments);
+                },
+    
+                fetch : function () {
+                    return this.model.fetch.apply(null, arguments);
+                },
+    
+                delete : function () {
+                    return this.model.delete.apply(null, arguments);
+                },
+    
+                clone : function () {
+                    return this.model.clone.apply(null, arguments);
+                },
+    
+                revert : function () {
+                    return this.model.revert.apply(null, arguments);
+                },
+    
+                destroy : function (destroyModel) {
+    
+                    var model;
+    
+                    model = get(this, 'model');
+    
+                    if (destroyModel && model) {
+                        model.destroy();
+                    }
+    
+                    return this._super.call(this);
+                }
+            });
+    
+            return ModelController;
+        }
+    
+    ).attach('$b');
     
 
-    /***********************************************************************
-    
-    Brink's Model, Store and Adapter Classes offers you flexible and easy way to work with your data layer.
-    
-    Using Brink.attr(), Brink.belongsTo() and Brink.hasMany() you can define simple or complex model
-    structures.
-    
-    ```javascript
-    
-    var MyStore = $b.Store.create();
-    
-    var Person = $b.Model.extend({
-    
-        primaryKey : 'id',
-        modelKey : 'person',
-    
-        adapter : $b.RESTAdapter.create(),
-        store : MyStore,
-    
-        schema : $b.Schema.create({
-            firstName : $b.attr(String),
-            lastName : $b.attr(String),
-    
-            children : $b.hasMany('person'),
-            spouse : $b.belongsTo('person')
-        })
-    });
-    
-    var dad = Person.create({
-        firstName : 'John',
-        lastName : 'Doe'
-    });
-    
-    var mom = Person.create({
-        firstName : 'Jane',
-        lastName : 'Doe'
-    });
-    
-    var child1 = Person.create({
-        firstName : 'Mary',
-        lastName  : 'Doe'
-    });
-    
-    var child2 = Person.create({
-        firstName : 'Bob',
-        lastName  : 'Doe'
-    });
-    
-    dad.spouse = mom;
-    dad.children.push(child1, child2);
-    
-    $b.Q.all([
-        mom.save(),
-        child1.save(),
-        child2.save()
-    ]).then(function () {
-        dad.save();
-    });
-    
-    ```
-    
-    Looking at the example above, it might be a bit confusing why we are saving the mom and children
-    before we save the `dad` record.
-    
-    The reason for this is that the mom and children do not yet exist, thus if we tried to `serialize()` the `dad`
-    record they would come back with null primary key values.
-    
-    @module Brink
-    @submodule data
-    
-    ************************************************************************/
-    
     $b('brink/data/Model', 
     
         [
+            './ModelController',
             '../core/Class',
             '../core/Array',
             '../utils/get',
@@ -8549,174 +8431,39 @@
             '../utils/computed'
         ],
     
-        function (Class, BrinkArray, get, set, bindTo, computed) {
+        function (ModelController, Class, BrinkArray, get, set, bindTo, computed) {
     
             'use strict';
     
             var Model = Class({
     
-                /***********************************************************************
-    
-                The Model Class is what all records are created from. Models provide
-                a uniform way to work with your records no matter what your backend
-                or persistence layer is, even if you mix and match across a project.
-    
-                @module Brink
-                @submodule data
-    
-                @class Brink.Model
-                @constructor
-                ************************************************************************/
-    
-                /***********************************************************************
-                The Store instance this model uses. You should only have one Store instance used
-                across your entire project and models.
-    
-                @property store
-                @type Brink.Store
-                @default null
-                ************************************************************************/
-    
                 store : null,
-    
-                /***********************************************************************
-                The Adapter instance you want to use for this model.
-    
-                @property adapter
-                @type Brink.Adapter
-                @default null
-                ************************************************************************/
                 adapter : null,
-    
-                /***********************************************************************
-                The modelKey you want to use for the model. This will likely influence your adapter.
-                i.e. for a RESTAdapter your modelKey would be used in the url for all requests
-                made for instances of this model. For a MongooseAdapter,
-                this would likely dictate the name of your tables.
-    
-                @property modelKey
-                @type String
-                @default null
-                ************************************************************************/
-    
                 modelKey : null,
-    
-                /***********************************************************************
-                The collectionKey you want to use for the model. Much like modelKey this is the
-                pluralized form of modelKey. This will be auto-defined as your modelKey + 's' unless
-                you explicity define it.
-    
-                @property collectionKey
-                @type String
-                @default null
-                ************************************************************************/
-    
                 collectionKey : null,
+                controllerClass : null,
     
-                /***********************************************************************
-                The property name of the primaryKey you are using for this Model.
-    
-                @property primaryKey
-                @type String
-                @default 'id'
-                ************************************************************************/
                 primaryKey : 'id',
     
-                /***********************************************************************
-                A Brink.Array of all the property names that have been changed since the
-                last save() or fetch().
-    
-                @property dirtyAttributes
-                @type Brink.Array
-                @default null
-                ************************************************************************/
                 dirtyAttributes : null,
     
-                /***********************************************************************
-                Whether or not the record is currently saving.
-    
-                @property isSaving
-                @type Boolean
-                @default false
-                ************************************************************************/
-    
                 isSaving : false,
-    
-                /***********************************************************************
-                Whether or not the record is currently being fetched.
-    
-                @property isFetching
-                @type Boolean
-                @default false
-                ************************************************************************/
-    
                 isFetching : false,
-    
-                /***********************************************************************
-                Whether or not the record has been fetched/loaded.
-    
-                @property isLoaded
-                @type Boolean
-                @default false
-                ************************************************************************/
                 isLoaded : false,
-    
-                /***********************************************************************
-                Whether or not the record is currently being deleted.
-    
-                @property isDeleting
-                @type Boolean
-                @default false
-                ************************************************************************/
-    
                 isDeleting : false,
-    
-    
-                /***********************************************************************
-                Whether or not the record has one or more changed properties since the
-                last save() or fetch().
-    
-                @property isDirty
-                @type Boolean
-                @default false
-                ************************************************************************/
     
                 isDirty : computed(function () {
                     return !!get(this, 'dirtyAttributes.length');
                 }, 'dirtyAttributes.length'),
     
-    
-                /***********************************************************************
-                Opposite of isDirty.
-    
-                @property isClean
-                @type Boolean
-                @default true
-                ************************************************************************/
-    
                 isClean : computed(function () {
                     return !get(this, 'isDirty');
                 }, 'isDirty'),
-    
-                /***********************************************************************
-                Is the record new? Determined by the existence of a primary key value.
-    
-                @property isNew
-                @type Boolean
-                @default false
-                ************************************************************************/
     
                 isNew : computed(function () {
                     return !get(this, 'pk');
                 }, 'pk'),
     
-    
-                /***********************************************************************
-                Get the primary key value of the record.
-    
-                @property pk
-                @type String|Number
-                ************************************************************************/
                 pk : computed({
     
                     get : function () {
@@ -8738,13 +8485,10 @@
                         attributes,
                         relationships;
     
-                    this.__callInit = false;
-    
                     this._super.call(this);
     
                     meta = this.__meta;
                     cMeta = this.constructor.__meta;
-                    meta.data = {};
     
                     meta.isInitialized = false;
     
@@ -8777,6 +8521,8 @@
                         meta.relationships = cMeta.relationships = relationships;
                     }
     
+                    meta.data = {};
+    
                     meta.pristineData = {};
                     meta.pristineContent = {};
     
@@ -8787,24 +8533,23 @@
                     set(this, 'dirtyAttributes', BrinkArray.create());
     
                     meta.isInitialized = true;
-    
-                    if (this.init) {
-                        this.__callInit = true;
-                        this.init.apply(this, arguments);
-                    }
-    
-                    return this;
                 },
     
-                /***********************************************************************
-                Serialize a record.
+                getController : function () {
     
-                @method serialize
-                @param {Function} filter A custom function to filter out attributes as you see fit.
-                @return {Object}
-                ************************************************************************/
+                    var controller = this.__meta.controller;
     
-                serialize : function (filter) {
+                    if (!controller) {
+                        if (!this.constructor.controllerClass) {
+                            return null;
+                        }
+                        controller = this.constructor.controllerClass.create({model : this});
+                    }
+    
+                    return controller;
+                },
+    
+                serialize : function () {
     
                     var i,
                         l,
@@ -8835,7 +8580,7 @@
                         pMeta = desc.meta();
                         key = pMeta.options.key || p;
     
-                        val = pMeta.serialize.call(this, filter);
+                        val = pMeta.serialize.call(this);
                         if (typeof val !== 'undefined') {
                             set(json, key, val);
                         }
@@ -8851,17 +8596,7 @@
                     return json;
                 },
     
-                /***********************************************************************
-                De-serialize a record.
-    
-                @method deserialize
-                @param  {Object} json The object containing the properties you want to deserialize.
-                @param  {Boolean} override Whether or not you want to update properties that have already been dirtied.
-                @param {Function} filter A custom function to filter out attributes as you see fit.
-                @return {Model}
-                ************************************************************************/
-    
-                deserialize : function (json, override, filter) {
+                deserialize : function (json, override) {
     
                     var i,
                         p,
@@ -8900,8 +8635,8 @@
                         key = pMeta.options.key || p;
                         val = get(json, key);
     
-                        if (typeof val !== 'undefined' && (!filter || filter(pMeta, key, val))) {
-                            val = pMeta.deserialize.call(this, val, override, filter);
+                        if (typeof val !== 'undefined') {
+                            val = pMeta.deserialize.call(this, val, override);
                             meta.pristineData[p] = val;
                         }
                     }
@@ -8915,14 +8650,6 @@
                     return this;
                 },
     
-                /***********************************************************************
-                Saves any changes to this record to the persistence layer (via the adapter).
-                Also adds this record to the store.
-    
-                @method save
-                @return {Promise}
-                ************************************************************************/
-    
                 save : function () {
     
                     var self,
@@ -8933,23 +8660,16 @@
     
                     set(this, 'isSaving', true);
     
-                    if (isNew && self.store) {
-                        self.store.add(self);
-                    }
-    
                     return this.adapter.saveRecord(this).then(function (json) {
                         self.deserialize(json);
                         set(self, 'isSaving', false);
                         set(self, 'isLoaded', true);
+    
+                        if (isNew && self.store) {
+                            self.store.add(self);
+                        }
                     });
                 },
-    
-                /***********************************************************************
-                Fetches and populates this record (via the adapter).
-    
-                @method fetch
-                @return {Promise}
-                ************************************************************************/
     
                 fetch : function () {
     
@@ -8971,13 +8691,6 @@
                     });
                 },
     
-                /***********************************************************************
-                Deletes this record (via the adapter). Also removes it from the store.
-    
-                @method delete
-                @return {Promise}
-                ************************************************************************/
-    
                 delete : function () {
     
                     var self,
@@ -8998,13 +8711,6 @@
                     });
                 },
     
-                /***********************************************************************
-                Creates and returns a copy of this record, with a null primary key.
-    
-                @method clone
-                @return {Model}
-                ************************************************************************/
-    
                 clone : function () {
     
                     var json = this.serialize();
@@ -9015,14 +8721,6 @@
     
                     return this.constructor.create(json);
                 },
-    
-    
-                /***********************************************************************
-                Reverts all changes made to this record since the last save() or fetch().
-    
-                @method revert
-                @return {Model}
-                ************************************************************************/
     
                 revert : function (revertRelationships) {
     
@@ -9068,8 +8766,11 @@
     
             Model.extend = function () {
     
-                var meta,
+                var p,
+                    props,
+                    meta,
                     proto,
+                    toProxy,
                     SubClass;
     
                 SubClass = Class.extend.apply(this, arguments);
@@ -9101,6 +8802,21 @@
                     proto.adapter.registerModel(SubClass);
                 }
     
+                if (proto.controllerClass) {
+    
+                    toProxy = {};
+    
+                    props = proto.__meta.properties;
+    
+                    for (p in props) {
+                        toProxy[p] = bindTo('model.' + p);
+                    }
+    
+                    SubClass.controllerClass = proto.controllerClass.extend(toProxy);
+    
+                    delete proto.controllerClass;
+                }
+    
                 return SubClass;
             };
     
@@ -9114,114 +8830,38 @@
     ).attach('$b');
     
 
-    $b('brink/data/Schema', 
-    
-        [
-            '../core/CoreObject',
-            '../utils/extend'
-        ],
-    
-        function (CoreObject, extend) {
-    
-            'use strict';
-    
-            var Schema = CoreObject.extend({
-    
-                /***********************************************************************
-    
-                Schemas allow you to define your models properties and relationships.
-    
-                @module Brink
-                @submodule data
-    
-                @class Brink.Schema
-                @constructor
-                ************************************************************************/
-    
-                __init : function (o) {
-    
-                    this.__meta = this.__meta || {};
-                    this.__meta.isSchema = true;
-    
-                    extend(this, o);
-                    return this;
-                }
-    
-            });
-    
-            return Schema;
-        }
-    
-    ).attach('$b');
-    
-
     $b('brink/data/Store', 
     
         [
             './Model',
             './Collection',
+            './ModelController',
             '../core/Class',
             '../utils/get',
             '../utils/set'
         ],
     
-        function (Model, Collection, Class, get, set) {
+        function (Model, Collection, ModelController, Class, get, set) {
     
             'use strict';
     
             var Store = Class({
-    
-                /***********************************************************************
-    
-                The store is a glorified cache, with convenience methods to work with your
-                Adapters to update or query your persistence layer as needed.
-    
-                By having a Store, you will need to access your persistence layer
-                much less frequently and you will be able to return records from the
-                store instantly.
-    
-                @module Brink
-                @submodule data
-    
-                @class Brink.Store
-                @constructor
-                ************************************************************************/
     
                 init : function () {
                     this.__registry = $b.__models;
                     this.__store = {};
                 },
     
-    
-                /***********************************************************************
-                Clear the store. Removes all record instances in the store.
-                This does not in any way affect the persistence layer or call any methods
-                on the models' adapters.
-    
-                @method clear
-                @param  {Brink.Model} Model
-                ************************************************************************/
-    
                 clear : function () {
                     this.__store = {};
                 },
-    
-                /***********************************************************************
-                Adds new record(s) to the store.
-                This does not in any way affect the persistence layer or call any methods
-                on the models' adapters.
-    
-                @method add
-                @param  {String|Model} model The modelKey or Model class to add records for.
-                @param  {Model|Array} records The record or records you want to add to the store.
-                @return {Brink.Collection}
-                ************************************************************************/
     
                 add : function (mKey, records) {
     
                     var i,
                         l,
                         record,
+                        controller,
                         collection;
     
                     if (arguments.length === 1) {
@@ -9240,25 +8880,18 @@
     
                         record = records[i];
     
-                        if (!~collection.indexOf(record)) {
-                            set(record, 'store', this);
-                            collection.push(record);
+                        controller = record.getController();
+    
+                        if (controller) {
+                            record = controller;
                         }
+    
+                        set(record, 'store', this);
+                        collection.push(record);
                     }
     
                     return collection;
                 },
-    
-                /***********************************************************************
-                Removes record(s) from the store.
-                This does not in any way affect the persistence layer or call any methods
-                on the models' adapters.
-    
-                @method remove
-                @param  {String|Model} model The modelKey or Model class to remove records for.
-                @param  {Model|Array} The record or records you want to remove from the store.
-                @return {Brink.Collection}
-                ************************************************************************/
     
                 remove : function (mKey, records) {
     
@@ -9281,32 +8914,16 @@
     
                     for (i = 0, l = records.length; i < l; i ++) {
                         record = records[i];
+                        record = record.__meta.controller || record;
                         collection.remove(records[i]);
                     }
     
                     return collection;
                 },
     
-                /***********************************************************************
-                Returns all the records of a specific type in the store.
-    
-                @method all
-                @param  {String|Model} model The modelKey or Model class of the records you want to get.
-                @return {Brink.Collection}
-                ************************************************************************/
-    
                 all : function (mKey) {
                     return this.getCollection(mKey);
                 },
-    
-                /***********************************************************************
-                Returns all the records of a specific type from the persistence layer
-                and adds them to the store.
-    
-                @method fetchAll
-                @param  {String|Model} model The modelKey or Model class of the records you want to get.
-                @return {Brink.Collection}
-                ************************************************************************/
     
                 fetchAll : function (mKey) {
     
@@ -9333,15 +8950,6 @@
     
                     }.bind(this));
                 },
-    
-                /***********************************************************************
-                Find a record in the store.
-    
-                @method find
-                @param  {String|Model} model The modelKey or Model class of the record you want to find.
-                @param  {String|Number|Object} q The primary key or an object of parameters you want to match.
-                @return {Brink.Model}
-                ************************************************************************/
     
                 find : function (mKey, q) {
     
@@ -9372,15 +8980,6 @@
                     }, this);
                 },
     
-                /***********************************************************************
-                Find a record in the store by primary key or create one.
-    
-                @method findOrCreate
-                @param  {String|Model} model The modelKey or Model class of the record you want to find.
-                @param  {String|Number} pk The primary key of the record.
-                @return {Brink.Model}
-                ************************************************************************/
-    
                 findOrCreate : function (mKey, pk) {
     
                     var record;
@@ -9393,38 +8992,11 @@
                         record = this.modelFor(mKey).create();
                         set(record, 'pk', pk);
                         this.add(mKey, record);
+                        record = record.__meta.controller || record;
                     }
     
                     return record;
                 },
-    
-                /***********************************************************************
-                Creates a new record and adds it to the store.
-    
-                @method createRecord
-                @param  {String|Model} model The modelKey or Model class of the record you want to find.
-                @param  {Object} data The data you want to populate the record with.
-                @return {Brink.Model}
-                ************************************************************************/
-    
-                createRecord : function (mKey, data) {
-    
-                    var record;
-    
-                    record = this.modelFor(mKey).create(data);
-                    this.add(mKey, record);
-    
-                    return record;
-                },
-    
-                /***********************************************************************
-                Filters through all records in the store of a specific type and returns matches.
-    
-                @method filter
-                @param  {String|Model} model The modelKey or Model class of the record you want to find.
-                @param  {Function|Object} q An object of parameters you want to match or a filter function.
-                @return {Brink.Array}
-                ************************************************************************/
     
                 filter : function (mKey, q) {
     
@@ -9492,14 +9064,6 @@
                     return collection;
                 },
     
-               /***********************************************************************
-                Given a modelKey or collectionKey returns the corresponding Model Class.
-    
-                @method modelFor
-                @param  {String} model The modelKey or collectionKey to get the Class for.
-                @return {Brink.Model}
-                ************************************************************************/
-    
                 modelFor : function (mKey) {
     
                     return (
@@ -9528,6 +9092,5 @@
         }
     
     ).attach('$b');
-    
 
 }).call(this);
